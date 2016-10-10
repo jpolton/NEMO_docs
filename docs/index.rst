@@ -48,8 +48,8 @@ PROGRESS:
 
 CURRENT:
 
-* Try an EXP_harmIT with Maria’s modifications with XML output for 3D tides. In progress (10 Oct 2016)
-* Porting dev logging to GitHub https://github.com/jpolton/EXP_harmIT.git
+* Try an EXP_harmIT with Maria’s modifications with XML output for 3D tides. **In progress (10 Oct 2016)**
+* **Porting dev logging to GitHub** https://github.com/jpolton/EXP_harmIT.git
 
 PLANS:
 
@@ -57,6 +57,40 @@ PLANS:
 * Changes to field_def.xml  - with 3D harmonics no longer using Karen’s version. Need to propagate through notes.
 * Spring neaps variation. Seasonal variation. Check notes elsewhere for plans
 * Write some papers.
+
+
+AMM60 June 2012 restarts and virtual mooring output
+===================================================
+Logs at AMM60 restarts and XIOS dev. Restarts on the new compiled code.
+
+PATH: ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
+
+PROGRESS:
+
+#. Successfully compiled Karen’s code.
+#. Generate the XML code using python notebook: ``jcomp_tools_dev/AMM60_build_iodef_from_latlon.ipynb``
+#. Successfully generated virtual mooring test data for early June 2012 using Karen’s restart: ``/work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/``
+#. Generated virtual moorings for Jo. Got the green light to proceed with high resolution data.
+
+CURRENT:
+
+* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 3 Oct 2016**
+
+cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+ISSUES:
+#. **CHECK THAT THE I/O PRESSURE IS OK WITH THE 20min wall time**
+
+PLANS:
+#. Run June 2012 with full list of moorings
+#. Migrate tech notes to NEMO skills
+#. Compress output in the finish script?
+#. Other output:
+     Slowly varying stratification
+     Baines forcing
+     ...
+
 
 
 Indices and tables
