@@ -11,22 +11,16 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   all-about-me
-
    AMM60_restarts_and_XIOS_dev
 
    3D_Harmonic_analysis
 
 Introduction
 ============
-One fine hat with a very small cat went to swim by the sea.
+This file is the launch page for different work flows.
 
-Test test test test test tes
+**Need to add more stuff**
 
-1. one
-2. two
-#. thress
-#. four
 
 
 3D Harmonic analysis
@@ -77,19 +71,22 @@ CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 3 Oct 2016**
 
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
 
 ISSUES:
+
 #. **CHECK THAT THE I/O PRESSURE IS OK WITH THE 20min wall time**
 
 PLANS:
+
 #. Run June 2012 with full list of moorings
 #. Migrate tech notes to NEMO skills
 #. Compress output in the finish script?
 #. Other output:
-     Slowly varying stratification
-     Baines forcing
-     ...
+
+  * Slowly varying stratification
+  * Baines forcing
+  * ...
 
 
 
