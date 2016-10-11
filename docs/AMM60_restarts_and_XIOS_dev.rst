@@ -278,6 +278,7 @@ Create new GitHub repo: https://github.com/jpolton/EXP_SBmoorings
 Resubmit::
 
   cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
   3982808.sdb
 
   sdb:
@@ -315,3 +316,23 @@ Though OUTPUT contains no new files. (Though it should all go in one file now)::
 | Presumably a problem with the ``iodef.xml`` file
 
 **Action:** Check the ``iodef.xml`` file
+
+Copy ``iodef.xml`` to give a local file for inspection::
+
+  cp iodef.xml ~/Desktop/OneWeekExpiry/.
+
+Cut the file down to just a few field_group entries.
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3985580.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3985580.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   --
+
+| **<— PENDING. Does it produce mooring output?**
+| EXPECT A SINGLE MOORING *.nc FILE. WITH A NUMBER OR MOORINGS WITHIN.
