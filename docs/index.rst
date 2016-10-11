@@ -37,14 +37,15 @@ This file is the launch page for different work flows.
 
 Logs at `3D Harmonic analysis <3D_Harmonic_analysis.html>`_
 
-PATH: ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
-``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT``
+PATH:
+ ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
+ ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT``
 
 PROGRESS:
 
 * Successfully compiled Karen’s code.
 * Ran for 20 mins in a clean new EXP config. Ran as EXP_NSea.
-* Checked output is OK for NSea test: AMM60_read_plot.ipynb
+* Checked output is OK for NSea test: ``AMM60_read_plot.ipynb``
 * Successfully compiled and ran Karen's code with Maria’s 3D harmonics (though w/o key_diaharm). Outputted virtual moorings OK.
 * Recompiled Maria’s 3D harmonics with key_diaharm
 * Added in new field_def.xml variables for the 3D harmonics
