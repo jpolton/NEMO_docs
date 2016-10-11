@@ -1,162 +1,186 @@
-PATH:
-/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
+PATH::
+
+  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
+
 Method:
- First follow Compiling AMM60. 15 Sept 2016
 
-Test code on NSea simulations.Testing a new compilation with NSea experiment. New build ssh looks like old build ssh. Check output: AMM60_read_plot.ipynb Looks OK. 16 Sept 2016
-
-Make a clean EXPeriment directory EXP_harmIT. In clean build configuration. 20 Sept 2016
-          /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT
+* First follow Compiling AMM60. **15 Sept 2016**
+* Test code on NSea simulations.Testing a new compilation with NSea experiment. New build ssh looks like old build ssh. Check output: ``AMM60_read_plot.ipynb`` Looks OK. **16 Sept 2016**
+* Make a clean EXPeriment directory EXP_harmIT. In clean build configuration. **20 Sept 2016**
+  ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
 
 NB Maria suggested I need the following but it breaks the compilation so for now comment it out.
-#cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 .
+``#cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 .``
 
-# Modules
-module add cray-hdf5-parallel
-module load  cray-netcdf-hdf5parallel
-module swap PrgEnv-cray PrgEnv-intel
+----
 
-# make the configuration directory (with default options which generates a cfg.txt file with options: XIOS_AMM60_nemo OPA_SRC LIM_SRC_2 NST_SRC)
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+load modules::
 
-# copy MY_SRC code from Karen
-rsync -uartvL --delete /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/MY_SRC/ /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
 
-# Add MY_SRC code from Maria
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC
-mv diaharm2.F90 diaharm_.F90_kariho40
-#mv dia25h.F90 dia25h.F90_kariho40
-cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/diaharm.F90 diaharm.F90_mane1
+Make the configuration directory (with default options which generates a ``cfg.txt`` file with options: ``XIOS_AMM60_nemo OPA_SRC LIM_SRC_2 NST_SRC``)::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+
+Copy MY_SRC code from Karen::
+
+  rsync -uartvL --delete /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/MY_SRC/ /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC
+
+Add MY_SRC code from Maria::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC
+  mv diaharm2.F90 diaharm_.F90_kariho40
+  #mv dia25h.F90 dia25h.F90_kariho40
+  cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/diaharm.F90 diaharm.F90_mane1
 
 Maria suggested I need the following but it breaks the compilation so for now comment it out.
-#cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 .
+``#cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 .``
 
-Create a new diagram.F90 that merges Karen and Maria’s. Start with Maria’s.
-cp diaharm.F90_mane1 diaharm.F90
+Create a new ``diagram.F90`` that merges Karen and Maria’s. Start with Maria’s::
 
-sdiff diaharm.F90_mane1 diaharm2.F90_kariho40
+  cp diaharm.F90_mane1 diaharm.F90
+  sdiff diaharm.F90_mane1 diaharm2.F90_kariho40
 
-mane1                                                            kariho40
-bold is the new / accepted version
+  mane1                                                            kariho40
+  bold is the new / accepted version
 
-      INTEGER :: jh, nhan, jl       |       INTEGER :: jh, nhan, jk, ji
+        INTEGER :: jh, nhan, jl       |       INTEGER :: jh, nhan, jk, ji
 
-      DO jh=1,jpmax_harmo       |       DO jk=1,jpmax_harmo
-         DO jl=1,jpmax_harmo       |         DO ji=1,jpmax_harmo
-            IF(TRIM(tname(jh)) == Wave(jl)%cname_tide) THEN   |             IF(TRIM(tname(jk)) == Wave(ji)%cname_tide) THEN
-               nb_ana=nb_ana+1               nb_ana=nb_ana+1
-            ENDIF             ENDIF
+        DO jh=1,jpmax_harmo       |       DO jk=1,jpmax_harmo
+           DO jl=1,jpmax_harmo       |         DO ji=1,jpmax_harmo
+              IF(TRIM(tname(jh)) == Wave(jl)%cname_tide) THEN   |             IF(TRIM(tname(jk)) == Wave(ji)%cname_tide) THEN
+                 nb_ana=nb_ana+1               nb_ana=nb_ana+1
+              ENDIF             ENDIF
 
-      DO jh=1,nb_ana       |       DO jk=1,nb_ana
-       DO jl=1,jpmax_harmo       |       DO ji=1,jpmax_harmo
-          IF (TRIM(tname(jh)) .eq. Wave(jl)%cname_tide) THEN  |           IF (TRIM(tname(jk)) .eq. Wave(ji)%cname_tide) THEN
-             name(jh) = jl       |             name(jk) = ji
-             EXIT             EXIT
-          END IF           END IF
+        DO jh=1,nb_ana       |       DO jk=1,nb_ana
+         DO jl=1,jpmax_harmo       |       DO ji=1,jpmax_harmo
+            IF (TRIM(tname(jh)) .eq. Wave(jl)%cname_tide) THEN  |           IF (TRIM(tname(jk)) .eq. Wave(ji)%cname_tide) THEN
+               name(jh) = jl       |             name(jk) = ji
+               EXIT             EXIT
+            END IF           END IF
 
-      ! Initialize temporary arrays:       ! Initialize temporary arrays:
-      ! ----------------------------       ! ----------------------------
-      ALLOCATE( ana_temp(jpi,jpj,2*nb_ana,5,jpk) )       |       ALLOCATE( ana_temp(jpi,jpj,2*nb_ana,3) )
-      ana_temp(:,:,:,:,:) = 0._wp       |       ana_temp(:,:,:,:) = 0._wp
+        ! Initialize temporary arrays:       ! Initialize temporary arrays:
+        ! ----------------------------       ! ----------------------------
+        ALLOCATE( ana_temp(jpi,jpj,2*nb_ana,5,jpk) )       |       ALLOCATE( ana_temp(jpi,jpj,2*nb_ana,3) )
+        ana_temp(:,:,:,:,:) = 0._wp       |       ana_temp(:,:,:,:) = 0._wp
 
-      INTEGER  :: ji, jj, jh, jc, nhc ,jk       |       INTEGER  :: ji, jj, jh, jc, nhc
+        INTEGER  :: ji, jj, jh, jc, nhc ,jk       |       INTEGER  :: ji, jj, jh, jc, nhc
 
-! ssh, ub, vb are stored at the last level of 5d array       |
+  ! ssh, ub, vb are stored at the last level of 5d array       |
 
-…3D stuff only here that we keep
-SUBROUTINE dia_harm_end
+  …3D stuff only here that we keep
+  SUBROUTINE dia_harm_end
 
-      INTEGER :: ji, jj, jh, jc, jn, nhan, jl ,jk       |       INTEGER :: ji, jj, jh, jc, jn, nhan, jl...
-      ALLOCATE( out_eta(jpi,jpj,jpk,2*nb_ana),   &       <
-         &      out_u  (jpi,jpj,jpk,2*nb_ana),   &       <
-         &      out_v  (jpi,jpj,jpk,2*nb_ana),   &       <
-         &      out_w  (jpi,jpj,jpk,2*nb_ana),   &       <
-      >       ALLOCATE( out_eta(jpi,jpj,2*nb_ana),   &
-      >         &      out_u  (jpi,jpj,2*nb_ana),   &
-                          >         &      out_v  (jpi,jpj,2*nb_ana)  )
+        INTEGER :: ji, jj, jh, jc, jn, nhan, jl ,jk       |       INTEGER :: ji, jj, jh, jc, jn, nhan, jl...
+        ALLOCATE( out_eta(jpi,jpj,jpk,2*nb_ana),   &       <
+           &      out_u  (jpi,jpj,jpk,2*nb_ana),   &       <
+           &      out_v  (jpi,jpj,jpk,2*nb_ana),   &       <
+           &      out_w  (jpi,jpj,jpk,2*nb_ana),   &       <
+        >       ALLOCATE( out_eta(jpi,jpj,2*nb_ana),   &
+        >         &      out_u  (jpi,jpj,2*nb_ana),   &
+                            >         &      out_v  (jpi,jpj,2*nb_ana)  )
 
-         &      out_dzi(jpi,jpj,jpk,2*nb_ana) )       <
-      ! density and Elevation:       |       ! Elevation:
-   DO jk=1,jpk       <
-                  ztmp4(kun)=ana_temp(ji,jj,kun,1,jk)       |                   ztmp4(kun)=ana_temp(ji,jj,kun,1)
+           &      out_dzi(jpi,jpj,jpk,2*nb_ana) )       <
+        ! density and Elevation:       |       ! Elevation:
+     DO jk=1,jpk       <
+                    ztmp4(kun)=ana_temp(ji,jj,kun,1,jk)       |                   ztmp4(kun)=ana_temp(ji,jj,kun,1)
 
-               out_eta(ji,jj,jk,jh       ) = X1 * tmask_i(ji, |               out_eta(ji,jj,jh       ) = X1 * tmask_i(ji,jj)
-               out_eta(ji,jj,jk,jh+nb_ana) = X2 * tmask_i(ji, |               out_eta(ji,jj,jh+nb_ana) = X2 * tmask_i(ji,jj)
-      ! u-component of velocity       |       ! ubar:
+                 out_eta(ji,jj,jk,jh       ) = X1 * tmask_i(ji, |               out_eta(ji,jj,jh       ) = X1 * tmask_i(ji,jj)
+                 out_eta(ji,jj,jk,jh+nb_ana) = X2 * tmask_i(ji, |               out_eta(ji,jj,jh+nb_ana) = X2 * tmask_i(ji,jj)
+        ! u-component of velocity       |       ! ubar:
+
+
+----
 
 On reflection the bits kept from Karen’s version are not helpful. They just seem to be a straight label swap and does not achieve anything.
 
-# copy in the compiler flags file
-cp /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/cpp_AMM60smago.fcm /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/cpp_XIOS_AMM60_nemo_harmIT.fcm
-# check /add the key_diaharm
-vi  cpp_XIOS_AMM60_nemo_harmIT.fcm
+----
+
+Copy in the compiler flags file::
+
+  cp /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/cpp_AMM60smago.fcm /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/cpp_XIOS_AMM60_nemo_harmIT.fcm
+
+Check /add the key_diaharm::
+
+ vi  cpp_XIOS_AMM60_nemo_harmIT.fcm
  bld::tool::fppkeys     key_ldfslp key_iomput key_mpp_mpi key_netcdf4 key_tide key_bdy key_jdha_init key_dynspg_ts key_vvl key_zdfgls key_dynldf_smag key_traldf_smag key_traldf_c3d    key_dynldf_c3d  key_diaharm
 
-# Compile with XC_ARCHER_INTEL
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10 clean
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+Compile with ``XC_ARCHER_INTEL``::
 
-WORKED! IT COMPILES
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
 
-INSERT 3 Oct
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC
-cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 ../MY_SRC/.
-cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/diainsitutem.F90 ../MY_SRC/.
+**WORKED! IT COMPILES**
 
-# Recompile
+----
 
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10 clean
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+**INSERT 3 Oct**::
 
-...
-/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/BLD/ppsrc/nemo/dia25h.f90(24): error #6580: Name in only-list does not exist.   [EN]
-   USE zdf_oce, ONLY: en
-----------------------^
-...
-Build failed on Mon Oct  3 15:56:07 2016.
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC
+  cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 ../MY_SRC/.
+  cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/diainsitutem.F90 ../MY_SRC/.
 
-Build failed in dia25h.F90
-...
-   USE zdf_oce, ONLY: en
-...
+Recompile::
 
-diff  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdf_oce.F90 /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/NEMO/OPA_SRC/ZDF/zdf_oce.F90
-45,47d44
-<    REAL(wp), PUBLIC, ALLOCATABLE, SAVE, DIMENSION(:,:,:) ::   avt_k , avm_k  ! not enhanced Kz
-<    REAL(wp), PUBLIC, ALLOCATABLE, SAVE, DIMENSION(:,:,:) ::   avmu_k, avmv_k ! not enhanced Kz
-<    REAL(wp), PUBLIC, ALLOCATABLE, SAVE, DIMENSION(:,:,:) ::   en              !: now turbulent kinetic energy   [m2/s2]
-51c48
-<    !! $Id: zdf_oce.F90 6204 2016-01-04 13:47:06Z cetlod $
----
->    !! $Id: zdf_oce.F90 5038 2015-01-20 14:26:13Z jamesharle $
-65,68c62
-<          &     avmv  (jpi,jpj,jpk), avt   (jpi,jpj,jpk)      ,      &
-<          &     avt_k (jpi,jpj,jpk), avm_k (jpi,jpj,jpk)      ,      &
-<          &     avmu_k(jpi,jpj,jpk), avmv_k(jpi,jpj,jpk)      ,      &
-<          &     en    (jpi,jpj,jpk), STAT = zdf_oce_alloc )
----
->          &     avmv(jpi,jpj,jpk), avt(jpi,jpj,jpk)           , STAT = zdf_oce_alloc )
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
 
-I.e. Maria has a newer version of zdf_oce.F90
-Copy it.
-cp  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdf_oce.F90 /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC/zdf_oce.F90
+Logs::
 
-Also there are knock ons in zdfgls.F90.
-Copy it (accidentally overwrote the OPA_SRC/ZDF/ version
-# cp  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdfgls.F90  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/NEMO/OPA_SRC/ZDF/zdfgls.F90
+  ...
+  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/BLD/ppsrc/nemo/dia25h.f90(24): error #6580: Name in only-list does not exist.   [EN]
+     USE zdf_oce, ONLY: en
+  ----------------------^
+  ...
+  Build failed on Mon Oct  3 15:56:07 2016.
 
-cp  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdfgls.F90  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC/zdfgls.F90
+  Build failed in dia25h.F90
+  ...
+     USE zdf_oce, ONLY: en
+  ...
 
-# Recompile
+Compare ``zdf_oce.F90``::
 
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10 clean
-./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+  diff  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdf_oce.F90 /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/NEMO/OPA_SRC/ZDF/zdf_oce.F90
+  45,47d44
+  <    REAL(wp), PUBLIC, ALLOCATABLE, SAVE, DIMENSION(:,:,:) ::   avt_k , avm_k  ! not enhanced Kz
+  <    REAL(wp), PUBLIC, ALLOCATABLE, SAVE, DIMENSION(:,:,:) ::   avmu_k, avmv_k ! not enhanced Kz
+  <    REAL(wp), PUBLIC, ALLOCATABLE, SAVE, DIMENSION(:,:,:) ::   en              !: now turbulent kinetic energy   [m2/s2]
+  51c48
+  <    !! $Id: zdf_oce.F90 6204 2016-01-04 13:47:06Z cetlod $
+  ---
+  >    !! $Id: zdf_oce.F90 5038 2015-01-20 14:26:13Z jamesharle $
+  65,68c62
+  <          &     avmv  (jpi,jpj,jpk), avt   (jpi,jpj,jpk)      ,      &
+  <          &     avt_k (jpi,jpj,jpk), avm_k (jpi,jpj,jpk)      ,      &
+  <          &     avmu_k(jpi,jpj,jpk), avmv_k(jpi,jpj,jpk)      ,      &
+  <          &     en    (jpi,jpj,jpk), STAT = zdf_oce_alloc )
+  ---
+  >          &     avmv(jpi,jpj,jpk), avt(jpi,jpj,jpk)           , STAT = zdf_oce_alloc )
 
-IT WORKED!
+**I.e. Maria has a newer version of** ``zdf_oce.F90``. Copy it::
+
+  cp  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdf_oce.F90 /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC/zdf_oce.F90
+
+Also there are knock ons in ``zdfgls.F90``. Copy it (accidentally overwrote the OPA_SRC/ZDF/ version)::
+
+  # cp  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdfgls.F90  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/NEMO/OPA_SRC/ZDF/zdfgls.F90
+
+  cp  /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/ZDF/zdfgls.F90  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/MY_SRC/zdfgls.F90
+
+Recompile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+
+**IT WORKED!**
+
 
 ===================================
 Make a clean EXPeriment: EXP_harmIT
@@ -164,7 +188,7 @@ Make a clean EXPeriment: EXP_harmIT
 **Note that this EXP requires a modified version of field_def.xml. Previously we used Karen’s reference version. This requires a modification to run_nemo**
 
 Move to configuration directory and create EXPeriment directory::
-  
+
   cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
   mkdir EXP_harmIT
 
