@@ -13,6 +13,8 @@ Contents:
 
    AMM60_restarts_and_XIOS_dev
 
+   Compiling_AMM60
+
    3D_Harmonic_analysis
 
 Introduction

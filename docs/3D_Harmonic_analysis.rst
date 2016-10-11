@@ -8,7 +8,7 @@ PATH::
 
 Method:
 
-* First follow Compiling AMM60. **15 Sept 2016**
+* First follow `Compiling AMM60 <Compiling_AMM60.html>`_. **15 Sept 2016**
 * Test code on NSea simulations.Testing a new compilation with NSea experiment. New build ssh looks like old build ssh. Check output: ``AMM60_read_plot.ipynb`` Looks OK. **16 Sept 2016**
 * Make a clean EXPeriment directory EXP_harmIT. In clean build configuration. **20 Sept 2016**
   ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
