@@ -1,3 +1,7 @@
+====================
+3D Harmonic Analysis
+====================
+
 PATH::
 
   /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
