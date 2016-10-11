@@ -20,60 +20,67 @@ PLAN:
 NOTE I DO NOT KNOW THE DATE OF THE RESTART: Update  1271520=20120605
 1264321 Seems to correspond to midnight 1 June 2012 (plus or minus 30 mins)
 
+----
+
 Clean experiment directory, EXP_SBmoorings
 ==========================================
 
-Follow notes from Testing a new compilation with NSea experiment::
+Follow notes from `Testing a new compilation with NSea experiment <Testing_a_new_compilation_with_NSea_experiment.html>`_::
 
   cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo
   mkdir EXP_SBmoorings
 
-Copy run script into job directory. Note this is not necessary as all the paths are set in the script but is means that each experiment can have its own run script
-cp EXP_NSea/run_nemo EXP_SBmoorings/run_nemo
-cp EXP_NSea/submit_nemo.pbs EXP_SBmoorings/submit_nemo.pbs
+Copy run script into job directory. Note this is not necessary as all the paths are set in the script but is means that each experiment can have its own run script::
 
-Edit run script (Note for only one restart restart_max=2 )
-vi EXP_SBmoorings/run_nemo
-export RUNNAME=EXP_SBmoorings
-export YEARrun='2012'
-export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo
-export nrestart_max=7  (For one submission this number must equal the number of lines in run_counter.txt)
+  cp EXP_NSea/run_nemo EXP_SBmoorings/run_nemo
+  cp EXP_NSea/submit_nemo.pbs EXP_SBmoorings/submit_nemo.pbs
 
-``vi EXP_SBmoorings/submit_nemo.pbs
-#PBS -N AMM60_SB
-#PBS -l walltime=00:20:00
-..
-  $JOBDIR/finish_nemo.sh
-  $JOBDIR/run_nemo
-..
-``
-Copy iodef.xml into job directory:
-cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_notradiff_long/iodef_fastnet.xml EXP_SBmoorings/iodef_sbmoorings.xml
-vi iodef_sbmoorings.xml (E.g. for testing)
-    <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
-...
-        <file id="file001" name_suffix="_SB001_grid_T" description="ocean T grid variables">
-          <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
-            <field field_ref="toce"      name="thetao"  long_name="sea water potential temperature" />
-            <field field_ref="soce"      name="so"      long_name="sea water salinity"              />
-            <field field_ref="tpt_dep"      name="depth"  />
-            <field field_ref="uoce"      name="vozocrtx" long_name="sea water x velocity" />
-            <field field_ref="voce"      name="vomecrty" long_name="sea water y velocity" />
-            <field field_ref="woce"      name="vovecrtz" long_name="sea water w velocity" />
-            <field field_ref="utau"      name="utau"  long_name="surface downward x stress" />
-            <field field_ref="vtau"      name="vtau"  long_name="surface downward y stress" />
-            <field field_ref="ssh"          name="ssh"      long_name="sea surface height"/>
-          </field_group>
-        </file>
+Edit run script (Note for only one restart ``restart_max=2``)::
 
-      </file_group>
+  vi EXP_SBmoorings/run_nemo
+  export RUNNAME=EXP_SBmoorings
+  export YEARrun='2012'
+  export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo
+  export nrestart_max=7  (For one submission this number must equal the number of lines in run_counter.txt)
 
-Copy domain_def.xml into job directory
-cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/domain_def.xml EXP_SBmoorings/domain_def.xml
+  vi EXP_SBmoorings/submit_nemo.pbs
+  #PBS -N AMM60_SB
+  #PBS -l walltime=00:20:00
+  ..
+    $JOBDIR/finish_nemo.sh
+    $JOBDIR/run_nemo
+  ..
+
+Copy iodef.xml into job directory::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_notradiff_long/iodef_fastnet.xml EXP_SBmoorings/iodef_sbmoorings.xml
+  vi iodef_sbmoorings.xml (E.g. for testing)
+      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+  ...
+          <file id="file001" name_suffix="_SB001_grid_T" description="ocean T grid variables">
+            <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+              <field field_ref="toce"      name="thetao"  long_name="sea water potential temperature" />
+              <field field_ref="soce"      name="so"      long_name="sea water salinity"              />
+              <field field_ref="tpt_dep"      name="depth"  />
+              <field field_ref="uoce"      name="vozocrtx" long_name="sea water x velocity" />
+              <field field_ref="voce"      name="vomecrty" long_name="sea water y velocity" />
+              <field field_ref="woce"      name="vovecrtz" long_name="sea water w velocity" />
+              <field field_ref="utau"      name="utau"  long_name="surface downward x stress" />
+              <field field_ref="vtau"      name="vtau"  long_name="surface downward y stress" />
+              <field field_ref="ssh"          name="ssh"      long_name="sea surface height"/>
+            </field_group>
+          </file>
+
+        </file_group>
+
+Copy ``domain_def.xml`` into job directory::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/domain_def.xml EXP_SBmoorings/domain_def.xml
 
 Edit XML files to contain virtual moorings at given lat/lon locations from supplied list. Use python notebook to generate text to paste into XML files:
-jcomp_tools_dev/AMM60_build_iodef_from_latlon.ipynb
-vi domain_def.xml (E.g. for testing)
+``jcomp_tools_dev/AMM60_build_iodef_from_latlon.ipynb``::
+
+  vi domain_def.xml (E.g. for testing)
 
         <!-- Shelf Break virtual moorings -->
         <domain id="SB032" zoom_ibegin="0610" zoom_jbegin="0302" zoom_ni="2" zoom_nj="2" />
@@ -109,80 +116,92 @@ vi domain_def.xml (E.g. for testing)
         <domain id="SB030" zoom_ibegin="0602" zoom_jbegin="0342" zoom_ni="2" zoom_nj="2" />
         <domain id="SB031" zoom_ibegin="0600" zoom_jbegin="0344" zoom_ni="2" zoom_nj="2" />
 
-When happy overwrite the iodef.xml with the new version
-cp EXP_SBmoorings/iodef_sbmoorings.xml EXP_SBmoorings/iodef.xml
+When happy overwrite the ``iodef.xml`` with the new version::
+  cp EXP_SBmoorings/iodef_sbmoorings.xml EXP_SBmoorings/iodef.xml
 
-Copy finish_nemo.sh into job directory
-cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/finish_nemo.sh EXP_SBmoorings/finish_nemo.sh
+Copy ``finish_nemo.sh`` into job directory::
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/finish_nemo.sh EXP_SBmoorings/finish_nemo.sh
 
-Link restart files
-mkdir EXP_SBmoorings/RESTART
-ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  EXP_SBmoorings/RESTART/.
+Link restart files::
 
-Create run_counter.txt into job directory (I don’t know the dates. NB Karen’s numbers are quite large but I don’t see the restart files). Note that the last line 2nd number must be +1 of the restart directory name. BEWARE of extra white spaces in these lines as the ‘cutting'  will not work properly with them
-Edit run_counter.txt: 1264321 is 1st June 2012, or perhaps 20120531 as this appears in the output file:
+  mkdir EXP_SBmoorings/RESTART
+  ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  EXP_SBmoorings/RESTART/.
+
+Create ``run_counter.txt`` into job directory (I don’t know the dates. NB Karen’s numbers are quite large but I don’t see the restart files). Note that the last line 2nd number must be +1 of the restart directory name. BEWARE of extra white spaces in these lines as the ‘cutting'  will not work properly with them
+Edit ``run_counter.txt: 1264321`` is 1st June 2012, or perhaps ``20120531`` as this appears in the output file::
+
      Chopped from  AMM60_SB.o3960041
           01271520
               date ndastp                                      :     20120531
-Anyway edit run_counter.txt to start at the beginning on June 2012
-vi EXP_SBmoorings/run_counter.txt
-1 1 7200 20100105
-2 1264321 1271520
 
-Copy in namelists
-cp EXP_NSea/namelist_ref EXP_SBmoorings/.
-cp EXP_NSea/namelist_cfg EXP_SBmoorings/.
+Anyway edit ``run_counter.txt`` to start at the beginning on June 2012::
 
-Submit run
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
-./run_nemo
-3971205.sdb
+  vi EXP_SBmoorings/run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3971205.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   — <— IN PROGRESS. CAREFUL WALL TIME MAY BE EXCEEDED BY LARGE NUMBERS OF OUTPUT FILES (3305 moorings).
+Copy in namelists::
 
-IT BROKE.
-TRY JUST ONE SUBMISSION TO DEBUG. ALSO cut down the number of output files in ifdef.xml.
+  cp EXP_NSea/namelist_ref EXP_SBmoorings/.
+  cp EXP_NSea/namelist_cfg EXP_SBmoorings/.
 
-vi run_counter.txt
-1 1 7200 20100105
-2 1264321 1271520
+Submit run::
 
-vi run_nemo
-export nrestart_max=2 #31 (For one submission this number must equal the number of lines in run_counter.txt)
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3971205.sdb
 
-# Shorten the queue to get this thing going (hopefully)
-vi submit_nemo.pbs
-#PBS -l walltime=00:01:00
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3971205.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   — <— IN PROGRESS. CAREFUL WALL TIME MAY BE EXCEEDED BY LARGE NUMBERS OF OUTPUT FILES (3305 moorings).
 
-Clean up a bit
-rm -r OUTPUT/ WDIR/ LOGS/
+**IT BROKE.
+TRY JUST ONE SUBMISSION TO DEBUG. ALSO cut down the number of output files in iodef.xml.**
 
-# Cut down the number of XML output files to file000 - file999 in ifdef.xml
-Original list is in iodef_sbmoorings.xml
-If this work I will need to run the month 3 times to simulate 3305 moorings.
+::
 
-Submit run
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
-./run_nemo
-3972357.sdb
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3972357.sdb     jelt     standard AMM60_SB      --   92 220    --  00:01 Q   --
+  vi run_nemo
+  export nrestart_max=2 #31 (For one submission this number must equal the number of lines in run_counter.txt)
 
-Broke. Looks like it didn’t like the ifdef.xml file
-Save ifdef.xml with 1000 virtual moorings as iodef_sbmoorings_000_999.xml
+Shorten the queue to get this thing going (hopefully)::
 
-Recover simple ifdef.xml file from ANChor run
-cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/iodef.xml   iodef.xml
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:01:00
 
-Clean it up and fix it to have nothing but the following:
+Clean up a bit::
+
+  rm -r OUTPUT/ WDIR/ LOGS/
+
+| Cut down the number of XML output files to file000 - file999 in ``iodef.xml``.
+| Original list is in ``iodef_sbmoorings.xml``
+| If this work I will need to run the month 3 times to simulate 3305 moorings.
+
+Submit run::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3972357.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3972357.sdb     jelt     standard AMM60_SB      --   92 220    --  00:01 Q   --
+
+| **Broke**. Looks like it didn’t like the ``iodef.xml`` file
+| Save ``iodef.xml`` with 1000 virtual moorings as ``iodef_sbmoorings_000_999.xml``
+
+Recover simple ifdef.xml file from ANChor run::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/iodef.xml   iodef.xml
+
+Clean it up and fix it to have nothing but the following::
 
       <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
         <file id="file011" name_suffix="_SB011_grid_T" description="ocean T grid variables">
@@ -200,61 +219,72 @@ Clean it up and fix it to have nothing but the following:
         </file>
       </file_group>
 
-Submit run with 20min wall time.
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
-./run_nemo
-3972636.sdb
+Submit run with 20min wall time::
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3972636.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   — <— PENDING. Does it produce output?
-Yes, AMM60_1h_20120601_20120605_SB011_grid_T.nc exists. It is running now (15:55, 4 Oct 2016)
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3972636.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3972636.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   —
+
+**PENDING. Does it produce output?**
+Yes, ``AMM60_1h_20120601_20120605_SB011_grid_T.nc`` exists. It is running now (15:55, 4 Oct 2016)
 
 
 Yes.
 Spotted error in the iodef_sbmooring*.xml files. Double definition of the 1h file_group without closing it.
-      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
+``<file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->``
 
- Saved the working test iodef files: iodef_1mooring.xml
-Copied the full file to the operational iodef file
-cp iodef_sbmoorings_001_3305.xml iodef.xml
+| Saved the working test iodef files: ``iodef_1mooring.xml``
+| Copied the full file to the operational iodef file: ``cp iodef_sbmoorings_001_3305.xml iodef.xml``
 
-Trim run_counter.txt
-Resubmit
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
-./run_nemo
-3977817.sdb
+Trim ``run_counter.txt``
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3977817.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   --<— PENDING. Does it produce mooring output?
-CAREFUL WALL TIME MAY BE EXCEEDED BY LARGE NUMBERS OF OUTPUT FILES (3305 moorings). 7 Oct 2016
+Resubmit::
 
-EXP_SBmoorings/LOGS/01271520> less stdouterr
--> report :  Memory report : Context <nemo> : client side : total memory used for buffer 0 bytes
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3977817.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3977817.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   --
+
+| **PENDING. Does it produce mooring output?**
+| CAREFUL WALL TIME MAY BE EXCEEDED BY LARGE NUMBERS OF OUTPUT FILES (3305 moorings). 7 Oct 201
+
+::
+
+  EXP_SBmoorings/LOGS/01271520> less stdouterr
+  -> report :  Memory report : Context <nemo> : client side : total memory used for buffer 0 bytes
 
 
-Try and rewrite the XML output to all be in one file.
-Create a separate lookup for lat and lon.
-Save new file as ifdef_1file.xml
+| Try and rewrite the XML output to all be in one file.
+| Create a separate lookup for lat and lon.
+| Save new file as ``iodef_1file.xml``
 
 Create new GitHub repo: https://github.com/jpolton/EXP_SBmoorings
 
-Trim run_counter.txt
-cp iodef_1file.xml iodef.xml
-Check the 20min queue
+| Trim ``run_counter.txt``
+| ``cp iodef_1file.xml iodef.xml``
+| Check the 20min queue
 
-Resubmit
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
-3982808.sdb
+Resubmit::
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3982808.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   —<— PENDING. Does it produce mooring output?
-CAREFUL WALL TIME MAY BE EXCEEDED BY LARGE NUMBERS OF VARIABLES in  FILE (3305 moorings). 10 Oct 2016
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  3982808.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3982808.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   —
+  
+| **<— PENDING. Does it produce mooring output?**
+| CAREFUL WALL TIME MAY BE EXCEEDED BY LARGE NUMBERS OF VARIABLES in  FILE (3305 moorings). 10 Oct 2016

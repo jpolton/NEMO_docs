@@ -10,6 +10,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   
+   Testing_a_new_compilation_with_NSea_experiment
 
    AMM60_restarts_and_XIOS_dev
 
