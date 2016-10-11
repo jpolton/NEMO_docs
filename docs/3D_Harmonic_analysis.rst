@@ -163,37 +163,46 @@ Make a clean EXPeriment: EXP_harmIT
 ===================================
 **Note that this EXP requires a modified version of field_def.xml. Previously we used Karen’s reference version. This requires a modification to run_nemo**
 
-`cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT`
-`mkdir EXP_harmIT`
+Move to configuration directory and create EXPeriment directory::
+  
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
+  mkdir EXP_harmIT
 
-Copy run script into job directory.
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/run_nemo EXP_harmIT/run_nemo
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/submit_nemo.pbs EXP_harmIT/submit_nemo.pbs
+Copy run script into job directory::
 
-Make a SHARED directory, and copy field_def.xml to it.
-mkdir /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED
-cp /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/.
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/run_nemo EXP_harmIT/run_nemo
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/submit_nemo.pbs EXP_harmIT/submit_nemo.pbs
 
-Edit run script (Note I only want one restart at this stage)
-vi EXP_harmIT/run_nemo
-export RUNNAME=EXP_harmIT
-export YEARrun='2012'
-export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
-exportnrestart_max=2#31 (For one submission this number must equal the number of lines in run_counter.txt)
-Edit the SHAREDDIR path to be mine and not Karen's
-export SHAREDDIR=$HOMEDIR/../SHARED                     # Config directory
+Make a SHARED directory, and copy field_def.xml to it::
 
-Edit submit script. Extended wall time to see how long it takes
-vi submit_nemo.pbs
-#PBS -N AMM60_harmIT
-#PBS -l walltime=00:20:00
+  mkdir /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED
+  cp /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/.
 
-Copy iodef.xml into job directory:
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/iodef.xml EXP_harmIT/iodef.xml
-Add in tidal diagnostics (copied from   /work/n01/n01/mane1/AMM7_w/iodef.xml). Comment out most, just to get it working.
-vi EXP_harmIT/iodef.xml
+Edit run script (Note I only want one restart at this stage)::
+
+  vi EXP_harmIT/run_nemo
+  export RUNNAME=EXP_harmIT
+  export YEARrun='2012'
+  export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
+  exportnrestart_max=2#31 (For one submission this number must equal the number of lines in run_counter.txt)
+  Edit the SHAREDDIR path to be mine and not Karen's
+  export SHAREDDIR=$HOMEDIR/../SHARED                     # Config directory
+
+Edit submit script. Extended wall time to see how long it takes::
+
+  vi submit_nemo.pbs
+  #PBS -N AMM60_harmIT
+  #PBS -l walltime=00:20:00
+
+Copy iodef.xml into job directory::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/iodef.xml EXP_harmIT/iodef.xml
+
+Add in tidal diagnostics (copied from   ``/work/n01/n01/mane1/AMM7_w/iodef.xml``). Comment out most, just to get it working::
+
+  vi EXP_harmIT/iodef.xml
       <file_group id="1d" output_freq="1d"  output_level="10" enabled=".TRUE." > <!-- 1d files -->
-...
+  ...
 
         <file id="file8" name_suffix="_Tides" description="tidal harmonics" >
           <field field_ref="e3t"  />
@@ -218,7 +227,7 @@ vi EXP_harmIT/iodef.xml
           <field field_ref="M2y_tabx"      name="M2y_tabx"  long_name="M2 bottom shear stress i-axes  imaginary "  />
           <field field_ref="M2x_taby"      name="M2x_taby"  long_name="M2 bottom shear stress j-axes  real "      />
           <field field_ref="M2y_taby"      name="M2y_taby"  long_name="M2 bottom shear stress j-axis  imaginary "  />
-<!--
+  <!--
           <field field_ref="S2x_ro"      name="S2x_ro"  long_name="S2 ro   real part"                      />
           <field field_ref="S2y_ro"      name="S2y_ro"  long_name="S2 ro  imaaginary part"                  />
           <field field_ref="S2x_u"        name="S2x_u"    long_name="S2 current bcl-baro i-axis harmonic real "      />
@@ -239,12 +248,13 @@ vi EXP_harmIT/iodef.xml
           <field field_ref="S2y_tabx"      name="S2y_tabx"  long_name="S2 bottom shear stress i-axes  imaginary "  />
           <field field_ref="S2x_taby"      name="S2x_taby"  long_name="S2 bottom shear stress j-axes  real "      />
           <field field_ref="S2y_taby"      name="S2y_taby"  long_name="S2 bottom shear stress j-axis  imaginary "  />
-—>
+  —>
         </file>
-...
+  ...
 
-Edit field_def.xml in SHARED directory. Copy and paste from  /work/n01/n01/mane1/AMM7_w/field_def.xml
-vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml
+Edit ``field_def.xml`` in SHARED directory. Copy and paste from  ``/work/n01/n01/mane1/AMM7_w/field_def.xml``::
+
+  vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml
 
      <field_group id="Tides_T" grid_ref="grid_T_2D" operation="once" >
          <!-- tidal composante -->
@@ -261,7 +271,7 @@ vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
          <field id="S1x_ro"          long_name="S1 ro/roa harmonic real part "      unit="none" grid_ref="grid_T_3D"  />
          <field id="S1y_ro"          long_name="S1 ro/roa harmonic imag part "      unit="none" grid_ref="grid_T_3D"  />
          <field id="M4x_ro"          long_name="M4 ro/roa harmonic real part "      unit="none" grid_ref="grid_T_3D"  />
-...
+    ...
          <field id="M2x_dzi"          long_name="M2 isopycnal elevation harmonic real part "      unit="m"      />
          <field id="M2y_dzi"          long_name="M2 isopycnal elevation harmonic imaginary part " unit="m"      />
          <field id="S2x_dzi"          long_name="S2 isopycnal elevation harmonic real part "      unit="m"      />
@@ -289,29 +299,38 @@ vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
 
      </field_group>
 
-Copy domain_def.xml into job directory
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/domain_def.xml EXP_harmIT/domain_def.xml
 
-Copy finish_nemo.sh into job directory
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/finish_nemo.sh EXP_harmIT/finish_nemo.sh
+Copy domain_def.xml into job directory::
 
-Link restart files
-mkdir EXP_harmIT/RESTART
-ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  EXP_harmIT/RESTART/.
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/domain_def.xml EXP_harmIT/domain_def.xml
 
-Create run_counter.txt into job directory. Start from 23:30 31 May 2012 (I think). Run for 5 days.
-vi EXP_harmIT/run_counter.txt
-1 1 7200 20100105
-2 1264321 1271520
+Copy finish_nemo.sh into job directory::
 
-# Edit run_counter,  to run for two days (2*1440 = 2880 minutes)
-vi run_counter.txt
-1 1 7200 20100105
-2 1264321 1267200
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/finish_nemo.sh EXP_harmIT/finish_nemo.sh
 
-Copy in namelists
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/namelist_ref EXP_harmIT/.
-cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/namelist_cfg EXP_harmIT/.
+Link restart files::
+
+  mkdir EXP_harmIT/RESTART
+  ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  EXP_harmIT/RESTART/.
+
+Create ``run_counter.txt`` into job directory. Start from 23:30 31 May 2012 (I think). Run for 5 days::
+
+  vi EXP_harmIT/run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Edit run_counter,  to run for two days (2*1440 = 2880 minutes)::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1267200
+
+Copy in namelists::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/namelist_ref EXP_harmIT/.
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/namelist_cfg EXP_harmIT/.
+
+
 
 =================================
 Try Two Simultaneous experiments:
