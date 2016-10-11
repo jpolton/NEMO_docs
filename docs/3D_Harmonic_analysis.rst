@@ -313,122 +313,214 @@ Copy in namelists
 cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/namelist_ref EXP_harmIT/.
 cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/namelist_cfg EXP_harmIT/.
 
+=================================
 Try Two Simultaneous experiments:
+=================================
+
 First Run
+=========
 
-Submit run (5min wall time). Fiddled with iodef.xml to output HOURLY
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT
-./run_nemo
-3972846.sdb
+Submit run (**5min wall time**). Fiddled with ``iodef.xml`` to **output** HOURLY::
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3972846.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   --   <— Does it WORK?
-OUTPUT SHOULD BE 3D harmonics, outputted HOURLY over 2 days
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT
+  ./run_nemo
+  3972846.sdb
 
-Broke.
-Try cleaning up iodef.xml (remove comments)
-cp iodef.xml ifdef.xml_tmp
-Several bugs. Resubmit
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3972846.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   -- <--Does it WORK?
+  OUTPUT SHOULD BE 3D harmonics, outputted HOURLY over 2 days
 
-Trim run_counter.txt
-Resubmit
-./run_nemo
-3977937.sdb
+| **Broke.**
+| **Try cleaning up** ``iodef.xml`` (remove comments):
+| ``cp iodef.xml ifdef.xml_tmp``
+| Several bugs. Resubmit
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3977937.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   — <— DOES THIS WORK. PREVIOUSLY ALWAYS GOT CORE DUMPS.
-OUTPUT SHOULD BE 3D harmonics, outputted hourly over 2 days (7 Oct 2016)
+Trim ``run_counter.txt``. Resubmit::
 
-Hmm something went wrong
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT
+  ./run_nemo
+  3977937.sdb
 
-Something went wrong in field_def.xml.
-Edit the comment tags to clean up the closure of comments. copy edits back to
-EXP_harmIT> mv WDIR/field_def.xml ../../SHARED/field_def.xml
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3977937.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   — <— DOES THIS WORK.
+  PREVIOUSLY ALWAYS GOT CORE DUMPS.
+  OUTPUT SHOULD BE 3D harmonics, outputted hourly over 2 days (7 Oct 2016)
 
-Trim run_counter.txt and resubmit:
-3982223.sdb
+Hmm something went wrong::
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3982223.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   --<— DOES THIS WORK. PREVIOUSLY ALWAYS GOT CORE DUMPS.
-OUTPUT SHOULD BE 3D harmonics, outputted hourly over 2 days (10 Oct 2016)
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT
 
-Try and document work flow on github:
-https://github.com/jpolton/EXP_harmIT.git
+| **Something went wrong in field_def.xml.**
+| Edit the comment tags to clean up the closure of comments. copy edits back to
+| ``EXP_harmIT> mv WDIR/field_def.xml ../../SHARED/field_def.xml``
 
-This WORKED. Resubmit full 3D harmonics list in ifdef.xml on a 20minute job.
+Trim run_counter.txt and resubmit::
+
+  3982223.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3982223.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   --<— DOES THIS WORK.
+  PREVIOUSLY ALWAYS GOT CORE DUMPS.
+  OUTPUT SHOULD BE 3D harmonics, outputted hourly over 2 days (10 Oct 2016)
+
+Try and document work flow on github::
+
+  https://github.com/jpolton/EXP_harmIT.git
+
+This WORKED. Resubmit full 3D harmonics list in ``iodef.xml`` on a 20minute job.
+
+**BROKE. NO OUTPUT. RAN TO WALLTIME.**
+
+Check output log::
+
+  less ocean.output
+  ...
+  dia_harm_init: Tidal harmonic analysis initialization
+   ~~~~~~~
+   First time step used for analysis:  nit000_han=            1
+   Last  time step used for analysis:  nitend_han=           75
+   Time step frequency for harmonic analysis:  nstep_han=           15
+
+   ===>>> : E R R O R
+           ===========
+
+   dia_harm_init : nit000_han must be greater than nit000
+
+| This may well have broken the model.
+| Fix and resubmit on a **5 minute** job on a **two day** simulation.
+
+Edit ``run_counter.txt`` to run for two days::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Edit ``namelist_cfg`` harmonic analysis variables::
+
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+     nit000_han = 1         ! First time step used for harmonic analysis
+     nitend_han = 75        ! Last time step used for harmonic analysis
+     nstep_han  = 15        ! Time step frequency for harmonic analysis
+
+Change into::
+
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+     nit000_han = 1264321         ! First time step used for harmonic analysis
+     nitend_han = 1271520        ! Last time step used for harmonic analysis
+     nstep_han  = 15        ! Time step frequency for harmonic analysis
+
+**This needs to be added to the** ``run_nemo`` **script**
+
+Edit wall time::
+
+  vi submit_nemo.pbs
+  ..
+  #PBS -l walltime=00:05:00
+  ..
+
+Submit::
+
+  ./run_nemo
+  3984287.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3984287.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   -- <— DOES THIS WORK?
+  EXPECT TWO DAYS OF 3D HARMONIC OUTPUT (11 Oct 2016)
+
+
+
+
 
 Second Run - for shorter period and limited output domain.
+==========================================================
 
-# Make new EXPeriment
-cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
-mkdir EXP_harmIT2
+Make new EXPeriment::
 
-# Copy files but not directories
-cp EXP_harmIT/* EXP_harmIT2/.
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT
+  mkdir EXP_harmIT2
 
-# Link restart files
-mkdir ../EXP_harmIT2/RESTART
-ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT2/RESTART/.
+Copy files but not directories::
 
-# Edit run_counter,  to run for one day (1440 minutes)
-vi run_counter.txt
-1 1 7200 20100105
-2 1264321 1265760
+  cp EXP_harmIT/* EXP_harmIT2/.
 
-# Edit submission script, and maybe the wall time
-vi submit_nemo.pbs
-#PBS -N AMM60_har2
-#PBS -l walltime=00:20:00
+Link restart files::
 
-# Edit run file for new directory path
-vi run_nemo
-export RUNNAME=EXP_harmIT2
+  mkdir ../EXP_harmIT2/RESTART
+  ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT2/RESTART/.
 
-# Add domain restrictions to output (output North Sea only)
-vi iodef.xml
-      <file_group id="1d" output_freq="1d"  output_level="10" enabled=".TRUE."> <!-- 1d files -->
-        <file id="file8" name_suffix="_Tides" description="tidal harmonics" >
-         <field_group id="NorthSea" domain_ref="NorthSea">
-          <field field_ref="M2x_ro"      name="M2x_ro"  long_name="M2 ro   real part"                      />
-          <field field_ref="M2y_ro"      name="M2y_ro"  long_name="M2 ro  imaaginary part"                  />
-        </field_group>
+Edit run_counter,  to run for one day (1440 minutes)::
 
-# Submit job
-./run_nemo
-3966280.sdb
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1265760
 
-sdb:
-                                                            Req'd  Req'd   Elap
-Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
---------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-3966280.sdb     jelt     standard AMM60_har2    --   92 220    --  00:20 Q   -- <— Does it WORK? RUNNING 29 Sept EVENING
+Edit submission script, and maybe the wall time::
 
-OUTPUT SHOULD BE 3D harmonics, (on North Sea domain- NOT), outputted daily.
-ls -lrt  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT2/WDIR
+  vi submit_nemo.pbs
+  #PBS -N AMM60_har2
+  #PBS -l walltime=00:20:00
 
-DOES NOT WORK. NO OUTPUT. core DUMP file suggests something in iodef.xml file...
+Edit run file for new directory path::
+
+  vi run_nemo
+  export RUNNAME=EXP_harmIT2
+
+Add domain restrictions to output (output North Sea only)::
+
+  vi iodef.xml
+        <file_group id="1d" output_freq="1d"  output_level="10" enabled=".TRUE."> <!-- 1d files -->
+          <file id="file8" name_suffix="_Tides" description="tidal harmonics" >
+           <field_group id="NorthSea" domain_ref="NorthSea">
+            <field field_ref="M2x_ro"      name="M2x_ro"  long_name="M2 ro   real part"                      />
+            <field field_ref="M2y_ro"      name="M2y_ro"  long_name="M2 ro  imaaginary part"                  />
+          </field_group>
+
+Submit job::
+
+  ./run_nemo
+  3966280.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3966280.sdb     jelt     standard AMM60_har2    --   92 220    --  00:20 Q   -- <— Does it WORK?
+  RUNNING 29 Sept EVENING
+  OUTPUT SHOULD BE 3D harmonics, (on North Sea domain- NOT), outputted daily.
+
+  ls -lrt  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT2/WDIR
+
+**DOES NOT WORK. NO OUTPUT.** core DUMP file suggests something in ``iodef.xml`` file...
+
+
 
 What might be going wrong with these harmonic outputs?
+======================================================
 
 SYMPTOMS:
-rerun of SBmoorings experiment with 3D harmonic executable worked fine and produced virtual moorings (straight swap in executables)
-When harmonics are introduced in the XML file the simulations do not output and just run until wall-time, then dump stderrlog file
-Compiling with key_diaharm still produces the same 'running to wall-time and no output' problem.
-Missed field_def.xml changes
+
+* rerun of SBmoorings experiment with 3D harmonic executable worked fine and produced virtual moorings (straight swap in executables)
+* When harmonics are introduced in the XML file the simulations do not output and just run until wall-time, then dump stderrlog file
+* Compiling with key_diaharm still produces the same 'running to wall-time and no output' problem.
+* Missed field_def.xml changes
 
 PLAN:
-Are the relevant harmonic compiler keys used? NO MISSING  key_diaharm. Edited the above
-NEED TO CLEAN NOTES AFTER AMM60_harm, and AMM60_har2 finish
-Could increase the harmonic XML output freq to hourly / could output harmonic at SBmooring.
-Do a straight swap from Karen’s to Maria's cp diaharm.F90_mane1 diaharm.F90 —> cleaner
-Test XML mods in AMM7 short queue
+
+* Are the relevant harmonic compiler keys used? NO MISSING  key_diaharm. Edited the above
+* NEED TO CLEAN NOTES AFTER AMM60_harm, and AMM60_har2 finish
+* Could increase the harmonic XML output freq to hourly / could output harmonic at SBmooring.
+* Do a straight swap from Karen’s to Maria's cp diaharm.F90_mane1 diaharm.F90 —> cleaner
+* Test XML mods in AMM7 short queue
