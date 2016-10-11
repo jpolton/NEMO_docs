@@ -500,38 +500,46 @@ Submit::
 This is 30.9 hours after the start. Hence 5mins wall-time --> 1.5days simulation.
 Hence 31days simulation requires 103 mins wall time.
 
-First try and complete the two day simulation with 10mins walltime.
+*First try and complete the two day simulation with 10mins walltime.*
+First try and complete the **five day** simulation with **20mins** walltime.
 
 Edit walltime::
 
   vi submit_nemo.pbs
-  #PBS -l walltime=00:10:00
+  #PBS -l walltime=00:20:00
 
 Edit ``run_counter.txt``::
 
   vi run_counter.txt
   1 1 7200 20100105
-  2 1264321 1271520
+  2 1264321 1271520  # THIS IS A 5 DAY SIMULATION!!
 
 Submit::
 
   ./run_nemo
-  3984805.sdb
+  3985531.sdb
 
   sdb:
                                                               Req'd  Req'd   Elap
   Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
   --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-  3984805.sdb     jelt     standard AMM60_harm    --   92 220    --  00:10 Q   --
+  3985531.sdb     jelt     standard AMM60_harm    --   92 220    --  00:20 Q   --
 
-**EXPECT 3D harmonics from 2 day simulation (11 Oct 2016)**
+**EXPECT hourly 3D harmonics from 5 day simulation (11 Oct 2016)**
 
 ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
 
 
 
 
----- The Following is not used ----
+Check output::
+
+  module load cray-netcdf
+  ncdump -h WDIR/AMM60_1h_20120601_20120605_Tides.nc
+
+| *Previously* This looks fine with 72 hourly outputs.
+| Now resubmitted with a 20min wall time.
+
 
 
 Second Run - for 2 month period.
