@@ -334,5 +334,5 @@ Resubmit::
   --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
   3985580.sdb     jelt     standard AMM60_SB      --   92 220    --  00:20 Q   --
 
-| **<— PENDING. Does it produce mooring output?**
+| **<— PENDING. Does it produce mooring output? (11 Oct 2016)**
 | EXPECT A SINGLE MOORING *.nc FILE. WITH A NUMBER OR MOORINGS WITHIN.
