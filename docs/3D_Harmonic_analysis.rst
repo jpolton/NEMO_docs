@@ -13,8 +13,6 @@ Method:
 * Make a clean EXPeriment directory EXP_harmIT. In clean build configuration. **20 Sept 2016**
   ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
 
-NB Maria suggested I need the following but it breaks the compilation so for now comment it out.
-``#cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 .``
 
 ----
 
