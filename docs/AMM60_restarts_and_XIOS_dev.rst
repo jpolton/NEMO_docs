@@ -304,34 +304,14 @@ Though OUTPUT contains no new files. (Though it should all go in one file now)::
   module load cray-netcdf
   ncdump -h OUTPUT/*nc
 
-  ``time.step: 1271520`` indicates the run properly finished integration
+  ``time.step: 1271520`` -- indicates the run properly finished integration
 
-  less AMM60_SB.o3982808 likewise shows wall time was not exceeded
+  less AMM60_SB.o3982808 -- likewise shows wall time was not exceeded
 
   cd EXP_SBmoorings/LOGS/01271520
+  less time-step ocean.output_EXP_SBmoorings
 
-  grep time-step ocean.output_EXP_SBmoorings
-    previous time-step                               :      1264320
-  ======>> time-step = 1264321      New day, DATE Y/M/D = 2012/06/01      nday_year = 153
-    ==>> time-step=      1264321 dynlap:  abs(ahm) max:    120.000000000000
-   stp_ctl : time-stepping control
-    ==>> time-step=      1264321  abs(U) max:    4.20636175293627
-    ==>> time-step=      1264321  SSS min:  8.643406570110452E-306
-  ======>> time-step = 1265761      New day, DATE Y/M/D = 2012/06/02      nday_year = 154
-    ==>> time-step=      1265761 dynlap:  abs(ahm) max:    120.000000000000
-    ==>> time-step=      1265761  abs(U) max:    4.76001818358370
-    ==>> time-step=      1265761  SSS min:  8.549551501046907E-306
-  ======>> time-step = 1267201      New day, DATE Y/M/D = 2012/06/03      nday_year = 155
-    ==>> time-step=      1267201 dynlap:  abs(ahm) max:    120.000000000000
-    ==>> time-step=      1267201  abs(U) max:    4.29159310281219
-    ==>> time-step=      1267201  SSS min:  8.309567395245573E-306
-  ======>> time-step = 1268641      New day, DATE Y/M/D = 2012/06/04      nday_year = 156
-    ==>> time-step=      1268641 dynlap:  abs(ahm) max:    120.000000000000
-    ==>> time-step=      1268641  abs(U) max:    3.88118153086751
-    ==>> time-step=      1268641  SSS min:  7.869368632513234E-306
-  ======>> time-step = 1270081      New day, DATE Y/M/D = 2012/06/05      nday_year = 157
-    ==>> time-step=      1270081 dynlap:  abs(ahm) max:    120.000000000000
-    ==>> time-step=      1270081  abs(U) max:    2.91002645407286
-    ==>> time-step=      1270081  SSS min:  7.411484519039392E-306
+| Some warnings but no errors.
+| Presumably a problem with the ``iodef.xml`` file
 
-  Note that the last timestep is not that same as the namelist or time.step entry. This is probaby because these log entries are daily.
+**Action:** Check the ``iodef.xml`` file

@@ -184,7 +184,6 @@ Recompile::
 **IT WORKED!**
 
 
-===================================
 Make a clean EXPeriment: EXP_harmIT
 ===================================
 **Note that this EXP requires a modified version of field_def.xml. Previously we used Karen’s reference version. This requires a modification to run_nemo**
@@ -365,7 +364,6 @@ Copy in namelists::
 
 
 
-=================================
 Try Two Simultaneous experiments:
 =================================
 

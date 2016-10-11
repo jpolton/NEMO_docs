@@ -1,16 +1,20 @@
+======================
+NEMO runs: where am I?
+======================
 .. jpolton's first docs documentation master file, created by
    sphinx-quickstart on Mon Oct 10 15:23:34 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to jpolton's first docs's documentation!
-================================================
 
-Contents:
+
+Pages made:
 
 .. toctree::
    :maxdepth: 2
-   
+
+   Generate_mesh_and_mask_files_from_stable_build
+
    Testing_a_new_compilation_with_NSea_experiment
 
    AMM60_restarts_and_XIOS_dev
@@ -18,6 +22,7 @@ Contents:
    Compiling_AMM60
 
    3D_Harmonic_analysis
+
 
 Introduction
 ============
@@ -30,7 +35,7 @@ This file is the launch page for different work flows.
 3D Harmonic analysis
 ====================
 
-Logs at 3D Harmonic analysis
+Logs at `3D Harmonic analysis <3D_Harmonic_analysis.html>`_
 
 PATH: ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
 ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT``
@@ -59,7 +64,7 @@ PLANS:
 
 AMM60 June 2012 restarts and virtual mooring output
 ===================================================
-Logs at AMM60 restarts and XIOS dev. Restarts on the new compiled code.
+Logs at `AMM60 restarts and XIOS dev <AMM60_restarts_and_XIOS_dev.html>`_. Restarts on the new compiled code.
 
 PATH: ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
 ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo``
@@ -74,26 +79,132 @@ PROGRESS:
 CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 3 Oct 2016**
-
-``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
+  ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
 
 ISSUES:
 
-#. **CHECK THAT THE I/O PRESSURE IS OK WITH THE 20min wall time**
+* **CHECK THAT THE I/O PRESSURE IS OK WITH THE 20min wall time**
 
 PLANS:
 
-#. Run June 2012 with full list of moorings
-#. Migrate tech notes to NEMO skills
-#. Compress output in the finish script?
-#. Other output:
-
+* Run June 2012 with full list of moorings
+* Migrate tech notes to NEMO skills
+* Compress output in the finish script?
+* Other output:
   * Slowly varying stratification
   * Baines forcing
   * ...
 
 
 
+NEMO skills
+===========
+
+  Aim: document basic functionality in getting stuff setup and working.
+
+  * `Compiling AMM60 <Compiling_AMM60.html>`_.
+  * `Generate mesh and mask files on short queue <https://www.evernote.com/shard/s523/nl/2147483647/f0149755-b99c-4f5c-a488-bd2940e16d20/>`_ (originally for AMM60 ANChor output). ``EXP_NSea_mesh``. **Doesn’t actually work**. Tried reducing tilmestep to 6s. No good. (22 Sept 16)
+  * `Configure AMM60 on the short queue <https://www.evernote.com/shard/s523/nl/2147483647/e0445ece-518f-4a5f-aff5-6ff5df8a491e/>`_ - though this **doesn’t actually work…**
+  * `Generate mesh and mask files on long queue <https://www.evernote.com/shard/s523/nl/2147483647/300e814a-5c06-4677-9c2e-d76e02133a11/>`_ (Karen’s codebase. Restart. Fresh compile. nn_msh=[1,3]). **Doesn’t work**
+  * `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_ ``(EXP_meshgen) qsub nc_mesh_build.pbs —> mesh_mask.nc``. **WORKS!**
+  * Compile ``-g -traceback`` debug version - there are some notes somewhere, though there is not much to say.
+
+  PATH:
+  ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/`` - **DIDN’T WORK**
+  ``/work/n01/n01/jelt/NEMO/nemo_v3_6_STABLE_r6939/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_meshgen`` - **DID WORK (22 Sept 2016)**
+
+  PROGRESS:
+
+  * Compiled code (Karen’s code base)
+  * Built AMM60 on short queue (as a cold start) - does not run
+  * Compile code in debug ``-g -traceback`` mode
+  * Built v3.6_STABLE. Restart with ``nn_msh = 1 —> mesh_mask.nc``
+
+  CURRENT:
+
+  Issues:
+
+  * Generating meshes is a problem with Karen’s code. It worked with a recent v3.6_STABLE.
+  * Can’t run short queue AMM60
+
+  Conclusions
+
+  * Can generate ``mesh_mask.nc`` file with new stable code but not Karen’s code.
+  * Cannot run on the short queue (SEG FAULTS). It might work on v3.6_STABLE
+
+  PLANS:
+
+  * **Try short queue with v3.6_STABLE**
+  * **Write compiling debug executable as a note**
+  * **Tidy up short queue pages.**
+  * Compress output in the finish script?
+
+
+ANChor runs
+===========
+
+| dev logs at `AMM60 runs for ANChor - dev <https://www.evernote.com/shard/s523/nl/2147483647/0e6c9337-5fa1-4039-9af8-00e7e02f2daf/>`_
+| Production logs at `AMM60 runs for ANChor <https://www.evernote.com/shard/s523/nl/2147483647/abbcb311-7f6e-4c62-9d54-22463c033eda/>`_
+
+PATH:
+``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/``
+
+PROGRESS:
+
+* Running with hourly velocity output with vertical viscosity AVM
+* mesh files generated with `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_
+
+CURRENT:
+
+* Integrating production runs `AMM60 runs for ANChor <https://www.evernote.com/shard/s523/nl/2147483647/abbcb311-7f6e-4c62-9d54-22463c033eda/>`_
+  ``cd  /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea`` (3 Oct 2016). Around end July 2010
+
+PLANS:
+
+* Delete /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea_old when ready
+* Compress output in the finish script?
+
+
+
+
+AMM60 validation work
+=====================
+meeting notes `AMM60 manuscript <https://www.evernote.com/shard/s538/nl/2147483647/e4d4f9ba-0221-41aa-8458-35e35522327b/>`_
+
+PROGRESS:
+
+* June 2012, D376, recalculated
+
+CURRENT:
+
+* iPython notebook:  ``~/python/ipynb/jcomp_tools_dev/internaltidemap_AMM60_paper.ipynb``
+* analysis of June 2012
+
+PLANS:
+
+*  Look at spring and neap diagnostics from 2012
+*  Verify winter diagnostic.
+*  Paper structure:
+
+     Would this work well with AMM7 and NNA?
+     Where can the mooring data fit into this?
+
+* Shift diagnostics to JASMIN?
+
+
+
+AMM60 in v3.6_STABLE
+====================
+Updating Karen’s code base
+
+PROGRESS:
+
+* downloaded and compiled v3.6_STABLE. `Fresh build with v3.6_STABLE <https://www.evernote.com/shard/s523/nl/2147483647/408b131e-fddf-4fee-94ec-d4f0671f0e21/>`_
+* generated AMM60 mesh files. `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_
+
+CURRENT:
+
+* Have not updated AMM60 to v3.6_STABLE. `Compiling AMM60 from v3.6_STABLE <https://www.evernote.com/shard/s523/nl/2147483647/cc65c445-f129-4db7-9310-b976c49645b0/>`_.  **In progress**
 
 
 Indices and tables
