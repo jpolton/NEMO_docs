@@ -336,3 +336,15 @@ Resubmit::
 
 | **<— PENDING. Does it produce mooring output? (11 Oct 2016)**
 | EXPECT A SINGLE MOORING *.nc FILE. WITH A NUMBER OR MOORINGS WITHIN.
+
+----
+
+**12 Oct 2016**
+
+| It ran ``run_counter.txt`` has next step ready
+| One nc output file, which is old. So no new XML output!
+| Finished fine in 16mins. No walltime problem
+| Nothing wrong in ``LOGS/01271520/ocean.output_EXP_SBmoorings``
+
+| **Action** Is the XML file actually the short version? Prob not. Though the XML file looks OK. Perhaps it is a memory thing
+| **Action** Need to debug XML file in AMM7, on the short queue.

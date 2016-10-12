@@ -49,11 +49,15 @@ PROGRESS:
 * Successfully compiled and ran Karen's code with Maria’s 3D harmonics (though w/o key_diaharm). Outputted virtual moorings OK.
 * Recompiled Maria’s 3D harmonics with key_diaharm
 * Added in new field_def.xml variables for the 3D harmonics
+* Ported dev logging to GitHub: https://github.com/jpolton/EXP_harmIT.git
+* Produced 3D harmonic netcdf output
+
 
 CURRENT:
 
-* Try an EXP_harmIT with Maria’s modifications with XML output for 3D tides. **In progress (10 Oct 2016)**
-* **Porting dev logging to GitHub** https://github.com/jpolton/EXP_harmIT.git
+* Need to verify output **In progress (12 Oct 2016)**
+* Submit a one (or two month simulation) June / July 2012
+* Develop diagnostics
 
 PLANS:
 
@@ -79,8 +83,9 @@ PROGRESS:
 
 CURRENT:
 
-* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 3 Oct 2016**
+* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 14 Oct 2016**
   ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
+  Issues with XML output not working. Perhaps too many files / too many moorings **IN PROGRESS**
 
 ISSUES:
 
