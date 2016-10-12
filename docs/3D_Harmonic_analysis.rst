@@ -534,7 +534,8 @@ Submit::
 
 Check output::
 
-  module load cray-netcdf
+
+
   ncdump -h WDIR/AMM60_1h_20120601_20120605_Tides.nc
 
 | *Previously* This looks fine with 72 hourly outputs.
@@ -744,8 +745,9 @@ What is the differece between ``EXP_harmIT/iodef.xml`` and ``EXP_harmIT2/iodef.x
   <       <file_group id="1m" output_freq="1mo" output_level="10" enabled=".TRUE."/> <!-- real monthly files -->
 
 
-It looks like there may be an extra ``</file_group>`` in ``EXP_harmIT2/iodef.xml``
+It looks like there may be an extra ``</file_group>`` in ``EXP_harmIT2/iodef.xml``. No this is OK
 **ACTION** CHECK ``EXP_harmIT2/iodef.xml``. Not sure what XML output freq is needed.
+**ACTION**. CHECK ``field_def.xml``: do all the additional 1 day variables exist?
 
 
 
