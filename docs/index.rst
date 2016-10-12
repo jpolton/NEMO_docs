@@ -89,7 +89,7 @@ CURRENT:
 
 ISSUES:
 
-* **CHECK THAT THE I/O PRESSURE IS OK WITH THE 20min wall time**
+* Not succeeded in output 3305 moorings. An I/O problem?
 
 PLANS:
 
