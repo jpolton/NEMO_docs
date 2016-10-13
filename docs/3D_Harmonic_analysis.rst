@@ -749,6 +749,27 @@ It looks like there may be an extra ``</file_group>`` in ``EXP_harmIT2/iodef.xml
 **ACTION** CHECK ``EXP_harmIT2/iodef.xml``. Not sure what XML output freq is needed.
 **ACTION**. CHECK ``field_def.xml``: do all the additional 1 day variables exist?
 
+Unhelpfully decided to make a new run. Comment out the 1 day output in ``iodef.xml``
+Resubmit ONE month (30 day) simulation (left it on the 6 hour queue though only needs about 3 hours)::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1221120
+
+  ./run_nemo
+  3987463.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  3987463.sdb     jelt     standard AMM60_har2    --   92 220    --  06:00 Q   --
+
+  | **Does it WORK? (12 Oct 2016)**
+  | **OUTPUT SHOULD BE 3D harmonics, outputted monthly for June 2012.**
+
+  ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT2/``
+
 
 
 *Old*: What might be going wrong with these harmonic outputs?
