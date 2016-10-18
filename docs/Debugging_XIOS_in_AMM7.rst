@@ -102,6 +102,8 @@ THIS WORKS! and outputs LAT and LON variables for each mooring::
    TOS2     sea surface temperature        1:2       1:2       ...       1:240     ...       ...
 
 
+----
+
 Edit: if ``iodef.xml`` has long_name the same for both variables does it work?::
 
   vi iodef.xml
@@ -121,3 +123,139 @@ Resubmit::
 
  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
  3996492.sdb
+
+YES. This also works.
+
+----
+
+Can I break it if I copy code from the failing AMM60 ``iodef.xml`` file?::
+
+  <!-- Shelf Break virtual moorings -->
+        <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
+          <file id="file0000" name_suffix="_SB_grid_T" description="ocean T grid variables">
+            <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+              <field field_ref="toce"       name="thetao_SB001"   long_name="sea water potential temperature" />
+              <field field_ref="soce"       name="so_SB001"       long_name="sea water salinity"              />
+              <field field_ref="tpt_dep"    name="depth_SB001"   />
+              <field field_ref="uoce"       name="vozocrtx_SB001" long_name="sea water x velocity" />
+              <field field_ref="voce"       name="vomecrty_SB001" long_name="sea water y velocity" />
+              <field field_ref="woce"       name="vovecrtz_SB001" long_name="sea water w velocity" />
+              <field field_ref="utau"       name="utau_SB001"     long_name="surface downward x stress" />
+              <field field_ref="vtau"       name="vtau_SB001"     long_name="surface downward y stress" />
+              <field field_ref="ssh"        name="ssh_SB001"      long_name="sea surface height"/>
+            </field_group>
+            <field_group id="1h_SB002_grid_T" domain_ref="SB002" >
+              <field field_ref="toce"       name="thetao_SB002"   long_name="sea water potential temperature" />
+              <field field_ref="soce"       name="so_SB002"       long_name="sea water salinity"              />
+              <field field_ref="tpt_dep"    name="depth_SB002"   />
+              <field field_ref="uoce"       name="vozocrtx_SB002" long_name="sea water x velocity" />
+              <field field_ref="voce"       name="vomecrty_SB002" long_name="sea water y velocity" />
+              <field field_ref="woce"       name="vovecrtz_SB002" long_name="sea water w velocity" />
+              <field field_ref="utau"       name="utau_SB002"     long_name="surface downward x stress" />
+              <field field_ref="vtau"       name="vtau_SB002"     long_name="surface downward y stress" />
+              <field field_ref="ssh"        name="ssh_SB002"      long_name="sea surface height"/>
+            </field_group>
+        	</file>
+        </file_group>
+
+Note that these domain_ref locations are set in domain_ref.xml and are OK for AMM7
+
+Resubmit::
+
+ ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+ 3996586.sdb
+
+
+Ah Ha! This runs but does not produce netCDF output. Good (because it can be fixed!)
+
+Change filename::
+
+  <!-- Shelf Break virtual moorings -->
+      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
+        <file id="file51" name_suffix="_SB_grid_T" description="ocean T grid variables">
+          <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+
+Nope
+
+Switch fields (``iodef.xml_fields_notworking``)::
+
+  <!-- Shelf Break virtual moorings -->
+        <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
+          <file id="file0000" name_suffix="_SB_grid_T" description="ocean T grid variables">
+            <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+              <field field_ref="sst"          name="tos1" long_name="sea surface temperature" />
+            </field_group>
+            <field_group id="1h_SB002_grid_T" domain_ref="SB002" >
+             <field field_ref="sst"          name="tos2" long_name="sea surface temperature" />
+            </field_group>
+        	</file>
+        </file_group>
+
+Nope
+
+Try something that did work (``iodef.xml_field_working``)::
+
+
+  <!-- Shelf Break virtual moorings -->
+    <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE." > <!-- 1h files -->
+     <file id="file51" name_suffix="_grid_T" description="ocean T grid variables" >
+      <field_group id="test1" domain_ref="SB001">
+       <field field_ref="sst"          name="tos1" long_name="sea surface temperature" />
+      </field_group>
+      <field_group id="test2" domain_ref="SB002">
+       <field field_ref="sst"          name="tos2" long_name="sea surface temperature" />
+      </field_group>
+     </file>
+    </file_group>
+
+Now try and change stuff until it breaks (``iodef.xml_file_id_``)::
+
+  <!-- Shelf Break virtual moorings -->
+     <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
+       <file id="file51" name_suffix="_grid_T" description="ocean T grid variables" >
+          <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+            <field field_ref="sst"          name="tos1" long_name="sea surface temperature" />
+          </field_group>
+          <field_group id="1h_SB002_grid_T" domain_ref="SB002" >
+            <field field_ref="sst"          name="tos2" long_name="sea surface temperature" />
+          </field_group>
+       </file>
+     </file_group>
+
+
+Spotted a spurious **"** in the ``file_group`` definition line.
+Remove and try the tricky thing again::
+
+    <!-- Shelf Break virtual moorings -->
+          <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+            <file id="file0000" name_suffix="_SB_grid_T" description="ocean T grid variables">
+              <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+                <field field_ref="toce"       name="thetao_SB001"   long_name="sea water potential temperature" />
+                <field field_ref="soce"       name="so_SB001"       long_name="sea water salinity"              />
+                <field field_ref="tpt_dep"    name="depth_SB001"   />
+                <field field_ref="uoce"       name="vozocrtx_SB001" long_name="sea water x velocity" />
+                <field field_ref="voce"       name="vomecrty_SB001" long_name="sea water y velocity" />
+                <field field_ref="woce"       name="vovecrtz_SB001" long_name="sea water w velocity" />
+                <field field_ref="utau"       name="utau_SB001"     long_name="surface downward x stress" />
+                <field field_ref="vtau"       name="vtau_SB001"     long_name="surface downward y stress" />
+                <field field_ref="ssh"        name="ssh_SB001"      long_name="sea surface height"/>
+              </field_group>
+              <field_group id="1h_SB002_grid_T" domain_ref="SB002" >
+                <field field_ref="toce"       name="thetao_SB002"   long_name="sea water potential temperature" />
+                <field field_ref="soce"       name="so_SB002"       long_name="sea water salinity"              />
+                <field field_ref="tpt_dep"    name="depth_SB002"   />
+                <field field_ref="uoce"       name="vozocrtx_SB002" long_name="sea water x velocity" />
+                <field field_ref="voce"       name="vomecrty_SB002" long_name="sea water y velocity" />
+                <field field_ref="woce"       name="vovecrtz_SB002" long_name="sea water w velocity" />
+                <field field_ref="utau"       name="utau_SB002"     long_name="surface downward x stress" />
+                <field field_ref="vtau"       name="vtau_SB002"     long_name="surface downward y stress" />
+                <field field_ref="ssh"        name="ssh_SB002"      long_name="sea surface height"/>
+              </field_group>
+            </file>
+          </file_group>
+
+This creates a netCDF output file but the file name is messed up because ``file id="file0000"`` is out of range (0-999).
+
+Changed filename file000 and resubmitted. This still gave a funny name: ``@expname@_@freq@_@startdate@_@enddate@_SB_grid_T.nc``
+
+Change filename file id="file51" and resubmit. THIS WORKS.

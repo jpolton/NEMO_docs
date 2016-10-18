@@ -348,3 +348,29 @@ Resubmit::
 | ``iodef.xml`` file is OK.
 
 | **Action** Need to debug XML file in AMM7, on the short queue.
+
+----
+
+Spotting a spurious **"** at the end of::
+
+  <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
+
+Try the whole lot in one go::
+
+  cp iodef_1file.xml  iodef.xml
+
+| Trim ``run_counter.txt``
+| Check 20min queue
+
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3996749.sdb
+
+Fix spurious " in ``iodef_sbmoorings_001_3305.xml`` and ``iodef_sbmoorings_001_999.xml``
+
+**PENDING (18 Oct 2016)**
+
+No netcdf output. Needs further investigation.
