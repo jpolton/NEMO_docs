@@ -351,7 +351,7 @@ Resubmit::
 
 ----
 
-Spotting a spurious **"** at the end of::
+Spotting a spurious quote mark **"** at the end of ``file_group`` definition::
 
   <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->"
 
@@ -369,7 +369,7 @@ Resubmit::
   ./run_nemo
   3996749.sdb
 
-Fix spurious " in ``iodef_sbmoorings_001_3305.xml`` and ``iodef_sbmoorings_001_999.xml``
+Remove spurious quotation mark " in ``iodef_sbmoorings_001_3305.xml`` and ``iodef_sbmoorings_001_999.xml``
 
 **PENDING (18 Oct 2016)**
 

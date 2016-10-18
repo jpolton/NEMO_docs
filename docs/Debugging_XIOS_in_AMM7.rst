@@ -254,8 +254,6 @@ Remove and try the tricky thing again::
             </file>
           </file_group>
 
-This creates a netCDF output file but the file name is messed up because ``file id="file0000"`` is out of range (0-999).
-
-Changed filename file000 and resubmitted. This still gave a funny name: ``@expname@_@freq@_@startdate@_@enddate@_SB_grid_T.nc``
+This creates a netCDF output file but the file name is messed up because ``file id="file0000"`` is out of range (1-999).
 
 Change filename file id="file51" and resubmit. THIS WORKS.
