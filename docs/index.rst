@@ -23,6 +23,8 @@ Pages made:
 
    3D_Harmonic_analysis
 
+   Debugging_XIOS_in_AMM7
+
 
 Introduction
 ============
