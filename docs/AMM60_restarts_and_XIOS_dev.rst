@@ -369,7 +369,7 @@ Resubmit::
   ./run_nemo
   3996749.sdb
 
-Remove spurious quotation mark " in ``iodef_sbmoorings_001_3305.xml`` and ``iodef_sbmoorings_001_999.xml``
+Meanwhile remove spurious quotation mark " in ``iodef_sbmoorings_001_3305.xml`` and ``iodef_sbmoorings_001_999.xml``
 
 **PENDING (18 Oct 2016)**
 
@@ -408,3 +408,4 @@ Resubmit::
 
 * Is there lots of mooring output in a single file?
 * Is the output from the prevous run, with two moorings, OK?
+* Could try a few files with multiple moorings in each, say 33 files 100 moorings?
