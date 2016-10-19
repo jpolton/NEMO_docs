@@ -404,8 +404,26 @@ Resubmit::
   3999305.sdb
 
 
-**PENDING (19 Oct 2016)**
+**PENDING (19 Oct 2016)** COMPLETED late, 10pm. Need to look at data.
 
-* Is there lots of mooring output in a single file?
+* Is there lots of mooring output in a single file? ``AMM60_1h_20120601_20120605_SB_grid_T.nc`` is created. Wall time exceeded. 27 hours completed.
 * Is the output from the prevous run, with two moorings, OK?
 * Could try a few files with multiple moorings in each, say 33 files 100 moorings?
+
+----
+
+cp iodef_sbmoorings_33files.xml iodef.xml
+
+| Trim ``run_counter.txt``. Not needed
+| Check 20min queue. OK
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3999961.sdb
+
+**PENDING (19 Oct 2016)**
+
+* Are there 33 files of 100 moorings?
+* Is the data OK?
