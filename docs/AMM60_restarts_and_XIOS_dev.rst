@@ -373,4 +373,38 @@ Remove spurious quotation mark " in ``iodef_sbmoorings_001_3305.xml`` and ``iode
 
 **PENDING (18 Oct 2016)**
 
-No netcdf output. Needs further investigation.
+NO NETCDF OUTPUT. Needs further investigation.
+
+Does it work with two moorings?::
+
+  cp iodef_2moorings.xml  iodef.xml
+
+| Trim ``run_counter.txt``
+| Check 20min queue
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3998516.sdb
+
+IT WORKS : 5 days came in at 20 mins, with two moorings. Nearly hit walltime. Renamed OUTPUT/AMM60*nc file to ..SB2.nc, or something similar.
+
+Next step try 1000 moorings...
+
+cp iodef_sbmoorings_001_999.xml  iodef.xml
+
+| Trim ``run_counter.txt``
+| Check 20min queue
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  3999305.sdb
+
+
+**PENDING (19 Oct 2016)**
+
+* Is there lots of mooring output in a single file?
+* Is the output from the prevous run, with two moorings, OK?

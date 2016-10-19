@@ -52,12 +52,12 @@ PROGRESS:
 * Recompiled Maria’s 3D harmonics with key_diaharm
 * Added in new field_def.xml variables for the 3D harmonics
 * Ported dev logging to GitHub: https://github.com/jpolton/EXP_harmIT.git
-* Produced 3D harmonic netcdf output
+* Produced 3D harmonic netcdf output files
 
 
 CURRENT:
 
-* Need to verify output **In progress (12 Oct 2016)**
+* 3D harmonic output file data are not valid. **ACTION: Investigate (19 Oct 2016)**
 * Submit a one (or two month simulation) June / July 2012
 * Develop diagnostics
 
@@ -82,10 +82,11 @@ PROGRESS:
 #. Generate the XML code using python notebook: ``jcomp_tools_dev/AMM60_build_iodef_from_latlon.ipynb``
 #. Successfully generated virtual mooring test data for early June 2012 using Karen’s restart: ``/work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/``
 #. Generated virtual moorings for Jo. Got the green light to proceed with high resolution data.
+#. Found a bug in the ``iodef.xml`` file using AMM7
 
 CURRENT:
 
-* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 14 Oct 2016**
+* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 19 Oct 2016**
   ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
   Issues with XML output not working. Perhaps too many files / too many moorings **IN PROGRESS**
 
@@ -116,6 +117,7 @@ NEMO skills
   * `Generate mesh and mask files on long queue <https://www.evernote.com/shard/s523/nl/2147483647/300e814a-5c06-4677-9c2e-d76e02133a11/>`_ (Karen’s codebase. Restart. Fresh compile. nn_msh=[1,3]). **Doesn’t work**
   * `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_ ``(EXP_meshgen) qsub nc_mesh_build.pbs —> mesh_mask.nc``. **WORKS!**
   * Compile ``-g -traceback`` debug version - there are some notes somewhere, though there is not much to say.
+  * `Debugging XML sensitivities in the short queue with AMM7 <Debugging_XIOS_in_AMM7.html>`_
 
   PATH:
   ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/`` - **DIDN’T WORK**
