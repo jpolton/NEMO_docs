@@ -32,6 +32,8 @@ This file is the launch page for different work flows.
 
 **Need to add more stuff**
 
+`External page <http://nemo-docs.readthedocs.io/en/latest/?#>`_
+
 
 
 3D Harmonic analysis

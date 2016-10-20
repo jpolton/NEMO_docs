@@ -470,7 +470,7 @@ cp iodef_sbmoorings_33files.xml iodef.xml
 
 **Configure AMM60 SBmoorings to run on more XIOS nodes**
 
-*Standard.
+* Standard::
 
   submit_nemo.pbs:
   #PBS -l select=92
@@ -486,7 +486,7 @@ cp iodef_sbmoorings_33files.xml iodef.xml
   XIOS nodes: ceil(40 / 5) = 8
   Total = 92
 
-* New Double XIOS nodes:
+* New Double XIOS nodes::
 
   submit_nemo.pbs:
   #PBS -l select=**100**
