@@ -65,7 +65,7 @@ CURRENT:
 * Develop diagnostics
 
 
-ACTIONS (20 Oct 2016):
+**ACTIONS (20 Oct 2016):**
 
 * Compare ``namelists`` and ``iodef.xml`` files with Maria's run:
   ``/work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00``
@@ -98,7 +98,7 @@ PROGRESS:
 #. 3305 moorings in 1 file completed but no XML output. (with or without XML typo)
 #. 2 moorings in 1 files works and outputs (5days takes 20mins)
 #. 999 moorings in 1 file works and outputs (27hours takes 20mins) **ACTION. Check output**
-#. 100 moorings each in 33 files **PENDING (19 Oct 2016)**
+#. 100 moorings each in 33 files (OOM after 25.1hrs in 10mins. No OUTPUT) **PENDING (19 Oct 2016)**
 
 
 CURRENT:
@@ -111,8 +111,8 @@ CURRENT:
 ACTIONS: (20 Oct 2016)
 
  * How is the data in the ``iodef_sbmoorings_001_999.xml`` simulation?
- * Are there 33 files of 100 moorings in the lastest run?
- * Is the data OK?
+ * Are there 33 files of 100 moorings in the lastest run? **NO**. Error: Out Of Memory.
+
 
 
 ISSUES:

@@ -428,3 +428,25 @@ Resubmit::
 * Are there 33 files of 100 moorings?
 * Is the data OK?
 * How is the data in the ``iodef_sbmoorings_001_999.xml`` simulation?
+
+| Nasty garbled run_counter.txt data, though it looks like it finished as a 3rd line is added
+| Nothing new in ``OUTPUT``
+| Ran for 10 mins (20min wall time)
+
+Disparity between ``time.step`` and ``run_counter.txt``::
+
+  more WDIR/time.step
+  1265827
+
+  more run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+  3 1271521 1278720 _:U()I.=
+
+Check LOGS::
+
+  more stdouterr
+  [NID 04371] 2016-10-19 22:21:27 Apid 23764253: initiated application termination
+  [NID 04371] 2016-10-19 22:21:28 Apid 23764253: OOM killer terminated this process.
+  Application 23764253 exit signals: Killed
+  Application 23764253 resources: utime ~0s, stime ~68s, Rss ~4848, inblocks ~4163, outblocks ~166
