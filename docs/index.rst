@@ -97,8 +97,10 @@ PROGRESS:
 #. 3305 XML files create memory problem
 #. 3305 moorings in 1 file completed but no XML output. (with or without XML typo)
 #. 2 moorings in 1 files works and outputs (5days takes 20mins)
-#. 999 moorings in 1 file works and outputs (27hours takes 20mins) **ACTION. Check output**
-#. 100 moorings each in 33 files (OOM after 25.1hrs in 10mins. No OUTPUT) **PENDING (19 Oct 2016)**
+#. 999 moorings in 1 file works and outputs (27hours takes 20mins) **ACTION. Check output. I LOST THE DATA**
+#. 100 moorings each in 34 files (OOM after 25.1hrs in 10mins. No OUTPUT) **BUG IN iodef.xml**
+#. 100 moorings each in 34 files (doubled XIOS processors) **PENDING (20 Oct 2016)**
+
 
 
 CURRENT:
@@ -110,8 +112,8 @@ CURRENT:
 
 ACTIONS: (20 Oct 2016)
 
- * How is the data in the ``iodef_sbmoorings_001_999.xml`` simulation?
- * Are there 33 files of 100 moorings in the lastest run? **NO**. Error: Out Of Memory.
+ * Are there 33 files of 100 moorings?
+ * How is the speed up with twice as many XIOS processors?
 
 
 

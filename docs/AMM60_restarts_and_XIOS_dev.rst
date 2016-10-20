@@ -407,7 +407,7 @@ Resubmit::
 **PENDING (19 Oct 2016)** COMPLETED late, 10pm. Need to look at data.
 
 * Is there lots of mooring output in a single file? ``AMM60_1h_20120601_20120605_SB_grid_T.nc`` is created. Wall time exceeded. 27 hours completed.
-* Is the output from the prevous run, with two moorings, OK?
+* Is the output from the prevous run, with two moorings, OK? - These data have 5 days of data
 * Could try a few files with multiple moorings in each, say 33 files 100 moorings?
 
 ----
@@ -429,6 +429,7 @@ Resubmit::
 * Is the data OK?
 * How is the data in the ``iodef_sbmoorings_001_999.xml`` simulation?
 
+| There are NO XML outputs
 | Nasty garbled run_counter.txt data, though it looks like it finished as a 3rd line is added
 | Nothing new in ``OUTPUT``
 | Ran for 10 mins (20min wall time)
@@ -450,3 +451,66 @@ Check LOGS::
   [NID 04371] 2016-10-19 22:21:28 Apid 23764253: OOM killer terminated this process.
   Application 23764253 exit signals: Killed
   Application 23764253 resources: utime ~0s, stime ~68s, Rss ~4848, inblocks ~4163, outblocks ~166
+
+  Out of memory:
+  http://www.nersc.gov/users/computational-systems/retired-systems/hopper/running-jobs/memory-considerations/
+  Recommend use fewer processors on each node, and therefor more nodes
+
+
+How for did the run get? *25.1 hours* Surely the output should have started appearing?
+
+----
+
+Found bug in ``iodef_sbmoorings_33files.xml``: the variables names were not unique in the files. Fixed this.
+Resubmit with more memory on the XIOS nodes.
+
+cp iodef_sbmoorings_33files.xml iodef.xml
+
+
+
+**Configure AMM60 SBmoorings to run on more XIOS nodes**
+
+*Standard.
+
+  submit_nemo.pbs:
+  #PBS -l select=92
+  export NEMOproc=2000
+  export XIOSproc=40
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N 5 -n $XIOSproc ./xios_server.exe >&stdouterr
+
+  vi run_nemo
+  export NPROC=2000
+
+  Sums:
+  NEMO nodes: ceil(2000 / 24) = 84
+  XIOS nodes: ceil(40 / 5) = 8
+  Total = 92
+
+* New Double XIOS nodes:
+
+  submit_nemo.pbs:
+  #PBS -l select=**100**
+  export NEMOproc=2000
+  export XIOSproc=**80**
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N 5 -n $XIOSproc ./xios_server.exe >&stdouterr
+
+  vi run_nemo
+  export NPROC=2000
+
+  Sums:
+  NEMO nodes: ceil(2000 / 24) = 84
+  XIOS nodes: ceil(80 / 5) = 16
+  Total = 100
+
+Trim ``run_counter.txt``
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  4000861.sdb
+
+**PENDING (20 Oct 2016)**
+
+* Are there 33 files of 100 moorings?
+* How is the speed up with twice as many XIOS processors?
