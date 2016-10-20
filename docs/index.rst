@@ -114,7 +114,7 @@ CURRENT:
 
 ACTIONS: (20 Oct 2016)
 
- * Are there 33 files of 100 moorings?
+ * Are there 33 files of 100 moorings? **NO. NEED TO INVESTIGATE**
  * How is the speed up with twice as many XIOS processors?
 
 

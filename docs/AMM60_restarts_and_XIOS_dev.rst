@@ -516,3 +516,9 @@ Resubmit::
 
 * Are there 33 files of 100 moorings?
 * How is the speed up with twice as many XIOS processors?
+
+Something Broke. Looks like a problem with the file naming, though file011 has previously worked
+Edit 34 file names to be called file101 - file134.
+These edits are in ``iodef.xml`` and not in ``iodef_sbmoorings_33files.xml``.
+
+Not sure what to do! Need to download logs.
