@@ -201,7 +201,6 @@ PLANS:
 
 
 
-
 AMM60 validation work
 =====================
 meeting notes `AMM60 manuscript <https://www.evernote.com/shard/s538/nl/2147483647/e4d4f9ba-0221-41aa-8458-35e35522327b/>`_
