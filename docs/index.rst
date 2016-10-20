@@ -50,8 +50,11 @@ PROGRESS:
 * Checked output is OK for NSea test: ``AMM60_read_plot.ipynb``
 * Successfully compiled and ran Karen's code with Maria’s 3D harmonics (though w/o key_diaharm). Outputted virtual moorings OK.
 * Recompiled Maria’s 3D harmonics with key_diaharm
-* Added in new field_def.xml variables for the 3D harmonics
+* Added in **new field_def.xml** variables for the 3D harmonics
 * Ported dev logging to GitHub: https://github.com/jpolton/EXP_harmIT.git
+* Edits to ``namelist_cfg: nnit???_han``
+* Exceed walltime: 2day in 5mins (1.5days in 5mins)
+* 5days in 20mins completes with harmonic output but not readable
 * Produced 3D harmonic netcdf output files
 
 
@@ -60,6 +63,14 @@ CURRENT:
 * 3D harmonic output file data are not valid. **ACTION: Investigate (19 Oct 2016)**
 * Submit a one (or two month simulation) June / July 2012
 * Develop diagnostics
+
+
+ACTIONS (20 Oct 2016):
+
+* Compare ``namelists`` and ``iodef.xml`` files with Maria's run:
+  ``/work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00``
+* Check the editing of the ``namelist_cfg`` file by ``run_nemo``
+* Check for ERRORS in ``ocean.output`` file. Perhaps ``grep dia_harm_init``
 
 PLANS:
 
@@ -83,12 +94,26 @@ PROGRESS:
 #. Successfully generated virtual mooring test data for early June 2012 using Karen’s restart: ``/work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/``
 #. Generated virtual moorings for Jo. Got the green light to proceed with high resolution data.
 #. Found a bug in the ``iodef.xml`` file using AMM7
+#. 3305 XML files create memory problem
+#. 3305 moorings in 1 file completed but no XML output. (with or without XML typo)
+#. 2 moorings in 1 files works and outputs (5days takes 20mins)
+#. 999 moorings in 1 file works and outputs (27hours takes 20mins) **ACTION. Check output**
+#. 100 moorings each in 33 files **PENDING (19 Oct 2016)**
+
 
 CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 19 Oct 2016**
   ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
   Issues with XML output not working. Perhaps too many files / too many moorings **IN PROGRESS**
+
+
+ACTIONS: (20 Oct 2016)
+
+ * How is the data in the ``iodef_sbmoorings_001_999.xml`` simulation?
+ * Are there 33 files of 100 moorings in the lastest run?
+ * Is the data OK?
+
 
 ISSUES:
 
@@ -189,6 +214,13 @@ CURRENT:
 
 * iPython notebook:  ``~/python/ipynb/jcomp_tools_dev/internaltidemap_AMM60_paper.ipynb``
 * analysis of June 2012
+
+
+ACTIONS (20 Oct 2016):
+
+* Do spring neap plots for June 2012
+* Do one winter plot
+
 
 PLANS:
 

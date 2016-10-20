@@ -51,7 +51,7 @@ Edit run script (Note for only one restart ``restart_max=2``)::
     $JOBDIR/run_nemo
   ..
 
-Copy iodef.xml into job directory::
+Copy ``iodef.xml`` into job directory::
 
   cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_notradiff_long/iodef_fastnet.xml EXP_SBmoorings/iodef_sbmoorings.xml
   vi iodef_sbmoorings.xml (E.g. for testing)
@@ -197,7 +197,7 @@ Submit run::
 | **Broke**. Looks like it didn’t like the ``iodef.xml`` file
 | Save ``iodef.xml`` with 1000 virtual moorings as ``iodef_sbmoorings_000_999.xml``
 
-Recover simple ifdef.xml file from ANChor run::
+Recover simple ``iodef.xml`` file from ANChor run::
 
   cp /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/iodef.xml   iodef.xml
 
@@ -427,3 +427,4 @@ Resubmit::
 
 * Are there 33 files of 100 moorings?
 * Is the data OK?
+* How is the data in the ``iodef_sbmoorings_001_999.xml`` simulation?
