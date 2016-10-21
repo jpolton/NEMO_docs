@@ -600,6 +600,36 @@ Resubmit (Note I killed the original submission to fix the namelist_cfg sed edit
 * Are there 33 files of 100 moorings?
 * How is the speed up with twice as many XIOS processors?
 
+| ``run_counter.txt`` with new line but garbled date
+| ``OUTPUT/AMM60_1h_20120601_20120605_SB001_grid_T.nc`` exists but can not be read by either ncdump or FERRET.
+| ``less time.step: 1264692``
+| wall time of 6mins before terminating
+
+LOGS/restart::
+
+  vi stdouterr
+
+    terminate called after throwing an instance of 'xios::CNetCdfException'
+    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+  terminate called after throwing an instance of 'terminate called after throwing an instance of 'xios::CNetCdfExceptionxios::CNetCdfException'
+  '
+    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+  forrtl: error (76): Abort trap signal
+  Image              PC                Routine            Line        Source
+  xios_server.exe    0000000000CB57E1  Unknown               Unknown  Unknown
+  xios_server.exe    0000000000CB3F37  Unknown               Unknown  Unknown
+  ...
+
 ----
 
 Second Run - debugging XML.
@@ -672,6 +702,121 @@ Resubmit (Note I killed the original submission to fix the namelist_cfg sed edit
   4003471.sdb
 
 **PENDING (21 Oct 2016)**
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings2``
+
+
+* Are there 1 file of 100 moorings and 1 files of 5 moorings?
+* How is the speed up with twice as many XIOS processors?
+
+| ``OUTPUT/AMM60_1h_20120601_20120601_SB001_grid_T.nc`` exists but is not readable by Ferret or ``ncdump``
+| run_counter.txt completed but new date is garbled
+| wall time of 2mins was used
+| ``less time.step: 1264871``
+| core dump
+
+In the LOGS/restart::
+
+  less stdouterr
+
+  terminate called after throwing an instance of 'xios::CNetCdfException'
+    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+  forrtl: error (76): Abort trap signal
+  Image              PC                Routine            Line        Source
+  xios_server.exe    0000000000CB57E1  Unknown               Unknown  Unknown
+  xios_server.exe    0000000000CB3F37  Unknown               Unknown  Unknown
+
+
+-------
+
+Try and Do these runs in Karen's compiled code
+==============================================
+
+Start with old directory::
+  
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago
+  mkdir SBmoorings3
+
+
+Copy files but not directories::
+
+  cp EXP_NSea/* EXP_SBmoorings3/.
+
+Link restart files::
+
+  mkdir EXP_SBmoorings3/RESTART
+  ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  EXP_SBmoorings3/RESTART/.
+
+Edit run_counter (run for 24 hours)::
+
+  cd EXP_SBmoorings3
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1265760
+
+
+Edit submission script, and maybe the wall time::
+
+  vi submit_nemo.pbs
+  #PBS -N AMM60_SB3
+  #PBS -l walltime=00:20:00
+
+Edit run file for new directory path::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/run_nemo .
+  vi run_nemo
+  export RUNNAME=EXP_SBmoorings3
+  ..
+  export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago
+
+Check max restarts too.
+Note where field_def.xml is copied from.
+
+Copy the other XML files::
+
+  mkdir /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/SHARED
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/field_def.xml /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/SHARED/.
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/domain_def.xml .
+
+Edit ``iodef.xml`` file to have 100 moorings in one file and 5 in the second (last) file::
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings2/iodef_sbmoorings_100moorings_2files.xml .
+  less iodef_sbmoorings_100moorings_2files.xml
+
+  <!-- Shelf Break virtual moorings -->
+      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+        <file id="file001" name_suffix="_SB001_grid_T" description="ocean T grid variables">
+          <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+            <field field_ref="toce"       name="thetao_SB001"   long_name="sea water potential temperature" />
+            <field field_ref="soce"       name="so_SB001"       long_name="sea water salinity"              />
+            ...
+            <field field_ref="vtau"       name="vtau_SB100"     long_name="surface downward y stress" />
+            <field field_ref="ssh"        name="ssh_SB100"      long_name="sea surface height"/>
+          </field_group>
+        </file>
+        <file id="file034" name_suffix="_SB034_grid_T" description="ocean T grid variables">
+          <field_group id="1h_SB3301_grid_T" domain_ref="SB3301" >
+            <field field_ref="toce"       name="thetao_SB3301"   long_name="sea water potential temperature" />
+            <field field_ref="soce"       name="so_SB3301"       long_name="sea water salinity"              />
+            ...
+            <field field_ref="vtau"       name="vtau_SB3305"     long_name="surface downward y stress" />
+            <field field_ref="ssh"        name="ssh_SB3305"      long_name="sea surface height"/>
+          </field_group>
+        </file>
+      </file_group>
+
+      cp iodef_sbmoorings_100moorings_2files.xml iodef.xml
+
+Resubmit (Note I killed the original submission to fix the namelist_cfg sed edit issue with ``nn_write`` not being changed)::
+
+  ./run_nemo
+  4004908.sdb
+
+**PENDING (21 Oct 2016)**
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings2``
+
 
 * Are there 1 file of 100 moorings and 1 files of 5 moorings?
 * How is the speed up with twice as many XIOS processors?

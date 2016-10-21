@@ -125,3 +125,39 @@ CHECK
 ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT/run_nemo``
 OR ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/run_nemo``
 OR ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings2/run_nemo``
+
+
+----
+
+Time step does not necessarily correspond to the end timestep in run_counter.txt::
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/WDIR
+  more time.step
+     309420
+
+  tail ../run_counter.txt
+  34 237601 244800 237600=20100618
+  35 244801 252000 244800=20100623
+  36 252001 259200 252000=20100628
+  37 259201 266400 259200=20100703
+  38 266401 273600 266400=20100708
+  39 273601 280800 273600=20100713
+  40 280801 288000 280800=20100718
+  41 288001 295200 288000=20100723
+  42 295201 302400 295200=20100728
+  43 302401 309600 302400=20100802
+
+Though this run was terminated because the wall time was exceeded.
+It is perhaps possilbe that the time.step ran away as things were getting shut down?
+
+----
+
+Created::
+
+ AMM60_1d_20100729_20100802_grid_T.nc
+ AMM60_1h_20100729_20100802_NorthSea.nc
+
+BUT Wall time exceeded. Resubmit::
+  run_nemo
+  4004867.sdb
+
+**How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**  

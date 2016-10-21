@@ -760,11 +760,26 @@ Edit submit_nemo.pbs::
 Resubmit::
 
   run_nemo
-  4003527.sdb  
+  4003527.sdb
 
 **EXPECT hourly 3D harmonics from 5 day simulation (21 Oct 2016)**
 
 ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
+
+| Output in WDIR with variables and axes but values all seem to be zero, or something not good. ncdump, FERRET, ncview and python didn't work
+| Job run until to exceeded the wall time at 20mins: ``run_counter.txt`` not changed: ``2 1264321 1271520``
+| ``less time.step: 1271519``. This is one minute from the end!
+
+
+Something went wrong::
+  less WDIR/stdouterr
+
+  aprun: Apid 23790262: Caught signal Terminated, sending to application
+  forrtl: error (78): process killed (SIGTERM)
+  Image              PC                Routine            Line        Source
+  nemo.exe           0000000001761A91  Unknown               Unknown  Unknown
+
+
 
 
 `Thread with a second simulation that was severed when I found this trunk simulation had problems <spare_3D_Harmoninc_analyis.html>`_
