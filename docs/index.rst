@@ -61,7 +61,7 @@ PROGRESS:
 * 5days in 20mins completes with harmonic output but not readable
 * Produced 3D harmonic netcdf output files **Not readable**
 * Found bug in namelist_cfg edit with nn_write
-* 5 day simulation with 3D harmonic output **PENDING**
+* 5 day simulation with 3D harmonic output **PENDING (21 Oct 2016)**
 
 
 CURRENT:
@@ -70,10 +70,10 @@ CURRENT:
 * Develop diagnostics
 
 
-**ACTIONS (20 Oct 2016):**
+**ACTIONS (21 Oct 2016):**
 
-* Check latest output
-* Check for ERRORS in ``ocean.output`` file. Perhaps ``grep dia_harm_init``
+* Check latest output. 5 day simulation with 3D harmonic output?
+* Maybe check for ERRORS in ``ocean.output`` file. Perhaps ``grep dia_harm_init``
 
 PLANS:
 
@@ -103,7 +103,7 @@ PROGRESS:
 #. 999 moorings in 1 file works and outputs (27hours takes 20mins) **ACTION. Check output. I LOST THE DATA**
 #. 100 moorings each in 34 files (OOM after 25.1hrs in 10mins. No OUTPUT) **BUG IN iodef.xml**
 #. 100 moorings each in 34 files (doubled XIOS processors) **Netcdf issues**
-#. Found error in ``namelist_cfg`` with ``nn_write`` not being edited 
+#. Found error in ``namelist_cfg`` with ``nn_write`` not being edited
 #. 100 moorings each in 34 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
 #. 100+5 moorings each in 1+1 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
 
@@ -202,6 +202,10 @@ CURRENT:
 
 * Integrating production runs `AMM60 runs for ANChor <AMM60_runs_for_ANChor.html>`_
   ``cd  /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea`` (21 Oct 2016). Submitted from end July 2010 through Aug
+
+ACTIONS:
+
+* Check output for Aug 2010 **Submitted (21 Oct 2016)**
 
 PLANS:
 
