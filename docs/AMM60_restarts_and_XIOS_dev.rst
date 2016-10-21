@@ -522,3 +522,156 @@ Edit 34 file names to be called file101 - file134.
 These edits are in ``iodef.xml`` and not in ``iodef_sbmoorings_33files.xml``.
 
 Not sure what to do! Need to download logs.
+
+Looking at the logs:
+
+| 6MB file created: AMM60_1h_20120601_20120605_SB001_grid_T.nc --> Can not read with ncdump or ferret. HDF error.
+| run_counter.txt gets extra line though the data string is garbled.
+| ran for 7 mins
+| core dump
+| time.step : 1264632 --> 5 hours of model time integration
+
+::
+
+  less LOGS/restart/stdouterr
+
+  terminate called after throwing an instance of 'terminate called after throwing an instance of 'xios::CNetCdfExceptionxios::CNetCdfException'
+  '
+    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+  terminate called after throwing an instance of 'xios::CNetCdfException'
+    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+  forrtl: error (76): Abort trap signal
+
+This seems consistent with running out of memory.
+
+
+**Try new configuration of XIOS processors**
+
+----
+
+Standard::
+
+  submit_nemo.pbs:
+  #PBS -l select=92
+  export NEMOproc=2000
+  export XIOSproc=40
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N 5 -n $XIOSproc ./xios_server.exe >&stdouterr
+
+  vi run_nemo
+  export NPROC=2000
+
+  Sums:
+  NEMO nodes: ceil(2000 / 24) = 84
+  XIOS nodes: ceil(40 / 5) = 8
+  Total = 92
+
+New Double XIOS nodes::
+
+  submit_nemo.pbs:
+  #PBS -l select=**104**
+  export NEMOproc=2000
+  export XIOSproc=**60**
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N **3** -n $XIOSproc ./xios_server.exe >&stdouterr
+
+  vi run_nemo
+  export NPROC=2000
+
+  Sums:
+  NEMO nodes: ceil(2000 / 24) = 84
+  XIOS nodes: ceil(60 / 3) = 20
+  Total = 104
+
+| trim ``run_counter.txt``
+
+Resubmit (Note I killed the original submission to fix the namelist_cfg sed edit issue with ``nn_write`` not be changed)::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  ./run_nemo
+  4003469.sdb
+
+**PENDING (21 Oct 2016)**
+
+* Are there 33 files of 100 moorings?
+* How is the speed up with twice as many XIOS processors?
+
+----
+
+Second Run - debugging XML.
+================================
+
+Make new EXPeriment::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/
+  mkdir EXP_SBmoorings2
+
+Copy files but not directories::
+
+  cp EXP_SBmoorings/* EXP_SBmoorings2/.
+
+Link restart files::
+
+  mkdir EXP_SBmoorings2/RESTART
+  ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings2/RESTART/.
+
+Edit run_counter (run for 24 hours)::
+
+  cd EXP_SBmoorings2
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1265760
+
+
+Edit submission script, and maybe the wall time::
+
+  vi submit_nemo.pbs
+  #PBS -N AMM60_SB2
+  #PBS -l walltime=00:20:00
+
+Edit run file for new directory path::
+
+  vi run_nemo
+  export RUNNAME=EXP_SBmoorings2
+
+Edit ``iodef.xml`` file to have 100 moorings in one file and 5 in the second (last) file::
+
+  less iodef_sbmoorings_100moorings_2files.xml
+
+  <!-- Shelf Break virtual moorings -->
+      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+        <file id="file001" name_suffix="_SB001_grid_T" description="ocean T grid variables">
+          <field_group id="1h_SB001_grid_T" domain_ref="SB001" >
+            <field field_ref="toce"       name="thetao_SB001"   long_name="sea water potential temperature" />
+            <field field_ref="soce"       name="so_SB001"       long_name="sea water salinity"              />
+            ...
+            <field field_ref="vtau"       name="vtau_SB100"     long_name="surface downward y stress" />
+            <field field_ref="ssh"        name="ssh_SB100"      long_name="sea surface height"/>
+          </field_group>
+        </file>
+        <file id="file034" name_suffix="_SB034_grid_T" description="ocean T grid variables">
+          <field_group id="1h_SB3301_grid_T" domain_ref="SB3301" >
+            <field field_ref="toce"       name="thetao_SB3301"   long_name="sea water potential temperature" />
+            <field field_ref="soce"       name="so_SB3301"       long_name="sea water salinity"              />
+            ...
+            <field field_ref="vtau"       name="vtau_SB3305"     long_name="surface downward y stress" />
+            <field field_ref="ssh"        name="ssh_SB3305"      long_name="sea surface height"/>
+          </field_group>
+        </file>
+      </file_group>
+
+    cp iodef_sbmoorings_100moorings_2files.xml iodef.xml
+
+Resubmit (Note I killed the original submission to fix the namelist_cfg sed edit issue with ``nn_write`` not being changed)::
+
+  ./run_nemo
+  4003471.sdb
+
+**PENDING (21 Oct 2016)**
+
+* Are there 1 file of 100 moorings and 1 files of 5 moorings?
+* How is the speed up with twice as many XIOS processors?

@@ -616,4 +616,155 @@ Compare against::
 
 ----
 
+
+Maria output XML at 1day freq. I used 1h
+
+Maria: namelist_cfg::
+
+  vi namelist_cfg
+
+  !-----------------------------------------------------------------------
+  &namrun        !   parameters of the run
+  !-----------------------------------------------------------------------
+     nn_no       =       0   !  job number (no more used...)
+     cn_exp      =  "GA"  !  experience name
+     **nn_it000 = 1**
+     **nn_itend = 25920**
+     nn_date0 = 19820201
+     nn_rstctl = 0 !  restart control = 0 nit000 is not compared to the restart file value
+                   !                  = 1 use ndate0 in namelist (not the value in the restart file)
+                   !                  = 2 calendar parameters read in the restart file
+     nn_leapy    =       1   !  Leap year calendar (1) or not (0)
+     ln_rstart   =   .true.
+     cn_ocerst_in   = "restart"   !  suffix of ocean restart name (input)
+     cn_ocerst_out  = "restart"   !  suffix of ocean restart name (output)
+     cn_ocerst_indir   = "./"   !  directory of ocean restart name (input)
+     cn_ocerst_outdir  = "./"   !  directory of ocean restart name (output)
+     nn_istate   =     0     !  output the initial state (1) or not (0)
+     nn_stock = 25920
+     nn_write = 25920
+     ...
+     ...
+  !-----------------------------------------------------------------------
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+     **nit000_han = 1**      ! 105121  ! First time step used for harmonic analysis
+     **nitend_han = 25920** ! 105120 ! 210528  ! Last time step used for harmonic analysis
+
+Note the *han* terms are the same as the start and end of the simulation
+
+
+Check the base file::
+
+  vi EXP_harmIT/namelist_cfg
+
+  !-----------------------------------------------------------------------
+  &namrun        !   parameters of the run
+  !-----------------------------------------------------------------------
+  nn_no       =       0   !  job number (no more used...)
+     cn_exp      =  "AMM60"  !  experience name
+  **nn_it000 = 1**
+  **nn_itend = 144**
+  nn_date0 = 20100105
+     nn_leapy    =       1   !  Leap year calendar (1) or not (0)
+  ln_rstart   =   .false.
+     nn_rstctl   =       2   !  restart control ==> activated only if ln_rstart=T
+     cn_ocerst_in   = "restart"   !  suffix of ocean restart name (input)
+     cn_ocerst_out  = "restart"   !  suffix of ocean restart name (input)
+     nn_istate   =     0     !  output the initial state (1) or not (0)
+  nn_stock = 1440
+  nn_write = 1440
+     ln_dimgnnn  = .false.   !  DIMG file format: 1 file for all processors (F) or by processor (T)
+     ln_mskland  = .false.   !  mask land points in NetCDF outputs (costly: + ~15%)
+     ln_clobber  = .false.   !  clobber (overwrite) an existing file
+     nn_chunksz  =       0   !  chunksize (bytes) for NetCDF file (works only with iom_nf90 routines)
+  /
+  ...
+  !-----------------------------------------------------------------------
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+     **nit000_han = 1264321**          ! First time step used for harmonic analysis
+     **nitend_han = 1271520**        ! Last time step used for harmonic analysis
+     nstep_han  = 15        ! Time step frequency for harmonic analysis
+
+
+Check the editted run file::
+
+  vi LOGS/01271520/namelist_cfg
+
+  !-----------------------------------------------------------------------
+  &namrun        !   parameters of the run
+  !-----------------------------------------------------------------------
+  nn_no       =       0   !  job number (no more used...)
+     cn_exp      =  "AMM60"  !  experience name
+  **nn_it000 = 1264321**
+  **nn_itend = 1271520**
+  nn_date0 = 20100105
+     nn_leapy    =       1   !  Leap year calendar (1) or not (0)
+  ln_rstart   =   .true.
+     nn_rstctl   =       2   !  restart control ==> activated only if ln_rstart=T
+     cn_ocerst_in   = "restart"   !  suffix of ocean restart name (input)
+     cn_ocerst_out  = "restart"   !  suffix of ocean restart name (input)
+  nn_stock = 1271520
+  nn_write = 1271520
+  nn_write = 1440
+     ln_dimgnnn  = .false.   !  DIMG file format: 1 file for all processors (F) or by processor (T)
+     ln_mskland  = .false.   !  mask land points in NetCDF outputs (costly: + ~15%)
+     ln_clobber  = .false.   !  clobber (overwrite) an existing file
+     nn_chunksz  =       0   !  chunksize (bytes) for NetCDF file (works only with iom_nf90 routines)
+  ...
+  !-----------------------------------------------------------------------
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+  **nit000_han = 1264321**
+  **nitend_han = 1271520**
+
+----
+
+There is a problem with the output frequency of data (uneditted)::
+
+  nn_istate   =     0     !  output the initial state (1) or not (0)
+  nn_stock = 1440
+  nn_write = 1440
+
+Because the sed writing is displaced by one line overwriting nn_istate and leaving nn_write unchanged::
+
+  nn_stock = 1271520
+  nn_write = 1271520
+  nn_write = 1440
+
+Edit run_nemo sed replacement in namelist_cfg
+
+Edit ``iodef.xml`` to output at 1day freq (like Maria)::
+
+  vi iodef.xml
+  ...
+  <file_group id="1d" output_freq="1d"  output_level="10" enabled=".TRUE."> <!-- 1d files -->
+    <file id="file8" name_suffix="_Tides" description="tidal harmonics" >
+      <field field_ref="e3t"  />
+      <field field_ref="gdept"/>
+      <field field_ref="M2x_ro"       name="M2x_ro"   long_name="M2 ro   real part"                       />
+
+Edit a 5 day simulation::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Edit submit_nemo.pbs::
+
+  vi submit_nemo.pbs
+  ...
+  #PBS -l walltime=00:20:00
+
+Resubmit::
+
+  run_nemo
+  4003527.sdb  
+
+**EXPECT hourly 3D harmonics from 5 day simulation (21 Oct 2016)**
+
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
+
+
 `Thread with a second simulation that was severed when I found this trunk simulation had problems <spare_3D_Harmoninc_analyis.html>`_

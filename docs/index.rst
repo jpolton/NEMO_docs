@@ -25,6 +25,8 @@ Pages made:
 
    Debugging_XIOS_in_AMM7
 
+   AMM60_runs_for_ANChor
+
 
 Introduction
 ============
@@ -57,21 +59,20 @@ PROGRESS:
 * Edits to ``namelist_cfg: nnit???_han``
 * Exceed walltime: 2day in 5mins (1.5days in 5mins)
 * 5days in 20mins completes with harmonic output but not readable
-* Produced 3D harmonic netcdf output files
+* Produced 3D harmonic netcdf output files **Not readable**
+* Found bug in namelist_cfg edit with nn_write
+* 5 day simulation with 3D harmonic output **PENDING**
 
 
 CURRENT:
 
-* 3D harmonic output file data are not valid. **ACTION: Investigate (19 Oct 2016)**
 * Submit a one (or two month simulation) June / July 2012
 * Develop diagnostics
 
 
 **ACTIONS (20 Oct 2016):**
 
-* Compare ``namelists`` and ``iodef.xml`` files with Maria's run:
-  ``/work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00``
-* Check the editing of the ``namelist_cfg`` file by ``run_nemo``
+* Check latest output
 * Check for ERRORS in ``ocean.output`` file. Perhaps ``grep dia_harm_init``
 
 PLANS:
@@ -101,20 +102,24 @@ PROGRESS:
 #. 2 moorings in 1 files works and outputs (5days takes 20mins)
 #. 999 moorings in 1 file works and outputs (27hours takes 20mins) **ACTION. Check output. I LOST THE DATA**
 #. 100 moorings each in 34 files (OOM after 25.1hrs in 10mins. No OUTPUT) **BUG IN iodef.xml**
-#. 100 moorings each in 34 files (doubled XIOS processors) **PENDING (20 Oct 2016)**
+#. 100 moorings each in 34 files (doubled XIOS processors) **Netcdf issues**
+#. Found error in ``namelist_cfg`` with ``nn_write`` not being edited 
+#. 100 moorings each in 34 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
+#. 100+5 moorings each in 1+1 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
 
 
 
 CURRENT:
 
-* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 19 Oct 2016**
+* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 21 Oct 2016**
   ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
-  Issues with XML output not working. Perhaps too many files / too many moorings **IN PROGRESS**
+* 100 moorings each in 34 files (fewer XIOS processors per node). EXP_SBmoorings **PENDING (21 Oct 2016)**
+* 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings2 **PENDING (21 Oct 2016)**
 
 
-ACTIONS: (20 Oct 2016)
+ACTIONS: (21 Oct 2016)
 
- * Are there 33 files of 100 moorings? **NO. NEED TO INVESTIGATE**
+ * Are there 33 files of 100 moorings? Are there outputs in EXP_SBmoorings and EXP_SBmoorings2
  * How is the speed up with twice as many XIOS processors?
 
 
@@ -183,7 +188,7 @@ ANChor runs
 ===========
 
 | dev logs at `AMM60 runs for ANChor - dev <https://www.evernote.com/shard/s523/nl/2147483647/0e6c9337-5fa1-4039-9af8-00e7e02f2daf/>`_
-| Production logs at `AMM60 runs for ANChor <https://www.evernote.com/shard/s523/nl/2147483647/abbcb311-7f6e-4c62-9d54-22463c033eda/>`_
+| Production logs at `AMM60 runs for ANChor <AMM60_runs_for_ANChor.html>`_
 
 PATH:
 ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/``
@@ -195,8 +200,8 @@ PROGRESS:
 
 CURRENT:
 
-* Integrating production runs `AMM60 runs for ANChor <https://www.evernote.com/shard/s523/nl/2147483647/abbcb311-7f6e-4c62-9d54-22463c033eda/>`_
-  ``cd  /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea`` (3 Oct 2016). Around end July 2010
+* Integrating production runs `AMM60 runs for ANChor <AMM60_runs_for_ANChor.html>`_
+  ``cd  /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea`` (21 Oct 2016). Submitted from end July 2010 through Aug
 
 PLANS:
 
