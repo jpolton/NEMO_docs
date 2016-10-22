@@ -735,7 +735,7 @@ Try and Do these runs in Karen's compiled code
 ==============================================
 
 Start with old directory::
-  
+
   cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago
   mkdir SBmoorings3
 
@@ -777,7 +777,7 @@ Note where field_def.xml is copied from.
 Copy the other XML files::
 
   mkdir /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/SHARED
-  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/field_def.xml /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/SHARED/.
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/SHARED/.
   cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/domain_def.xml .
 
 Edit ``iodef.xml`` file to have 100 moorings in one file and 5 in the second (last) file::
@@ -815,8 +815,62 @@ Resubmit (Note I killed the original submission to fix the namelist_cfg sed edit
   4004908.sdb
 
 **PENDING (21 Oct 2016)**
-``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings2``
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
 
+
+
+
+| stopped in 21s
+| core dump
+| empty OUTPUT/
+| ``less LOGS/restart/stdouterr``: Can not open <./field_def.xml> file
+
+| Fix missing field_def.xml (edited instructions above)
+| Trim run_counter.txt
+
+Resubmit::
+
+  ./run_nemo
+  4005687.sdb
+
+**PENDING (22 Oct 2016)**
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
+
+* Are there 1 file of 100 moorings and 1 files of 5 moorings?
+* How is the speed up with twice as many XIOS processors?
+
+| killed. Wall time exceeded
+
+Extend wall time, check ``run_counter.txt`` and resubmit::
+
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:40:00
+
+  ./run_nemo
+  4006114.sdb
+
+**PENDING (22 Oct 2016)**
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
+
+* Are there 1 file of 100 moorings and 1 files of 5 moorings?
+* How is the speed up with twice as many XIOS processors?
+
+| killed. Wall time exceeded
+
+Extend wall time, check ``run_counter.txt`` and resubmit::
+
+  vi run_counter.txt  # This is one day
+  1 1 7200 20100105
+  2 1264321 1265760
+
+  vi submit_nemo.pbs
+  #PBS -l walltime=01:30:00
+
+  ./run_nemo
+  4006114.sdb
+
+**PENDING (22 Oct 2016)**
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
 
 * Are there 1 file of 100 moorings and 1 files of 5 moorings?
 * How is the speed up with twice as many XIOS processors?

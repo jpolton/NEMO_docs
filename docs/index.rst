@@ -61,19 +61,18 @@ PROGRESS:
 * 5days in 20mins completes with harmonic output but not readable
 * Produced 3D harmonic netcdf output files **Not readable**
 * Found bug in namelist_cfg edit with nn_write
-* 5 day simulation with 3D harmonic output **PENDING (21 Oct 2016)**
+* 5 day simulation with 3D harmonic output **WORKS (22 Oct 2016)**
 
 
 CURRENT:
 
-* Submit a one (or two month simulation) June / July 2012
-* Develop diagnostics
+* Trying 25hour output diagnostics **PENDING 22 Oct**
 
 
 **ACTIONS (21 Oct 2016):**
 
-* Check latest output. 5 day simulation with 3D harmonic output?
-* Maybe check for ERRORS in ``ocean.output`` file. Perhaps ``grep dia_harm_init``
+* Submit a one (or two month simulation) June / July 2012
+* Develop diagnostics
 
 PLANS:
 
@@ -112,15 +111,15 @@ PROGRESS:
 CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 21 Oct 2016**
-  ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
-* 100 moorings each in 34 files (fewer XIOS processors per node). EXP_SBmoorings **PENDING (21 Oct 2016)**
-* 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings2 **PENDING (21 Oct 2016)**
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
+* 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings3. In old executable. At least 40mins for 1 day **PENDING (22 Oct 2016)**
 
 
-ACTIONS: (21 Oct 2016)
+ACTIONS: (22 Oct 2016)
 
- * Are there 33 files of 100 moorings? Are there outputs in EXP_SBmoorings and EXP_SBmoorings2
+ * Are there 33 files of 100 moorings? Are there outputs in EXP_SBmoorings3
  * How is the speed up with twice as many XIOS processors?
+ * If so, then need to speed up output with more processors.
 
 
 
@@ -197,15 +196,16 @@ PROGRESS:
 
 * Running with hourly velocity output with vertical viscosity AVM
 * mesh files generated with `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_
+* Have output through to the end of Aug 2012 (27th)
 
 CURRENT:
 
-* Integrating production runs `AMM60 runs for ANChor <AMM60_runs_for_ANChor.html>`_
-  ``cd  /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea`` (21 Oct 2016). Submitted from end July 2010 through Aug
+* Finished integration production runs `AMM60 runs for ANChor <AMM60_runs_for_ANChor.html>`_
+  ``cd  /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea`` (22 Oct 2016).
 
 ACTIONS:
 
-* Check output for Aug 2010 **Submitted (21 Oct 2016)**
+* Notify GaBy of output **Submitted (22 Oct 2016)**
 
 PLANS:
 

@@ -160,4 +160,34 @@ BUT Wall time exceeded. Resubmit::
   run_nemo
   4004867.sdb
 
-**How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**  
+**How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**
+
+Two new runs::
+
+  -rw------- 1 jelt n01   688183877 Oct 21 21:41 AMM60_1d_20100803_20100807_grid_T.nc
+  -rw------- 1 jelt n01 33065238457 Oct 21 21:41 AMM60_1h_20100803_20100807_NorthSea.nc
+  -rw------- 1 jelt n01       74882 Oct 21 21:42 AMM60_NSea.o4004867
+  -rw------- 1 jelt n01   688183877 Oct 21 22:03 AMM60_1d_20100808_20100812_grid_T.nc
+  -rw------- 1 jelt n01 33065238457 Oct 21 22:03 AMM60_1h_20100808_20100812_NorthSea.nc
+
+WDIR/stdouterr: Job killed
+The wall time was exceeded.
+
+Plan: re calculate AMM60_1h_20100813_20100817_NorthSea.nc
+
+vi run_counter.txt::
+  ...
+  44 309601 316800 309600=20100807
+  45 316801 324000 316800=20100812
+
+Increase wall time::
+
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:25:00
+
+Resubmit::
+
+  run_nemo
+  4005690.sdb
+
+**PENDNG 22 Oct 2016. How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**

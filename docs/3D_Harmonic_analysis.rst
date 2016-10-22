@@ -779,7 +779,204 @@ Something went wrong::
   Image              PC                Routine            Line        Source
   nemo.exe           0000000001761A91  Unknown               Unknown  Unknown
 
+----
+
+22 Oct 2016
+
+If there is something going wrong because of memory resource, can I scale what Maria did to get AMM7 working?
+
+Job terminated because of wall time limit. Edit walltime::
+
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:25:00
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Submit::
+
+  ./run_nemo
+  4005702.sdb
+
+**EXPECT hourly 3D harmonics from 5 day simulation (21 Oct 2016)**
+
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
+
+| ``run_counter.txt`` was added to
+| OUTPUT/AMM60_1d_20120601_20120605_Tides.nc 30Gb
+| core dump
+| run for 21mins (allowed 25)
+| less time.step: 1271519
+
+less stdouterr::
+
+  > Error [CObjectFactory::GetObject(const StdString & id)] :
+  In file '/work/n01/n01/jdha/ST/xios-1.0/src/object_factory_impl.hpp', line 79 -> [ id = 2N2x_ro, U = field ]  object is not referenced !
+
+End of log file::
+
+  ``tail -100 LOGS/01271520/ocean.output_EXP_harmIT``
+
+  ...
+  written ok
+
+  anharmo_end: kt=nitend_han: Perform harmonic analysis
+  ~~~~~~~~~~~~
+
+  dia_wri_harm : Write harmonic analysis results
+
+So, there was a problem with writing the harmonic outputs. I really don't understand where the ``2N2x_ro`` problem comes from. This variable doesn't exist.
 
 
+diaharm.F90 calls iom_put for constucted variable *_ro ...::
+
+  CALL iom_put( TRIM(tname(jh))//'x_ro', z3real(:,:,:) )
+  CALL iom_put( TRIM(tname(jh))//'y_ro', z3im (:,:,:)  )
+  CALL iom_put( TRIM(tname(jh))//'x_SSH', z2real(:,:) )
+  CALL iom_put( TRIM(tname(jh))//'y_SSH', z2im (:,:)  )
+
+NEED TO EDIT THE NAMELIST TO ONLY INCLUDE A FEW HARMONICS FOR ANALYSIS.
+E.g Maria's namelist_cfg::
+
+  vi /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/namelist_cfg
+  !-----------------------------------------------------------------------
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+     nit000_han = 1      ! 105121  ! First time step used for harmonic analysis
+     nitend_han = 25920 ! 105120 ! 210528  ! Last time step used for harmonic analysis
+     nstep_han  = 12        ! Time step frequency for harmonic analysis
+     tname(1)     =   'O1'  !  name of constituent
+     tname(2)     =   'P1'
+     tname(3)     =   'K1'
+     tname(4)     =   'N2'
+     tname(5)     =   'M2'
+     tname(6)     =   'S2'
+     tname(7)     =   'K2'
+     tname(8)     =   'Q1'
+     tname(9)     =   'M4'
+  /
+
+Edit ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT/namelist_cfg`` accordingly::
+
+  vi namelist_cfg
+  !-----------------------------------------------------------------------
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+     nit000_han = 1264321         ! First time step used for harmonic analysis
+     nitend_han = 1271520        ! Last time step used for harmonic analysis
+     nstep_han  = 15        ! Time step frequency for harmonic analysis
+     tname(1)     =   'O1'  !  name of constituent
+     tname(2)     =   'P1'
+     tname(3)     =   'K1'
+     tname(4)     =   'N2'
+     tname(5)     =   'M2'
+     tname(6)     =   'S2'
+     tname(7)     =   'K2'
+     tname(8)     =   'Q1'
+     tname(9)     =   'M4'
+  /
+
+Prepare and then resubmit::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:25:00
+
+  ./run_nemo
+  4006192.sdb
+
+**EXPECT hourly 3D harmonics from 5 day simulation (21 Oct 2016)**
+
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
+
+IT WORKS!!!
+
+| 30G AMM60_1d_20120601_20120605_Tides.nc
+| 19 mins of simulation for 5 days
+
+
+-----
+
+Add in 25hour diagnostics::
+
+  vi iodef.xml
+  <file_group id="1d" output_freq="1d"  output_level="10" enabled=".TRUE." > <!-- 1d files -->
+    <file id="file51" name_suffix="_grid_T" description="ocean T grid variables" >
+      <field field_ref="e3t"  />
+      <field field_ref="gdept"/>
+      <field field_ref="temper25h"    name="temper25h" long_name="sea_water_potential_temperature"    />
+      <field field_ref="salin25h"     name="salin25h" long_name="sea_water_salinity"                  />
+      <field field_ref="ssh25h"       name="ssh25h"   long_name="sea_surface_height_above_geoid"      />
+      <field field_ref="mldr10_1"     name="mldr10_1" long_name="Mixed Layer Depth 0.01 ref.10m"      />
+    </file>
+
+    <file id="file53" name_suffix="_grid_U" description="ocean U grid variables" >
+      <field field_ref="e3u"  />
+      <field field_ref="gdepu"  />
+      <field field_ref="ssu"          name="uos"     long_name="sea_surface_x_velocity"    />
+      <field field_ref="uoce"         name="uo"      long_name="sea_water_x_velocity" />
+      <field field_ref="vozocrtx25h"  name="uo25h"   long_name="sea_water_x_velocity" />
+      <field field_ref="ubar"         name="ubar"    long_name="barotropic_x_velocity" />
+    </file>
+
+    <file id="file54" name_suffix="_grid_V" description="ocean V grid variables" >
+      <field field_ref="e3v"  />
+      <field field_ref="gdepv"  />
+      <field field_ref="ssv"          name="vos"     long_name="sea_surface_y_velocity"    />
+      <field field_ref="voce"         name="vo"      long_name="sea_water_y_velocity" />
+      <field field_ref="vomecrty25h"  name="vo25h"   long_name="sea_water_y_velocity" />
+      <field field_ref="vbar"         name="vbar"    long_name="barotropic_y_velocity" />
+    </file>
+
+    <file id="file55" name_suffix="_grid_W" description="ocean W grid variables" >
+      <field field_ref="e3w"  />
+      <field field_ref="gdepw"  />
+      <field field_ref="vomecrtz25h"  name="wo25h"   long_name="ocean vertical velocity" />
+      <field field_ref="eps25h"       name="eps25h"  long_name="TKE dissipation rate 25h " />
+      <field field_ref="N2_25h"       name="N2_25h"  long_name="25h mean Brent-Viasala " />
+      <field field_ref="S2_25h"       name="S2_25h"  long_name="25h squared shear" />
+      <field field_ref="tke25h"       name="TKE25h"  long_name="25h vertical kinetic energy" />
+    </file>
+
+    <file id="file8" name_suffix="_Tides" description="tidal harmonics" >
+      <field field_ref="e3t"  />
+      <field field_ref="gdept"/>
+      <field field_ref="M2x_ro"       name="M2x_ro"   long_name="M2 ro   real part"                       />
+      ...
+
+
+ALSO ENSURE THAT THESE ARE IN ``FIELD_DEF.XML``, IN ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED``
+Trim ``run_counter.txt``::
+
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Resubmit::
+
+  ./run_nemo
+  4006317.sdb
+
+
+**EXPECT hourly 3D harmonics from 5 day simulation (22 Oct 2016)**
+**EXPECT 25hourly outputs too**
+
+``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
+-----
+
+PLAN:
+
+* Add in 25hr diagnostics. Check
+* Do one, or two, month simulation
+
+Edit run_counter,  to run for two months (June and July 2012 = 87,840 mins)::
+
+  cd EXP_harmIT
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1352160
 
 `Thread with a second simulation that was severed when I found this trunk simulation had problems <spare_3D_Harmoninc_analyis.html>`_
