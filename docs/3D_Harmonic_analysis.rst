@@ -876,30 +876,20 @@ Edit ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOG
      tname(8)     =   'Q1'
      tname(9)     =   'M4'
   /
+Also need to add switch for 25h diagnostics (add it after the above harmonics so it does not affect ``sed`` invokation in ``run_nemo``)::
 
-Prepare and then resubmit::
+  !-----------------------------------------------------------------------
+  &nam_dia25h    !   Output 25 hour mean diagnostics
+  !-----------------------------------------------------------------------
+      ln_dia25h   = .true.
 
-  vi run_counter.txt
-  1 1 7200 20100105
-  2 1264321 1271520
+Also added this to ``namelist_ref``::
 
-  vi submit_nemo.pbs
-  #PBS -l walltime=00:25:00
-
-  ./run_nemo
-  4006192.sdb
-
-**EXPECT hourly 3D harmonics from 5 day simulation (21 Oct 2016)**
-
-``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
-
-IT WORKS!!!
-
-| 30G AMM60_1d_20120601_20120605_Tides.nc
-| 19 mins of simulation for 5 days
-
-
------
+  vi namelist_ref
+  !-----------------------------------------------------------------------
+  &nam_dia25h    !   Output 25 hour mean diagnostics
+  !-----------------------------------------------------------------------
+      ln_dia25h   = .true.
 
 Add in 25hour diagnostics::
 
@@ -950,21 +940,34 @@ Add in 25hour diagnostics::
 
 
 ALSO ENSURE THAT THESE ARE IN ``FIELD_DEF.XML``, IN ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED``
-Trim ``run_counter.txt``::
 
+Prepare and then resubmit::
+
+  vi run_counter.txt
   1 1 7200 20100105
   2 1264321 1271520
 
-Resubmit::
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:25:00
 
   ./run_nemo
-  4006317.sdb
+  4007538.sdb
 
 
 **EXPECT hourly 3D harmonics from 5 day simulation (22 Oct 2016)**
 **EXPECT 25hourly outputs too**
 
 ``cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT/EXP_harmIT``
+
+*NB without the 25h diagnostics (from a previous run)*::
+
+| *30G AMM60_1d_20120601_20120605_Tides.nc*
+| *19 mins of simulation for 5 days*
+
+
+For some reason there is no evidence of dia25h being initialised in the log files. It is as if dia25.F90 was not compiled...
+
+
 -----
 
 PLAN:
@@ -972,7 +975,7 @@ PLAN:
 * Add in 25hr diagnostics. Check
 * Do one, or two, month simulation
 
-Edit run_counter,  to run for two months (June and July 2012 = 87,840 mins)::
+Edit run_counter,  to run for two months (June and July 2012 = 87,840 mins, 61 days)::
 
   cd EXP_harmIT
   vi run_counter.txt

@@ -58,21 +58,22 @@ PROGRESS:
 * Ported dev logging to GitHub: https://github.com/jpolton/EXP_harmIT.git
 * Edits to ``namelist_cfg: nnit???_han``
 * Exceed walltime: 2day in 5mins (1.5days in 5mins)
-* 5days in 20mins completes with harmonic output but not readable
-* Produced 3D harmonic netcdf output files **Not readable**
+* 5 day (19mins) simulation with 3D harmonic output **WORKS (22 Oct 2016)**
 * Found bug in namelist_cfg edit with nn_write
-* 5 day simulation with 3D harmonic output **WORKS (22 Oct 2016)**
+* Added ``ln_dia25h`` and edited harmonic constituents wanted in ``namelist_cfg``.
+* Added 25hour diagnostics to ``field_def.xml``
 
 
 CURRENT:
 
-* Trying 25hour output diagnostics **PENDING 22 Oct**
+* Trying 25hour output diagnostics with 3D harmonics **PENDING 23 Oct**
 
 
 **ACTIONS (21 Oct 2016):**
 
 * Submit a one (or two month simulation) June / July 2012
 * Develop diagnostics
+* Copy ``field_def.xml`` edits to other directories, that don't need them.
 
 PLANS:
 
@@ -105,6 +106,7 @@ PROGRESS:
 #. Found error in ``namelist_cfg`` with ``nn_write`` not being edited
 #. 100 moorings each in 34 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
 #. 100+5 moorings each in 1+1 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
+*. 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings3. In old executable. At least 40mins for 1 day **Wall time exceeded**
 
 
 
@@ -112,7 +114,8 @@ CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 21 Oct 2016**
 ``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
-* 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings3. In old executable. At least 40mins for 1 day **PENDING (22 Oct 2016)**
+* 100+5 moorings each in 1+1 files (x10 XIOS processors per node). EXP_SBmoorings3. In old executable. 20min queue **PENDING (23 Oct 2016)**
+
 
 
 ACTIONS: (22 Oct 2016)

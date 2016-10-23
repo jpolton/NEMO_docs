@@ -874,3 +874,59 @@ Extend wall time, check ``run_counter.txt`` and resubmit::
 
 * Are there 1 file of 100 moorings and 1 files of 5 moorings?
 * How is the speed up with twice as many XIOS processors?
+
+**Wall time exceeded, 1h 30.**
+This is for a 1 day simulation!
+
+
+**Configure AMM60 SBmoorings to run on more XIOS nodes**
+
+----
+
+Standard::
+
+  submit_nemo.pbs:
+  #PBS -l select=92
+  export NEMOproc=2000
+  export XIOSproc=40
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N 5 -n $XIOSproc ./xios_server.exe >&stdouterr
+
+  vi run_nemo
+  export NPROC=2000
+
+  Sums:
+  NEMO nodes: ceil(2000 / 24) = 84
+  XIOS nodes: ceil(40 / 5) = 8
+  Total = 92
+
+New x10 XIOS nodes::
+
+  submit_nemo.pbs:
+  #PBS -l select=**164**
+  export NEMOproc=2000
+  export XIOSproc=**400**
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N 5 -n $XIOSproc ./xios_server.exe >&stdouterr
+
+  vi run_nemo
+  export NPROC=2000
+
+  Sums:
+  NEMO nodes: ceil(2000 / 24) = 84
+  XIOS nodes: ceil(400 / 5) = 80
+  Total = 164
+
+Trim ``run_counter.txt``
+
+Resubmit to a 20min queue::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3
+  ./run_nemo
+  4007516.sdb
+
+**FAILED (23 Oct 2016)**
+
+* Are there 33 files of 100 moorings + 5 in another?
+* How is the speed up with twice as many XIOS processors?
+
+| It completed in 17s!
+``stdouterr: apsched: claim exceeds reservation's resources``
