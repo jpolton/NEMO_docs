@@ -965,8 +965,11 @@ Prepare and then resubmit::
 | *19 mins of simulation for 5 days*
 
 
-For some reason there is no evidence of dia25h being initialised in the log files. It is as if dia25.F90 was not compiled...
+*For some reason there is no evidence of dia25h being initialised in the log files. It is as if dia25.F90 was not compiled...
 
+*Note that the compile keys are different for AMM60 and Maria's AMM7 runs: https://www.evernote.com/shard/s523/nl/2147483647/9efc56c7-6965-4baf-b8be-b05f4e2b8d4c/
+
+*`Recompile and resubmit <clean_3D_Harmonic_analysis.index>`_
 
 -----
 

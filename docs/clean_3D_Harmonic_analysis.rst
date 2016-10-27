@@ -7,6 +7,8 @@ clean build
 
 ::
 
+  chmod a+rx /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/MY_SRC/*
+
   cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
 
   module add cray-hdf5-parallel
@@ -77,12 +79,10 @@ Check ``iodef.xml`` file for harmonic output and 25hr output::
 Submit job::
 
   ./run_nemo
-  4007770.sdb
+  4011945.sdb
 
 
-| **Does it WORK? (24 Oct 2016)**
-| **OUTPUT SHOULD BE 3D harmonics, outputted monthly for June and July 2012. Also various daily files.**
+| **Does it WORK? (27 Oct 2016)**
+| **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various daily files.**
 
   ``ls -lrt  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/``
-
-**No values in 25hr diagnostics**

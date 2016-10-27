@@ -62,12 +62,13 @@ PROGRESS:
 * Found bug in namelist_cfg edit with nn_write
 * Added ``ln_dia25h`` and edited harmonic constituents wanted in ``namelist_cfg``.
 * Added 25hour diagnostics to ``field_def.xml``
+* Trying 25hour output diagnostics with 3D harmonics. It appears that the dia25h does activate.
 
 
 CURRENT:
 
-* Trying 25hour output diagnostics with 3D harmonics **PENDING 23 Oct**
-
+* Try `Recompile and resubmit clean 3D Harmonic analysis  <clean_3D_Harmonic_analysis.index>`_ again. Make sure permissions on MY_SRC files are all same. Resubmit **PENDING 27 Oct 2016**
+* Noted that there are differences between AMM60 and Maria's AMM7 keys: https://www.evernote.com/shard/s523/nl/2147483647/9efc56c7-6965-4baf-b8be-b05f4e2b8d4c/
 
 **ACTIONS (21 Oct 2016):**
 
@@ -108,14 +109,14 @@ PROGRESS:
 #. 100+5 moorings each in 1+1 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
 #. 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings3. In old executable. At least 40mins for 1 day **Wall time exceeded**
 #. 100+5 moorings each in 1+1 files (x10 XIOS processors per node). EXP_SBmoorings3. In old executable. **EXCEEDED RESOURCE ALLOWED**
-
+#. 100+5 moorings each in 1+1 files. 1pt moorings. (fewer XIOS processors per node). EXP_SBmoorings. 20min queue **BROKE**
+#. 3 moorings in 2 files works in AMM7.
 
 
 CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 21 Oct 2016**
-``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
-* 100+5 moorings each in 1+1 files. 1pt moorings. (fewer XIOS processors per node). EXP_SBmoorings. 20min queue **PENDING (24 Oct 2016)**
+* Debug using AMM7 **PENDING 27 Oct 2016**
 
 
 

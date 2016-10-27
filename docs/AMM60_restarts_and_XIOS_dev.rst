@@ -981,6 +981,29 @@ cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
 * Are there 2 files with 100 moorings in one + 5 in another?
 * How is the speed?
 
+| NOT WORKING. 
+| There is only one file: ``OUTPUT/AMM60_1h_20120601_20120605_SB001_grid_T.nc`` and it is broken.
+| core dump
+| ran for 2min 33
+| less time.step: 1264875
+| completed with garbled new datestamp on run_counter.txt
+| less stdouterr:
+::
+  terminate called after throwing an instance of 'xios::CNetCdfException'
+  what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+  forrtl: error (76): Abort trap signal
+  Image              PC                Routine            Line        Source
+  xios_server.exe    0000000000CB57E1  Unknown               Unknown  Unknown
+  xios_server.exe    0000000000CB3F37  Unknown               Unknown  Unknown
+
+PERHAPS THERE IS A BUG WITH THE SECOND XML OUTPUT FILE.
+
+**ACTION: DEBUG XML in AMM7.**
+
+
 ----
 
 PLAN: subsample moorings locations in ``iodef.xml``
