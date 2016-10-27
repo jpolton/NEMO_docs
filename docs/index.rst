@@ -106,7 +106,8 @@ PROGRESS:
 #. Found error in ``namelist_cfg`` with ``nn_write`` not being edited
 #. 100 moorings each in 34 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
 #. 100+5 moorings each in 1+1 files (fewer XIOS processors per node) **PENDING (21 Oct 2016)**
-*. 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings3. In old executable. At least 40mins for 1 day **Wall time exceeded**
+#. 100+5 moorings each in 1+1 files (fewer XIOS processors per node). EXP_SBmoorings3. In old executable. At least 40mins for 1 day **Wall time exceeded**
+#. 100+5 moorings each in 1+1 files (x10 XIOS processors per node). EXP_SBmoorings3. In old executable. **EXCEEDED RESOURCE ALLOWED**
 
 
 
@@ -114,7 +115,7 @@ CURRENT:
 
 * **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 21 Oct 2016**
 ``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_SBmoorings3``
-* 100+5 moorings each in 1+1 files (x10 XIOS processors per node). EXP_SBmoorings3. In old executable. 20min queue **PENDING (23 Oct 2016)**
+* 100+5 moorings each in 1+1 files. 1pt moorings. (fewer XIOS processors per node). EXP_SBmoorings. 20min queue **PENDING (24 Oct 2016)**
 
 
 
@@ -123,6 +124,7 @@ ACTIONS: (22 Oct 2016)
  * Are there 33 files of 100 moorings? Are there outputs in EXP_SBmoorings3
  * How is the speed up with twice as many XIOS processors?
  * If so, then need to speed up output with more processors.
+ * Remove job in AMM60smago path
 
 
 

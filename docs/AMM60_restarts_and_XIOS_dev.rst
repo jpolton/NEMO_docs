@@ -930,3 +930,57 @@ Resubmit to a 20min queue::
 
 | It completed in 17s!
 ``stdouterr: apsched: claim exceeds reservation's resources``
+
+
+Reduce the number of points in the moorings (from 4 to 1). And subsample space
+==============================================================================
+
+Revert back to my compiled code::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+Manually edit domain_def.xml (1pt per mooring). LATER edit and iodef.xml (moorings divisible by 4)::
+
+  cp domain_def.xml domain_def_4pt.xml
+  mv domain_def.xml domain_def_1pt.xml
+
+  vi domain_def_1pt.xml
+  :12,3318s/zoom_ni="2" zoom_nj="2"/zoom_ni="1" zoom_nj="1"/g
+
+  cp domain_def_1pt.xml domain_def.xml
+
+Since 30 moorings with 4pts worked in the test phase, then 100 moorings should work with 1pt::
+
+  cp ../EXP_SBmoorings2/iodef_sbmoorings_100moorings_2files.xml ../EXP_SBmoorings/iodef_sbmoorings_100moorings_2files.xml
+  cp iodef_sbmoorings_100moorings_2files.xml iodef.xml
+
+Edit ``run_counter.txt`` for 5 day simulation::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Extended XIOS processors (20 mins wall time)::
+
+  vi submit_nemo.pbs
+  #PBS -l select=104
+  #PBS -l walltime=00:20:00
+  export NEMOproc=2000
+  export XIOSproc=60
+  aprun -b -n $NEMOproc -N 24 ./$EXEC : -N 3 -n $XIOSproc ./xios_server.exe >&stdouterr
+
+Resubmit::
+
+  ./run_nemo
+  4007894.sdb
+
+cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+**PENDING (24 Oct 2016)**
+
+* Are there 2 files with 100 moorings in one + 5 in another?
+* How is the speed?
+
+----
+
+PLAN: subsample moorings locations in ``iodef.xml``
