@@ -981,7 +981,7 @@ cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
 * Are there 2 files with 100 moorings in one + 5 in another?
 * How is the speed?
 
-| NOT WORKING. 
+| NOT WORKING.
 | There is only one file: ``OUTPUT/AMM60_1h_20120601_20120605_SB001_grid_T.nc`` and it is broken.
 | core dump
 | ran for 2min 33
@@ -1003,6 +1003,25 @@ PERHAPS THERE IS A BUG WITH THE SECOND XML OUTPUT FILE.
 
 **ACTION: DEBUG XML in AMM7.**
 
+| AMM7 suggests that there are too many moorings per file.
+| AMM7 configuration works with 25 moorings per file. Also 4pt per mooring increases run time by around 16%.
+
+Try 1pt moorings. 25 moorings in 133 files.
+::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  cp domain_def_1pt.xml domain_def.xml
+  cp /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00/iodef_sbmoorings_25moorings_133files.xml . # Get the new iodef file
+  cp iodef_sbmoorings_25moorings_133files.xml iodef.xml
+
+Trim run_counter.txt::
+  vi run_counter.txt  # This is one day
+  1 1 7200 20100105
+  2 1264321 1265760
+
+@0min queue. Resubmit::
+  ./run_nemo
+  4015266.sdb
 
 ----
 

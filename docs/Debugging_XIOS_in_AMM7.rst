@@ -334,7 +334,9 @@ Resubmit::
    ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
    4012284.sdb
 
-**DOES IT WORK? PENDING 27 Oct 2016**
+**THIS WORKS, AS EXPECTED**
+
+cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
 
 ----
 
@@ -342,3 +344,171 @@ Next steps:
 ===========
 
 Create mirrored AMM60 output with 100 moorings in one file and about 5 in another.
+
+Create ``domain_def_1pt.xml`` with ipython notebook
+
+Copy the 2 file iodef.xml file::
+
+  cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/iodef_sbmoorings_100moorings_2files.xml .
+  cp iodef_sbmoorings_100moorings_2files.xml iodef.xml
+
+Resubmit::
+
+   ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+   4012898.sdb
+
+**PENDING 27 Oct 2016. Expect one file with 100 moorings and one file with 5. These are 1pt moorings**
+
+| ran for 59s
+| get NetCDF output but there is a problem with it
+
+::
+  less NE198101.e4012898
+
+  terminate called after throwing an instance of 'terminate called after throwing an instance of 'xios::CNetCdfExceptionxios::CNetCdfException'
+  '
+    what():    what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+Try a quick edit of ``iodef.xml``. Change the file name to see if it then works. Use filenames file001 and file002, which previously worked.
+``<file id="file002" name_suffix="_SB034_grid_T" description="ocean T grid variables">``
+
+Resubmit::
+
+   ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+   4013865.sdb
+
+**PENDING 28 Oct 2016. Expect one file with 100 moorings and one file with 5. These are 1pt moorings**
+
+| ran for 1min 1s. Same error with same file id: 65536
+
+Comment out second file in iodef.xml
+
+Resubmit::
+
+   ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+   4013884.sdb
+
+| Same error!
+
+However it worked with 2 files and 3 moorings and a long time ago with one file and 30 (4pt) moorings.
+
+Try one file with 33 moorings. 2nd file with 5 moorings.
+
+Resubmit::
+
+   ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+
+Same but shorter error log::
+  terminate called after throwing an instance of 'xios::CNetCdfException'
+  what():  Error in calling function nc_enddef(ncId)
+  NetCDF: HDF error
+  Unable to end define mode of this file, given its id : 65536
+
+
+Remove the second file. Leaving one file with 33 (1pt) moorings. Resubmit::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4013938.sdb
+
+Same error,
+
+Resubmit with 20 (1pt) moorings::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4013970.sdb
+
+This **WORKS** and runs beyond 2 mins.
+
+Quit and resubmit with 25 (1pt) moorings::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4014010.sdb
+
+| **WORKS**
+| 6 min 41s to finish. Load balance looks OK
+
+Resubmit with 30 (1pt) moorings::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4014047.sdb
+
+**Fails** with new error after 2mins::
+
+  > Error [CNc4DataOutput::writeFieldData_ (CField*  field)] : In file '/work/n01/n01/jelt/xios-1.0_r703/src/output/nc4_data_output.cpp', line 1271 -> On writin
+  g field data: so_SB025
+  In the context : nemo
+  Error in calling function ncPutVaraType(ncid, varId, start, count, op)
+  NetCDF: HDF error
+  Unable to write value of a variable with id : 289
+
+
+CONCLUSION. 25 moorings work but 30 moorings do not.
+Try 20 moorings in one file and 5 in a second.
+
+Resubmit with 25 (1pt) + 5 moorings::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4014081.sdb
+
+**WORKED** 6min 50s.
+CONCLUSION. 25 moorings work in one file but 30 moorings do not.
+However 25 mooorings in one file and 5 in another file also works.
+
+
+Resubmit with 2 files each with 25 (1pt) moorings::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4014137.sdb
+
+
+**WORKED** walltime=00:07:48
+CONCLUSION. 25 moorings each in 2 files works.
+But 30 moorings in 1 file does not.
+
+**TEST**
+Does 4pt mooring effect performance?
+
+Resubmit with 2 files each with 25 (1pt) moorings::
+
+  cp domain_def_4pt.xml domain_def.xml
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4014418.sdb
+
+**It worked** walltime=00:09:00
+CONCLUSION. 25 (1pt) moorings each in 2 files works.
+But 30 moorings in 1 file does not.
+Increasing from 1pt to 4pt moorings increases walltime from 7:45 to 9:00 mins
+
+
+**Test**
+Use 1pt moorings for all the moorings spread across 133 files in groups of 25. Resubmit::
+
+  cp domain_def_1pt.xml domain_def.xml
+  cp iodef_sbmoorings_25moorings_133files.xml iodef.xml
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4015212.sdb
+
+*Side line*
+This looks like it is working, since it has not instantly crashed. Try 25moorings in 133 files with AMM60
+
+EXCEEDED WALLTIME.
+
+Trim simulation from 10 days to 1 day, keep the 20min queue::
+
+  vi annualrun.pbs
+  #nit=$((10*tpd)) # 10 days
+  nit=$((1*tpd)) # 1 days
+
+Resubmit::
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4015274.sdb
+
+Walltime exceeded. Cut down from 133 files to 13 files in iodef.xml
+Resubmit::
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4015306.sdb
+
+Walltime exceeded.  

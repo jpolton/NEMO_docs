@@ -85,4 +85,11 @@ Submit job::
 | **Does it WORK? (27 Oct 2016)**
 | **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various daily files.**
 
-  ``ls -lrt  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/``
+cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
+
+| run_counter.txt is added to without garbled date
+| lots of files in OUTPUT
+| Issue with GDEPW not being complete (perhaps it is defined twice?) The map works north of mid Wales, though is wrapped westward. Perhaps W-grid items have a dimension length problem?
+| grid_T.nc is bad
+
+**ACTION: CHECK field_def.xml DEFINITIONS FOR THE 25H VARIABLES**
