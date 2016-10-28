@@ -511,4 +511,6 @@ Resubmit::
   ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
   4015306.sdb
 
-Walltime exceeded.  
+Walltime exceeded.
+
+cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
