@@ -514,3 +514,137 @@ Resubmit::
 Walltime exceeded.
 
 cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
+
+
+----
+
+New Plan: Create a mask and output moorings as a 3D array
+=========================================================
+
+First check that AMM7 can compile::
+
+  https://www.evernote.com/shard/s523/nl/2147483647/086ee834-ae54-4384-8523-79a1eee0d54e/
+
+Submit::
+
+  cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4017892.sdb
+
+Plan is to emulate the changes Karen made to diagnose Internal Tides. These edits are all confined to ``diawri.F90``
+First make a copy of working ``diawri.F90``
+
+``/work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/MY_SRC> cp diawri.F90  diawri.F90_30Oct16``
+
+Edit ``diawri.F90`` (copy and paste in here when it works)::
+
+    ...
+    sbmask(161, 78) = 1
+    sbmask(161, 79) = 1
+    sbmask(160, 79) = 1
+    sbmask(159, 79) = 1
+    sbmask(158, 80) = 1
+
+    z3d(:,:,jpk) = 0.e0
+    DO jk = 1, jpkm1
+       z3d(:,:,jk) = sbmask * un(:,:,jk)
+    END DO
+    CALL iom_put( "sb_u", z3d )   ! 3D u-velocity
+    z3d(:,:,jpk) = 0.e0
+    DO jk = 1, jpkm1
+       z3d(:,:,jk) = sbmask * vn(:,:,jk)
+    END DO
+    CALL iom_put( "sb_v", z3d )   ! 3D v-velocity
+    z3d(:,:,jpk) = 0.e0
+    DO jk = 1, jpkm1
+       z3d(:,:,jk) = sbmask * wn(:,:,jk)
+    END DO
+    CALL iom_put( "sb_w", z3d )   ! 3D w-velocity
+
+    z3d(:,:,jpk) = 0.e0
+    DO jk = 1, jpkm1
+       z3d(:,:,jk) = sbmask * tsn(:,:,jk,jp_tem)
+    END DO
+    CALL iom_put( "sb_toce", z3d )   ! 3D temperature
+    z3d(:,:,jpk) = 0.e0
+    DO jk = 1, jpkm1
+       z3d(:,:,jk) = sbmask * tsn(:,:,jk,jp_sal)
+    END DO
+    CALL iom_put( "sb_soce", z3d )   ! 3D salinity
+    z3d(:,:,jpk) = 0.e0
+    DO jk = 1, jpkm1
+       z3d(:,:,jk) = sbmask * fse3t(:,:,jk)
+    END DO
+    CALL iom_put( "sb_dept", z3d )   ! 3D T-point depth
+
+    CALL iom_put( "sb_utau", utau * sbmask )   ! 2D zontal wind stress
+    CALL iom_put( "sb_vtau", vtau * sbmask )   ! 2D meridional wind stress
+    CALL iom_put( "sb_ssh",  sshn * sbmask )   ! 2D ssh
+  ENDIF
+
+
+
+  cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM7_nemo -m ARCHER_INTEL
+
+
+Copy executable:
+  cp  XIOS_AMM7_nemo/BLD/bin/nemo.exe XIOS_AMM7_nemo/EXP00/.
+
+Copy pbs script:
+#  cp  /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo/EXP00/annualrun.pbs ../XIOS_AMM7_nemo/EXP00/.
+
+Edit paths in annualrun.pbs and run_nemo.sh for the appropriate execution directory::
+
+  vi annualrun.pbs  # running for one day
+  vi run_nemo.sh
+
+
+Edit ``field_def.xml``::
+
+  vi field_def.xml
+
+  <field_group id="sbmooring" >
+   <field field_ref="sb_toce"         name="thetao"   long_name="sea_water_potential_temperature"    unit="degC"   grid_ref="grid_T_3D"  />
+   <field field_ref="sb_soce"         name="so"       long_name="sea_water_salinity"                 unit="psu"   grid_ref="grid_T_3D"   />
+   <field field_ref="sb_u"         name="uo"       long_name="sea_water_x_velocity"        unit="m/s"      grid_ref="grid_U_3D"          />
+   <field field_ref="sb_v"         name="vo"       long_name="sea_water_y_velocity"        unit="m/s"      grid_ref="grid_V_3D"          />
+   <field field_ref="sb_w"         name="wo"       long_name="sea_water_z_velocity"        unit="m/s"      grid_ref="grid_W_3D"          />
+   <field field_ref="sb_dept"      name="depth"    long_name="T-cell thickness"            unit="m"        grid_ref="grid_T_3D"          />
+   <field field_ref="sb_ssh"          name="zos"      long_name="sea_surface_height_above_geoid"    unit="m"     grid_ref="grid_T_2D"    />
+   <field field_ref="sb_utau"         name="tauuo"   long_name="surface_downward_x_stress" unit="m/s^2"    grid_ref="grid_U_2D" />
+   <field field_ref="sb_vtau"         name="tauvo"   long_name="surface_downward_y_stress" unit="m/s^2"    grid_ref="grid_V_2D" />
+  </field_group>
+
+
+Edit ``iodef.xml``::
+
+  vi iodef.xml
+  <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+   <file id="file51" name_suffix="SB" description="Shelf break moorings">
+    <field_group group_ref="sbmoorings"/>
+   </file>
+   ...
+  </file_group>
+
+Edit the wall time to since it appears the 24-48hr queue might be quicker (didn't work. Not sure what queue is called)::
+
+  vi annualrun.pbs
+  #PBS -l walltime=24:20:00
+  #PBS -q short
+
+
+
+Submit::
+  cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4017983.sdb
+
+**PENDING (30 Oct 2016)**
+cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+
+* Does the output work?
+* How fast / slow is it?
+* How large is the output?
+
+Assume all the above is correct. Copy to AMM60, compile and submit.

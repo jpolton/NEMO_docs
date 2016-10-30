@@ -1019,10 +1019,88 @@ Trim run_counter.txt::
   1 1 7200 20100105
   2 1264321 1265760
 
-@0min queue. Resubmit::
+20min queue. Resubmit::
   ./run_nemo
   4015266.sdb
 
+WALLTIME EXCEEDED
+
+
+Resubmit with only 10 output files. Check run_counter.txt::
+  ./run_nemo
+  4016256.sdb
+
+WALLTIME EXCEEDED
+
 ----
 
-PLAN: subsample moorings locations in ``iodef.xml``
+PLAN: OUTPUT 3D data with a SBmooring mask. NEED TO EDIT AND RECOMPILE THE CODE.
+
+Copy the modifications to the executable::
+
+  cp /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/MY_SRC/diawri.F90 /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/MY_SRC/.
+
+Edit field_def.xml to SHAREDDIR::
+  vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml
+
+    <field_group id="sbmooring" >
+     <field field_ref="sb_toce"         name="thetao"   long_name="sea_water_potential_temperature"    unit="degC"   grid_ref="grid_T_3D"  />
+     <field field_ref="sb_soce"         name="so"       long_name="sea_water_salinity"                 unit="psu"   grid_ref="grid_T_3D"   />
+     <field field_ref="sb_u"         name="uo"       long_name="sea_water_x_velocity"        unit="m/s"      grid_ref="grid_U_3D"          />
+     <field field_ref="sb_v"         name="vo"       long_name="sea_water_y_velocity"        unit="m/s"      grid_ref="grid_V_3D"          />
+     <field field_ref="sb_w"         name="wo"       long_name="sea_water_z_velocity"        unit="m/s"      grid_ref="grid_W_3D"          />
+     <field field_ref="sb_dept"      name="depth"    long_name="T-cell thickness"            unit="m"        grid_ref="grid_T_3D"          />
+     <field field_ref="sb_ssh"          name="zos"      long_name="sea_surface_height_above_geoid"    unit="m"     grid_ref="grid_T_2D"    />
+     <field field_ref="sb_utau"         name="tauuo"   long_name="surface_downward_x_stress" unit="m/s^2"    grid_ref="grid_U_2D" />
+     <field field_ref="sb_vtau"         name="tauvo"   long_name="surface_downward_y_stress" unit="m/s^2"    grid_ref="grid_V_2D" />
+    </field_group>
+
+
+
+Edit iodef.xml in JOBDIR::
+    vi iodef.xml
+      <!-- Shelf Break virtual moorings -->
+      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+        <file id="file51" name_suffix="SB" description="Shelf break moorings">
+          <field_group group_ref="sbmoorings"/>
+        </file>
+        ..
+      </file_group>
+
+
+Recompile
+
+load modules::
+
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+Compile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM60_nemo_harmIT -m XC_ARCHER_INTEL -j 10
+
+Copy executable (note that this is for 3D harmonics, though it is not invoked here)::
+  mv XIOS_AMM60_nemo/EXP_SBmoorings/nemo.exe  XIOS_AMM60_nemo/EXP_SBmoorings/nemo.exe301016
+  cp  XIOS_AMM60_nemo_harmIT/BLD/bin/nemo.exe XIOS_AMM60_nemo/EXP_SBmoorings/.
+
+
+Trim run_counter.txt::
+
+  cd XIOS_AMM60_nemo/EXP_SBmoorings/
+  vi run_counter.txt
+
+Submit::
+
+  ./run_nemo
+  4017998.sdb
+
+
+**PENDING (30 Oct 2016)**
+cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+* Does the output work?
+* How fast / slow is it?
+* How large is the output?
+* Next steps fill out with all the moorings.
