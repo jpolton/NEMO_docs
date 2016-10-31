@@ -730,3 +730,7 @@ Resubmit::
 
  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
  4021456.sdb
+
+ **PENDING 31 Oct 2016**
+
+ Next steps to uncomment sbmoorings code in .F90
