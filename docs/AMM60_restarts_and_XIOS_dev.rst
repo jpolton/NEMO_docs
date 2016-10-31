@@ -1041,6 +1041,8 @@ Copy the modifications to the executable::
   cp /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/MY_SRC/diawri.F90 /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/MY_SRC/.
 
 Edit field_def.xml to SHAREDDIR::
+
+  **CHANGE FIELD_REF to ID**
   vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml
 
     <field_group id="sbmooring" >
@@ -1094,13 +1096,16 @@ Trim run_counter.txt::
 Submit::
 
   ./run_nemo
-  4017998.sdb
+  4019348.sdb
 
 
-**PENDING (30 Oct 2016)**
+**PENDING (31 Oct 2016)**
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
 * Does the output work?
 * How fast / slow is it?
 * How large is the output?
 * Next steps fill out with all the moorings.
+* Implement proper IF statements in diawri.F90
+
+**Hit wall limit** Need to do some more debugging in AMM7

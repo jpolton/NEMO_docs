@@ -525,6 +525,13 @@ First check that AMM7 can compile::
 
   https://www.evernote.com/shard/s523/nl/2147483647/086ee834-ae54-4384-8523-79a1eee0d54e/
 
+load modules::
+
+  module unload cray-hdf5 cray-netcdf
+  module swap PrgEnv-cray PrgEnv-intel
+  module load cray-hdf5-parallel
+  module load cray-netcdf-hdf5parallel
+
 Submit::
 
   cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
@@ -537,6 +544,8 @@ First make a copy of working ``diawri.F90``
 ``/work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/MY_SRC> cp diawri.F90  diawri.F90_30Oct16``
 
 Edit ``diawri.F90`` (copy and paste in here when it works)::
+
+    vi /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/MY_SRC/diawri.F90
 
     ...
     sbmask(161, 78) = 1
@@ -580,15 +589,23 @@ Edit ``diawri.F90`` (copy and paste in here when it works)::
     CALL iom_put( "sb_utau", utau * sbmask )   ! 2D zontal wind stress
     CALL iom_put( "sb_vtau", vtau * sbmask )   ! 2D meridional wind stress
     CALL iom_put( "sb_ssh",  sshn * sbmask )   ! 2D ssh
-  ENDIF
+  !ENDIF
 
+
+Compile with ``-g -traceback``::
+
+  vi /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/ARCH/arch-XC_ARCHER_INTEL.fcm
+  ...
+  %FCFLAGS             -integer-size 32 -real-size 64 -O3 -fp-model source -zero -fpp -warn all -g -traceback
+  %FFLAGS              -integer-size 32 -real-size 64 -O3 -fp-model source -zero -fpp -warn all -g -traceback
 
 
   cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG
   ./makenemo -n XIOS_AMM7_nemo -m ARCHER_INTEL
 
 
-Copy executable:
+Copy executable::
+
   cp  XIOS_AMM7_nemo/BLD/bin/nemo.exe XIOS_AMM7_nemo/EXP00/.
 
 Copy pbs script:
@@ -601,19 +618,19 @@ Edit paths in annualrun.pbs and run_nemo.sh for the appropriate execution direct
 
 
 Edit ``field_def.xml``::
-
+**UPDATE CHANGED field_ref to ID**
   vi field_def.xml
 
   <field_group id="sbmooring" >
-   <field field_ref="sb_toce"         name="thetao"   long_name="sea_water_potential_temperature"    unit="degC"   grid_ref="grid_T_3D"  />
-   <field field_ref="sb_soce"         name="so"       long_name="sea_water_salinity"                 unit="psu"   grid_ref="grid_T_3D"   />
-   <field field_ref="sb_u"         name="uo"       long_name="sea_water_x_velocity"        unit="m/s"      grid_ref="grid_U_3D"          />
-   <field field_ref="sb_v"         name="vo"       long_name="sea_water_y_velocity"        unit="m/s"      grid_ref="grid_V_3D"          />
-   <field field_ref="sb_w"         name="wo"       long_name="sea_water_z_velocity"        unit="m/s"      grid_ref="grid_W_3D"          />
-   <field field_ref="sb_dept"      name="depth"    long_name="T-cell thickness"            unit="m"        grid_ref="grid_T_3D"          />
-   <field field_ref="sb_ssh"          name="zos"      long_name="sea_surface_height_above_geoid"    unit="m"     grid_ref="grid_T_2D"    />
-   <field field_ref="sb_utau"         name="tauuo"   long_name="surface_downward_x_stress" unit="m/s^2"    grid_ref="grid_U_2D" />
-   <field field_ref="sb_vtau"         name="tauvo"   long_name="surface_downward_y_stress" unit="m/s^2"    grid_ref="grid_V_2D" />
+   <field id="sb_toce"         name="thetao"   long_name="sea_water_potential_temperature"    unit="degC"   grid_ref="grid_T_3D"  />
+   <field id="sb_soce"         name="so"       long_name="sea_water_salinity"                 unit="psu"   grid_ref="grid_T_3D"   />
+   <field id="sb_u"         name="uo"       long_name="sea_water_x_velocity"        unit="m/s"      grid_ref="grid_U_3D"          />
+   <field id="sb_v"         name="vo"       long_name="sea_water_y_velocity"        unit="m/s"      grid_ref="grid_V_3D"          />
+   <field id="sb_w"         name="wo"       long_name="sea_water_z_velocity"        unit="m/s"      grid_ref="grid_W_3D"          />
+   <field id="sb_dept"      name="depth"    long_name="T-cell thickness"            unit="m"        grid_ref="grid_T_3D"          />
+   <field id="sb_ssh"          name="zos"      long_name="sea_surface_height_above_geoid"    unit="m"     grid_ref="grid_T_2D"    />
+   <field id="sb_utau"         name="tauuo"   long_name="surface_downward_x_stress" unit="m/s^2"    grid_ref="grid_U_2D" />
+   <field id="sb_vtau"         name="tauvo"   long_name="surface_downward_y_stress" unit="m/s^2"    grid_ref="grid_V_2D" />
   </field_group>
 
 
@@ -630,7 +647,7 @@ Edit ``iodef.xml``::
 Edit the wall time to since it appears the 24-48hr queue might be quicker (didn't work. Not sure what queue is called)::
 
   vi annualrun.pbs
-  #PBS -l walltime=24:20:00
+  #PBS -l walltime=00:20:00
   #PBS -q short
 
 
@@ -638,13 +655,78 @@ Edit the wall time to since it appears the 24-48hr queue might be quicker (didn'
 Submit::
   cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
   ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
-  4017983.sdb
+  4020211.sdb
 
-**PENDING (30 Oct 2016)**
+**PENDING (31 Oct 2016)**
 cd /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
 
 * Does the output work?
 * How fast / slow is it?
 * How large is the output?
+* Implement proper IF statements in diawri.F90
 
 Assume all the above is correct. Copy to AMM60, compile and submit.
+
+-----
+
+Problems with recompiled code. Start fresh with gmaya copy
+==========================================================
+
+cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
+
+vi iodef.xml
+
+Edit to just have one file output
+
+Edit annualrun.pbs to a 1 day simulation
+
+Test code as is::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+  4020925.sdb
+
+**This works**
+
+-----
+
+Now try and make sbmooring diagnostic a 3D output in::
+
+  cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
+
+Copy edited source code::
+
+  cp /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/MY_SRC/diawri.F90 /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/MY_SRC/diawri.F90
+
+This has the sbmooring code (and Karen's pycnocline depth) commented out.
+
+load modules::
+
+  module unload cray-hdf5 cray-netcdf
+  module swap PrgEnv-cray PrgEnv-intel
+  module load cray-hdf5-parallel
+  module load cray-netcdf-hdf5parallel
+
+Compile this code::
+
+  cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG
+  ./makenemo -n XIOS_AMM7_nemo2 -m ARCHER_INTEL
+
+Copy executable::
+
+  cp  XIOS_AMM7_nemo2/BLD/bin/nemo.exe XIOS_AMM7_nemo2/EXP00/.
+
+Copy XML files::
+
+  cd /work/n01/n01/jelt/gmaya/NEMO/CONFIG/XIOS_AMM7_nemo2/EXP00
+  #cp /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/iodef.xml iodef.xml
+  #cp /work/n01/n01/jelt/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/field_def.xml field_def.xml
+
+Edit XML files::
+
+  vi iodef.xml
+  vi field_def.xml
+
+Resubmit::
+
+ ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+ 4021456.sdb
