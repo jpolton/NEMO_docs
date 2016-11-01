@@ -1093,19 +1093,205 @@ Trim run_counter.txt::
   cd XIOS_AMM60_nemo/EXP_SBmoorings/
   vi run_counter.txt
 
-Submit::
+**Hit wall limit** Need to do some more debugging in AMM7
+
+Resubmit::
 
   ./run_nemo
-  4019348.sdb
+  4021532.sdb
+
+Hit wall time. No output. XML only sought 3d sbmooring which is enabled in .F90
+
+Resubmit with one simple output to check F90 (2 moorings in one file) and no 3d sbmoorings::
+
+  ./run_nemo
+  4021929.sdb
+
+STILL HITTING WALL TIME. SOMETHING WRONG WITH 3D harmonics not CORRECT (nit000_han and nitend_han). UPDATE run_nemo (using ../../XIOS_AMM60_nemo_harmIT/EXP_harmIT/run_nemo) and RESUBMIT::
+
+  ./run_nemo
+  4022079.sdb
 
 
-**PENDING (31 Oct 2016)**
+**This is running and outputting 1d mooring files**
+Run to competion (5mins for 1 day) but also creates a core dump. Data in 1d mooring file is not OK. Time axis runs L=1:0. THIS MAY WELL BE RESOLVED WITH A LONGER RUN.
+
+NEXT STEP TO TRY AGAIN WITH 3D moorings
+Trim run_counter.txt
+Edit iodef.xml to include 3d sbmoorings::
+
+  <file id="file51" name_suffix="SB" description="Shelf break moorings">
+    <field_group group_ref="sbmooring"/>
+  </file>
+
+Iron out bug with 3D harmonics expecting extra harmonic outputs that don't exist. Edit namelist_cfg. TURN OFF 3D harmonics::
+
+  !-----------------------------------------------------------------------
+  &nam_diaharm   !   Harmonic analysis of tidal constituents ('key_diaharm')
+  !-----------------------------------------------------------------------
+    nit000_han = 1         ! First time step used for harmonic analysis
+    nitend_han = 75        ! Last time step used for harmonic analysis
+    nstep_han  = 15        ! Time step frequency for harmonic analysis
+    tname(1)     =   'O1'  !  name of constituent
+    tname(2)     =   'P1'
+    tname(3)     =   'K1'
+    tname(4)     =   'N2'
+    tname(5)     =   'M2'
+    tname(6)     =   'S2'
+    tname(7)     =   'K2'
+    tname(8)     =   'Q1'
+    tname(9)     =   'M4'
+  /
+  !-----------------------------------------------------------------------
+  &nam_dia25h    !   Output 25 hour mean diagnostics
+  !-----------------------------------------------------------------------
+   ln_dia25h   = .false.
+
+Resubmit::
+
+  ./run_nemo
+  4022202.sdb
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+**WORKED AND COMPLETED IN 5mins for 1 day**
+1d mooring data was outputted (though data was missing for hours 1 : 10, present from 11 : 24 ?)
+
+----
+
+This was from an executable copied from ``XIOS_AMM60_nemo_harmIT``. Compile fresh and rerun. It makes little sense to be developing to code bases,
+with and without 3d harmonics when namelist switches can be used. Make a backup copy of MY_SRC and then copy from  XIOS_AMM60_nemo_harmIT::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo
+  cp -r MY_SRC MY_SRC_1Nov16
+
+  cp -r ../XIOS_AMM60_nemo_harmIT/MY_SRC MY_SRC
+
+Note there was an oddity in ``diawri.F90`` with
+
+ ``CALL iom_put( "rhop_surf", rhop(:,:,1) )   ! surface potential density.``
+  But ``rhop_surf`` does not exist. Comment out this line.
+
+
+...
+::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+Add key_diaharm flag::
+
+  vi XIOS_AMM60_nemo/cpp_XIOS_AMM60_nemo.fcm
+  bld::tool::fppkeys     key_ldfslp key_iomput key_mpp_mpi key_netcdf4 key_tide key_bdy key_jdha_init key_dynspg_ts key_vvl key_zdfgls key_dynldf_smag key_traldf_smag key_traldf_c3d    key_dynldf_c3d   key_diaharm
+
+Compile::
+
+  ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10
+
+Copy executable (or check that the symbolic link is correct)::
+  cp  XIOS_AMM60_nemo/BLD/bin/nemo.exe XIOS_AMM60_nemo/EXP_SBmoorings/.
+
+
+Trim run_counter.txt::
+
+  cd XIOS_AMM60_nemo/EXP_SBmoorings/
+  vi run_counter.txt
+
+Resubmit::
+
+  ./run_nemo
+  4022946.sdb
+
+
+With new sbmask and karen's code. This works.
+Note the the sbmask is only defined on each process at the moment.
+
+Size of 3x3 output, on each processor, which is 5236 moorings, hourly output for one day is 45G.
+This would need offline compression.
+
+Edit compression script, then submit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+  vi nc_compress.pbs
+  qsub nc_compress.pbs
+
+This hit the Wall time limit (60mins) and so did not work. Extend wall time to 2 hours::
+
+  qsub nc_compress.pbs
+
+**PENDING 1 Nov 2016**
+
+----
+
+========================================
+Outputting moorings as a masked 3D array
+========================================
+
+Source: ``/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings``
+
+* Need to create a globally accessible mask file ``sbmask``
+* Need to write output
+
+Create a mask file
+==================
+
+Make some edits to move sbmask definition to dom_oce.F90::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/NEMO/OPA_SRC
+
+  cp DOM/dommsk.F90 ../../CONFIG/XIOS_AMM60_nemo/MY_SRC/dommsk.F90
+  cp DOM/dom_oce.F90 ../../CONFIG/XIOS_AMM60_nemo/MY_SRC/dom_oce.F90
+
+Edit sbmask files::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/MY_SRC
+  vi dommsk.F90
+  ...
+
+  vi dom_oce.F90
+  ...
+
+Compile::
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10
+
+
+Trim run_counter.txt::
+
+  cd XIOS_AMM60_nemo/EXP_SBmoorings/
+  vi run_counter.txt
+
+Resubmit::
+
+    ./run_nemo
+    4023900.sdb
+
+**PENDING (1 Nov 2016)**
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+**WORKS**
+tail -100  LOGS/01265760/stdouterr
+-> report :  Performance report : This ratio must be close to zero. Otherwise it may be usefull to increase buffer size or numbers of server
+-> report :  Memory report : increasing it by a factor will increase performance, depending of the volume of data wrote in file at each time step of the file
+-> report :  Memory report : Current buffer_size : 50000000
+-> report :  Performance report : Ratio : 2.25639 %
+-> report :  Memory report : Minimum buffer size required : 674602
+-> report :  Memory report : increasing it by a factor will increase performance, depending of the volume of data wrote in file at each time step of the file
+
+The output appears to work. 7 output locations in the XML output.
+
 
 * Does the output work?
 * How fast / slow is it?
 * How large is the output?
 * Next steps fill out with all the moorings.
 * Implement proper IF statements in diawri.F90
-
-**Hit wall limit** Need to do some more debugging in AMM7

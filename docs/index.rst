@@ -111,20 +111,27 @@ PROGRESS:
 #. 100+5 moorings each in 1+1 files (x10 XIOS processors per node). EXP_SBmoorings3. In old executable. **EXCEEDED RESOURCE ALLOWED**
 #. 100+5 moorings each in 1+1 files. 1pt moorings. (fewer XIOS processors per node). EXP_SBmoorings. 20min queue **BROKE**
 #. 3 moorings in 2 files works in AMM7.
+#. Switching to outputting 3d array for moorings output usugn a 2d mask array for moorings locations
 
 
 CURRENT:
+cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
-* **Fine resolution spacing virtual moorings IN PROGRESS (3305 moorings) - 21 Oct 2016**
-* Debug using AMM7 **PENDING 27 Oct 2016**
+* Switching to outputting 3d array for moorings output usugn a 2d mask array for moorings locations
+**PENDING (1 Nov 2016)**
+* Also waiting for ``nc_compress.pbs`` to run, 2hr wall time
+**PENDING (1 Nov 2016)**
+
+* Does the output work?
+* How fast / slow is it?
+* How large is the output?
+* Next steps fill out with all the moorings.
+* Implement proper IF statements in diawri.F90
 
 
 
 ACTIONS: (22 Oct 2016)
 
- * Are there 33 files of 100 moorings? Are there outputs in EXP_SBmoorings3
- * How is the speed up with twice as many XIOS processors?
- * If so, then need to speed up output with more processors.
  * Remove job in AMM60smago path
 
 
@@ -132,6 +139,7 @@ ACTIONS: (22 Oct 2016)
 ISSUES:
 
 * Not succeeded in output 3305 moorings. An I/O problem?
+* Too slow using id moorings, aggregated into files.
 
 PLANS:
 
