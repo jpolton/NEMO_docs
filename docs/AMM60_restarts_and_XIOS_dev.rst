@@ -1223,7 +1223,40 @@ This hit the Wall time limit (60mins) and so did not work. Extend wall time to 2
 
   qsub nc_compress.pbs
 
-**PENDING 1 Nov 2016**
+| **This took 2hr 6mins to process one 45Gb file (1 day of data), which took 6 mins to generate..**
+| **Compressed size 294Mb**
+
+Investigate better compression using on-line code. Have a trawl of James' filespace for examples of ``xmlio_server.def``.
+Copy and update the nn_chunks_k. Note AMM60 has 51 levels, NNA has 75::
+
+  cp /work/n01/n01/jdha/ST/trunk/NEMOGCM/CONFIG/AMM7/EXP00/xmlio_server.def /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/xmlio_server.def
+  vi xmlio_server.def
+  ...
+  !-----------------------------------------------------------------------
+  &namnc4         !  netcdf4 chunking and compression settings
+                  !  (benign if "key_netcdf4" is not used)
+  !-----------------------------------------------------------------------
+     nn_nchunks_i   =   4       !  number of chunks in i-dimension
+     nn_nchunks_j   =   4       !  number of chunks in j-dimension
+     nn_nchunks_k   =   6      !  number of chunks in k-dimension
+                                !  setting nn_nchunks_k = jpk will give a chunk size of 1 in the vertical which
+                                !  is optimal for postprocessing which works exclusively with horizontal slabs
+     ln_nc4zip      =   .TRUE.  !  (T) use netcdf4 chunking and compression
+                                !  (F) ignore chunking information and produce netcdf3-compatible files
+
+
+Trim run_counter.txt::
+
+  cd XIOS_AMM60_nemo/EXP_SBmoorings/
+  vi run_counter.txt
+
+Resubmit::
+
+    ./run_nemo
+    4024719.sdb
+
+** Completed in 5min 57**
+AMM60_1h_20120601_20120601_SB.nc is still 45Gb, though AMM60_1h_20120601_20120601_SB001_grid_T.nc is probably smaller.
 
 ----
 
@@ -1278,20 +1311,70 @@ Resubmit::
 **PENDING (1 Nov 2016)**
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
-**WORKS**
-tail -100  LOGS/01265760/stdouterr
--> report :  Performance report : This ratio must be close to zero. Otherwise it may be usefull to increase buffer size or numbers of server
--> report :  Memory report : increasing it by a factor will increase performance, depending of the volume of data wrote in file at each time step of the file
--> report :  Memory report : Current buffer_size : 50000000
--> report :  Performance report : Ratio : 2.25639 %
--> report :  Memory report : Minimum buffer size required : 674602
--> report :  Memory report : increasing it by a factor will increase performance, depending of the volume of data wrote in file at each time step of the file
 
-The output appears to work. 7 output locations in the XML output.
-
-
-* Does the output work?
-* How fast / slow is it?
-* How large is the output?
-* Next steps fill out with all the moorings.
+* Does the output work? **YES**
+* How fast / slow is it? **6mins / day**
+* How large is the output? **45Gb / day**
 * Implement proper IF statements in diawri.F90
+
+
+Edit domain_def.xml to output region of interest only::
+  vi domain_def.xml
+
+  <!-- Shelf Break virtual mooring mask -->
+  <domain id="SB" zoom_ibegin="0307" zoom_jbegin="0252" zoom_ni="0666" zoom_nj="0986" />
+
+
+Add subdomain ``SB`` to iodef.xml file::
+
+  vi iodef.xml
+  ...
+      <!-- Shelf Break virtual moorings -->
+      <file_group id="1h" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+
+        <file id="file51" name_suffix="_SB" description="Shelf break moorings">
+          <field_group group_ref="sbmooring" domain_ref="SB"/>
+        </file>
+
+      </file_group>
+
+Run for 1 day. Trim run_counter.txt::
+
+    cd XIOS_AMM60_nemo/EXP_SBmoorings/
+    vi run_counter.txt
+
+
+
+
+Simulation plan for June 2012
+=============================
+
+Presently from run_counter.txt
+6 minutes a day. Therefore 3 day chunks will fit on the 20mins queue
+
+1264321 1265760 - 1 day
+
+1264321 1268640 - 3 days
+
+For June 2012 need 10 loops of 3 days::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  1264321 1268640
+
+  vi run_nemo
+  export nrestart_max=11 #31 (For one submission this number must equal the number of lines in run_counter.txt)
+
+I made these edits after the job was submitted but was still in the queue. Perhaps it will work...
+
+Resubmit::
+
+    ./run_nemo
+    4024958.sdb
+
+**PENDING (2 Nov 2016)**
+cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
+
+* Does the output work? ** **
+* How fast / slow is it? **> 6mins / day ?**
+* How large is the output? **< 45Gb / day**

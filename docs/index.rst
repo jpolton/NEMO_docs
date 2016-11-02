@@ -112,27 +112,22 @@ PROGRESS:
 #. 100+5 moorings each in 1+1 files. 1pt moorings. (fewer XIOS processors per node). EXP_SBmoorings. 20min queue **BROKE**
 #. 3 moorings in 2 files works in AMM7.
 #. Switching to outputting 3d array for moorings output usugn a 2d mask array for moorings locations
+#. Shelf break mooring subdomain. Output 3D arrays with a mooring mask applied.
 
 
 CURRENT:
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
-* Switching to outputting 3d array for moorings output usugn a 2d mask array for moorings locations
-**PENDING (1 Nov 2016)**
-* Also waiting for ``nc_compress.pbs`` to run, 2hr wall time
-**PENDING (1 Nov 2016)**
-
-* Does the output work?
-* How fast / slow is it?
-* How large is the output?
-* Next steps fill out with all the moorings.
-* Implement proper IF statements in diawri.F90
+* Submitted June 2012 simulation
+**PENDING (2 Nov 2016)**
+* Will need to do off-line compression on output
 
 
 
-ACTIONS: (22 Oct 2016)
 
- * Remove job in AMM60smago path
+ACTIONS: (2 Nov 2016)
+* Will need to do off-line compression on output
+
 
 
 
