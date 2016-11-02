@@ -1372,9 +1372,21 @@ Resubmit::
     ./run_nemo
     4024958.sdb
 
+
+Editted finish_nemo.sh to launch compression of data::
+
+  vi finish_nemo.sh
+  ...
+  # Compress output
+  qsub $JOBDIR/nc_compress.pbs
+
+The compression script moves compressed files to OUTPUT/tmp. This needs to be cleaned when the compressed files are checked
+
+
 **PENDING (2 Nov 2016)**
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
 * Does the output work? ** **
 * How fast / slow is it? **> 6mins / day ?**
 * How large is the output? **< 45Gb / day**
+* Clean the OUTPUT/tmp directory if output is OK.
