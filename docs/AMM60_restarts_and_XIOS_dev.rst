@@ -1289,6 +1289,7 @@ Edit sbmask files::
   ...
 
 Compile::
+
   cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
 
   module add cray-hdf5-parallel
@@ -1380,13 +1381,69 @@ Editted finish_nemo.sh to launch compression of data::
   # Compress output
   qsub $JOBDIR/nc_compress.pbs
 
-The compression script moves compressed files to OUTPUT/tmp. This needs to be cleaned when the compressed files are checked
+The compression script moves compressed files to OUTPUT/tmp. This needs to be cleaned when the compressed files are checked.
+** This didn't seem to work properly:**, though output seemed to compress fine the log files were lost and the job ran until walltime limit**
 
 
 **PENDING (2 Nov 2016)**
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
-* Does the output work? ** **
-* How fast / slow is it? **> 6mins / day ?**
-* How large is the output? **< 45Gb / day**
+* Does the output work? **YES**
+* How fast / slow is it? **> 6mins / day ?** Between 5mins 14 and 7mins 48
+* How large is the output? **< 45Gb / day** 18Gb uncompressed, 322Mb compressed
 * Clean the OUTPUT/tmp directory if output is OK.
+* Don't have logs on the nc_compress.pbs to find walltime > 5 hours but < 7 hrs
+
+**ACTION: copy to SAN**::
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/OUTPUT/cmp* /projectsa/FASTNEt/jelt/AMM60/RUNS/2010_2013/SB_moorings/.
+  chmod a+rx /projectsa/FASTNEt/jelt/AMM60/RUNS/2010_2013/SB_moorings/cmp*nc
+
+
+Job has finished but the 1 June file is missing
+Edit run_counter.txt to just do one day::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  1264321 1265760
+
+Here is the completed ``run_counter.txt`` file (with duff start because I interrupted 3x day to 1x day intervals)
+1 1 7200 20100105
+1264321 1268640
+3 1265761 1267200 1265760=20120601
+4 1267201 1268640 1267200=20120602
+5 1268641 1270080 1268640=20120603
+6 1270081 1271520 1270080=20120604
+7 1271521 1272960 1271520=20120605
+8 1272961 1274400 1272960=20120606
+9 1274401 1275840 1274400=20120607
+10 1275841 1277280 1275840=20120608
+11 1277281 1278720 1277280=20120609
+12 1278721 1280160 1278720=20120610
+13 1280161 1281600 1280160=20120611
+14 1281601 1283040 1281600=20120612
+15 1283041 1284480 1283040=20120613
+16 1284481 1285920 1284480=20120614
+17 1285921 1287360 1285920=20120615
+18 1287361 1288800 1287360=20120616
+19 1288801 1290240 1288800=20120617
+20 1290241 1291680 1290240=20120618
+21 1291681 1293120 1291680=20120619
+22 1293121 1294560 1293120=20120620
+23 1294561 1296000 1294560=20120621
+24 1296001 1297440 1296000=20120622
+25 1297441 1298880 1297440=20120623
+26 1298881 1300320 1298880=20120624
+27 1300321 1301760 1300320=20120625
+28 1301761 1303200 1301760=20120626
+29 1303201 1304640 1303200=20120627
+30 1304641 1306080 1304640=20120628
+31 1306081 1307520 1306080=20120629
+32 1307521 1308960 1307520=20120630
+
+When 1 June run is finished I should reconstruct the above.
+
+**ACTIONS:**
+* Check qstat progress on 1st June
+* Check progress of nc_compress. How long did it take?
+* Submit lots of nc_compress jobs with revised wall time estimates.
+* LATER: scp cmp*nc files to SAN.

@@ -124,10 +124,9 @@ cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
 
 
 
-
 ACTIONS: (2 Nov 2016)
 * Will need to do off-line compression on output
-
+* Tidy up and close this work Object.
 
 
 
