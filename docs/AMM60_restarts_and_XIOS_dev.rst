@@ -1392,7 +1392,7 @@ cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
 * How fast / slow is it? **> 6mins / day ?** Between 5mins 14 and 7mins 48
 * How large is the output? **< 45Gb / day** 18Gb uncompressed, 322Mb compressed
 * Clean the OUTPUT/tmp directory if output is OK.
-* Don't have logs on the nc_compress.pbs to find walltime > 5 hours but < 7 hrs
+* nc_compress.pbs: 1hr 35
 
 **ACTION: copy to SAN**::
   rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings/OUTPUT/cmp* /projectsa/FASTNEt/jelt/AMM60/RUNS/2010_2013/SB_moorings/.
@@ -1404,11 +1404,11 @@ Edit run_counter.txt to just do one day::
 
   vi run_counter.txt
   1 1 7200 20100105
-  1264321 1265760
+  2 1264321 1265760
 
 Here is the completed ``run_counter.txt`` file (with duff start because I interrupted 3x day to 1x day intervals)
 1 1 7200 20100105
-1264321 1268640
+2 1264321 1268640
 3 1265761 1267200 1265760=20120601
 4 1267201 1268640 1267200=20120602
 5 1268641 1270080 1268640=20120603
@@ -1444,6 +1444,6 @@ When 1 June run is finished I should reconstruct the above.
 
 **ACTIONS:**
 * Check qstat progress on 1st June
-* Check progress of nc_compress. How long did it take?
-* Submit lots of nc_compress jobs with revised wall time estimates.
+* Check progress of nc_compress. How long did it take? 1hr 35
+* Submit lots of nc_compress jobs with revised wall time estimates. Queue: [20-29]. done: [2-8, 30] 
 * LATER: scp cmp*nc files to SAN.
