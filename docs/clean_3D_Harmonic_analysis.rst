@@ -93,3 +93,4 @@ cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/
 | grid_T.nc is bad
 
 **ACTION: CHECK field_def.xml DEFINITIONS FOR THE 25H VARIABLES**
+Get on with: ``/Users/jeff/python/ipynb/NEMO/3DHarmonicView.ipynb`` (loads data on /Volumes/archer)

@@ -1406,9 +1406,9 @@ Edit run_counter.txt to just do one day::
   1 1 7200 20100105
   2 1264321 1265760
 
-Here is the completed ``run_counter.txt`` file (with duff start because I interrupted 3x day to 1x day intervals)
+Here is the completed ``run_counter.txt`` file with 1 day increments.
 1 1 7200 20100105
-2 1264321 1268640
+2 1264321 1265760
 3 1265761 1267200 1265760=20120601
 4 1267201 1268640 1267200=20120602
 5 1268641 1270080 1268640=20120603
@@ -1440,10 +1440,10 @@ Here is the completed ``run_counter.txt`` file (with duff start because I interr
 31 1306081 1307520 1306080=20120629
 32 1307521 1308960 1307520=20120630
 
-When 1 June run is finished I should reconstruct the above.
 
 **ACTIONS:**
-* Check qstat progress on 1st June
-* Check progress of nc_compress. How long did it take? 1hr 35
-* Submit lots of nc_compress jobs with revised wall time estimates. Queue: [20-29]. done: [2-8, 30] 
-* LATER: scp cmp*nc files to SAN.
+* Check qstat progress on 1st June. **DONE**.
+* Check progress of nc_compress. How long did it take? **1hr 35** **DONE**.
+* Submit lots of nc_compress jobs with revised wall time estimates. **DONE**
+* Submit last nc_compress1_9_10.pbs when only 3 files left in OUTPUT. **DONE**
+* LATER: scp cmp\*nc files to SAN. **DONE**
