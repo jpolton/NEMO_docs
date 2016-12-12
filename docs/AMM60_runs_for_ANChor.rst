@@ -191,3 +191,90 @@ Resubmit::
   4005690.sdb
 
 **PENDNG 22 Oct 2016. How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**
+
+----
+
+New subdomain for North Sea
+===========================
+
+12 Dec 2016
+
+Exisiting subdomain does not capture all the Lophelia platforms.
+Aim: Move northern boundary to 64N
+
+PATH: /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/
+
+vi run_counter.txt::
+
+  1 1 7200 20100105
+  2 7201 14400 7200=20100109
+
+Only need to run to end of Apr 2010
+vi run_nemo::
+
+  export nrestart_max=25
+
+vi submit_nemo.pbs::
+
+  #PBS -A n01-NOCL
+
+Move the northern boundary north (use AMM60_extract_bathy_subdomain.ipynb)
+vi ../EXP_NSea/domain_def.xml::
+
+  <!-- North Sea -->
+  <domain id="NorthSea" zoom_ibegin="0560" zoom_jbegin="0600" zoom_ni="560" zoom_nj="766" />
+
+Edit run_counter.txt to accomodate this restart::
+  vi run_counter.txt
+
+Submit::
+
+    ./run_nemo
+    4109300.sdb
+
+  **PENDNG 12 Dec 2016. How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``. Should run to Apr**
+
+----
+
+Some stuff that I thought I might try but then decided against
+==============================================================
+
+Try and pickup Dec 2010 restart to start again in Jan 2010::
+
+  cd /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXP_notradiff
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 7201 38880
+  3 38881 82080 20100131
+  4 82081 125280 82080=20100302
+  5 125281 168480 125280=20100401
+  6 168481 211680 168480=20100501
+  7 211681 254880 211680=20100531
+  8 254881 298080 254880=20100630
+  9 298081 341280 298080=20100730
+  10 341281 384480 341280=20100829
+  11 384481 427680 384480=20100928
+  12 427681 514080 427680=20101028
+  13 514081 600480 514080=20101227 <-- USE THIS
+  14 600481 686880 600480=20110225
+  15 686881 773280
+  16 773281 859680 773280=20110625
+  17 859681 946080 859680=20110824
+  18 946081 1032480 946080=20111023
+  19 1032481 1118880 1032480=20111222
+  20 1118881 1205280 1118880=20120220
+  21 1205281 1291680 1205280=20120420
+  22 1291681 1378080 1291680=20120619
+  23 1378081 1464480 1378080=20120818
+  24 1464481 1550880 1464480=20121017
+  25 1550881 1637280 1550880=20121216
+  26 1637281 1723680 1637280=20130214
+  27 1723681 1810080 1723680=20130415
+  28 1810081 1896480 1810080=20130614
+  29 1896481 1982880 1896480=20130813
+  30 1982881 2052000 1982880=20131012
+  31 2052001 2121120 2052000=20131129
+
+Seek and link in restart to North Sea experiment directory::
+
+  ln -s /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXP_notradiff/RESTART/00514080 /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/RESTART/.
