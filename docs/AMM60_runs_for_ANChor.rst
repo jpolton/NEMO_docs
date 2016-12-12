@@ -209,6 +209,11 @@ vi run_counter.txt::
   1 1 7200 20100105
   2 7201 14400 7200=20100109
 
+Link in restart::
+  
+  ln -s /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXP_notradiff/RESTART/00007200 /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/RESTART/.
+
+
 Only need to run to end of Apr 2010
 vi run_nemo::
 
