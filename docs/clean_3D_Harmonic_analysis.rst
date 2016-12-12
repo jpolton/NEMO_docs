@@ -90,7 +90,73 @@ cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/
 | run_counter.txt is added to without garbled date
 | lots of files in OUTPUT
 | Issue with GDEPW not being complete (perhaps it is defined twice?) The map works north of mid Wales, though is wrapped westward. Perhaps W-grid items have a dimension length problem?
-| grid_T.nc is bad
+| I think the problem is with the 25h data
 
 **ACTION: CHECK field_def.xml DEFINITIONS FOR THE 25H VARIABLES**
 Get on with: ``/Users/jeff/python/ipynb/NEMO/3DHarmonicView.ipynb`` (loads data on /Volumes/archer)
+
+
+----
+
+Make new M2 EXPeriment, with only M2 output
+===========================================
+
+Make new experiment directory::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2
+  mkdir EXP_harmIT2
+
+Copy files but not directories::
+
+  cp ../XIOS_AMM60_nemo_harmIT/EXP_harmIT/* ../XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/.
+
+Link restart files::
+
+  mkdir EXP_harmIT2/RESTART
+  ln -s  /work/n01/n01/kariho40/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/AMM60smago/EXPD376/RESTART/01264320  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/RESTART/.
+
+Edit run_counter,  to run for 5 days)::
+
+  cd EXP_harmIT2
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+Edit submission script, and maybe the wall time::
+
+  vi submit_nemo.pbs
+  #PBS -N AMM60_har2
+  #PBS -l walltime=00:25:00
+  #PBS -A n01-NOCL
+
+Edit run file for new directory path::
+
+  vi run_nemo
+  export RUNNAME=EXP_harmIT2
+  export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2
+
+Check code to edit the harmonic analysis terms in the namelist file::
+
+  less run_nemo
+  ...
+  273c\
+  nit000_han = "$nn_it000"
+  274c\
+  nitend_han = "$nitend" " $JOBDIR/namelist_cfg > $WDIR/namelist_cfg
+
+Check ``iodef.xml`` file for harmonic output and 25hr output. Only output M2 (or it is too large to play with)::
+
+  less iodef.xml
+
+
+Submit job::
+
+  ./run_nemo
+  4109840.sdb
+
+
+| **Does it WORK? (12 Dec 2016)**
+| **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various daily files.**
+| **This is identical to previous run (ABOVE) but with only M2 tidal species AND with new PBS account**
+
+cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
