@@ -239,6 +239,15 @@ Submit::
 
   **PENDNG 12 Dec 2016. How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``. Should run to Apr**
 
+Resubmit 20 Dec 2016::
+
+  ./run_nemo
+  4123086.sdb
+
+  **PENDNG 20 Dec 2016. How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``. Should for ~50 steps**
+
+* Next steps. Reduce output to get faster turn over.
+
 ----
 
 Some stuff that I thought I might try but then decided against
