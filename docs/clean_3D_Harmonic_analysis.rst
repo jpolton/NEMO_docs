@@ -160,3 +160,38 @@ Submit job::
 | **This is identical to previous run (ABOVE) but with only M2 tidal species AND with new PBS account**
 
 cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
+
+22 Dec 16
+Seems OK but I am missing the e[12][uvt] files for AMM60. Add them into iodef.xml. Trim run_counter.txt and resubmit::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+  vi iodef.xml
+  <file id="file51" name_suffix="_grid_T" description="ocean T grid variables" >
+      <field field_ref="e1t"  />
+      <field field_ref="e2t"  />
+      <field field_ref="e3t"  />
+  ...
+  <file id="file53" name_suffix="_grid_U" description="ocean U grid variables" >
+        <field field_ref="e1u"  />
+        <field field_ref="e2u"  />
+        <field field_ref="e3u"  />
+  ...
+  <file id="file54" name_suffix="_grid_V" description="ocean V grid variables" >
+          <field field_ref="e1v"  />
+          <field field_ref="e2v"  />
+          <field field_ref="e3v"  />
+  ...
+
+  ./run_nemo
+  4126747.sdb
+
+
+| **Does GRID it WORK? (21 Dec 2016)**
+| **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various daily files.**
+| **I don't think that the 25h data is working**
+| **This is identical to previous run (ABOVE) but with e1u, e2u, e1v, e2v, e1t, e2t**
+
+cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
