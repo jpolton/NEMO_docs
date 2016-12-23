@@ -195,3 +195,31 @@ Seems OK but I am missing the e[12][uvt] files for AMM60. Add them into iodef.xm
 | **This is identical to previous run (ABOVE) but with e1u, e2u, e1v, e2v, e1t, e2t**
 
 cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
+
+The horizontal grids didn't work. It looks like they are not properly defined.
+At best the output is a depth variable. **Action** check field_def.xml::
+
+  vi /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/SHARED/field_def.xml
+
+  <field id="e1v"          long_name="V-cell width"     standard_name="cell_width"      unit="m"       grid_ref="grid_V_3D" />
+  <field id="e2v"          long_name="V-cell depth"     standard_name="cell_depth"      unit="m"       grid_ref="grid_V_3D" />         <field id="e3v"          long_name="V-cell thickness" standard_name="cell_thickness"  unit="m"       grid_ref="grid_V_3D" />
+  <field id="e3v"          long_name="V-cell thickness"     standard_name="cell_thickness"   unit="m"  grid_ref="grid_V_3D" />
+
+  <field id="e1u"          long_name="U-cell width"     standard_name="cell_width"      unit="m"       grid_ref="grid_U_3D" />
+  <field id="e2u"          long_name="U-cell depth"     standard_name="cell_depth"      unit="m"       grid_ref="grid_U_3D" />
+  <field id="e3u"          long_name="U-cell thickness"     standard_name="cell_thickness"   unit="m"  grid_ref="grid_U_3D" />
+
+  <field id="e1t"          long_name="T-cell width"   standard_name="cell_width"   unit="m"   grid_ref="grid_T_3D"/>
+  <field id="e2t"          long_name="T-cell depth"   standard_name="cell_depth"   unit="m"   grid_ref="grid_T_3D"/>
+  <field id="e3t"          long_name="T-cell thickness"   standard_name="cell_thickness"   unit="m"   grid_ref="grid_T_3D"/>
+
+  ./run_nemo
+  4128089.sdb
+
+
+| **Does GRID it WORK? (23 Dec 2016)**
+| **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various daily files.**
+| **I don't think that the 25h data is working**
+| **This is identical to previous run (ABOVE) but with e1u, e2u, e1v, e2v, e1t, e2t now defined**
+
+cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
