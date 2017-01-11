@@ -223,3 +223,10 @@ At best the output is a depth variable. **Action** check field_def.xml::
 | **This is identical to previous run (ABOVE) but with e1u, e2u, e1v, e2v, e1t, e2t now defined**
 
 cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
+
+Inspection of ``AMM60_1d_20120601_20120605_grid_W.nc``:
+The GDEPW and EPS25H fields are gridded onto a subdomain. E3W is OK. Perhaps the problem is hard wired in the FORTRAN... Not that I can see.
+
+Try copying Maria's AMM7 code with 3D harmonics and changing it to AMM60...
+
+Logs at `AMM7 3D Harmonic analysis <AMM7_3D_Harmonic_analysis.html>`_

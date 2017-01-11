@@ -267,7 +267,7 @@ PROGRESS:
 CURRENT:
 
 * Have not updated AMM60 to v3.6_STABLE. `Compiling AMM60 from v3.6_STABLE <https://www.evernote.com/shard/s523/nl/2147483647/cc65c445-f129-4db7-9310-b976c49645b0/>`_.  **In progress**
-
+* Copied Maria's 3D harmonics version of AMM7 running on v3.6_STABLE: `AMM7 3D Harmonic analysis <AMM7_3D_Harmonic_analysis.html>`_  **IN PROGRESS (11 Jan 17)**
 
 Indices and tables
 ==================
