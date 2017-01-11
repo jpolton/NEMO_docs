@@ -194,8 +194,8 @@ Resubmit::
 
 ----
 
-New subdomain for North Sea
-===========================
+New subdomain for North Sea, Jan 2010 - Nov 2013
+================================================
 
 12 Dec 2016
 
@@ -255,7 +255,32 @@ Edit run_nemo for total of 100 restarts and resubmit::
 
 **PENDNG 22 Dec 2016. How is output? Check ``/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``. Should for ~50 steps**
 
+24 Dec 2016
+Quick turnaround on the simulation. Done up to 19/5/11
+Add another 100 timesteps. Resubmit::
 
-* Next steps. Reduce output to get faster turn over.
+  vi run_nemo
+  export nrestart_max=200
+
+  ./run_nemo
+  4131925.sdb
+
+26 Dec 2016
+Quick turnaround. Done up to 20120218. Edit run_nemo to maxcount 300 and resubmit::
+
+  vi run_nemo
+  export nrestart_max=300
+
+  ./run_nemo
+  4144278.sdb
+
+
+Exceeded walltime at end of Nov 2013. Resubmit::
+
+  ./run_nemo
+  4184892.sdb
+
+**PENDNG 11 Jan 2017. How is output? Check:**
+**``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**
 
 ----
