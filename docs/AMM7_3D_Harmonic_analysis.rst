@@ -55,12 +55,16 @@ Submit restart from Jan 1998 - for 3 months::
 
 **PENDING (11 Jan 17)**
 
+Note that the output here is for three months but the start date is manually set in the namelist file: `output_199801/namelist_cfg2`
+
 Check output. Mount archer over sshfs. Use ferret for quick and easy look at data::
 
   #cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
   livmaf$ cd /Volumes/archer/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
-  ls -lrt GA_1d_19820201*nc
+  ls -lrt GA_1d_19980201*nc
   ferret
+  yes? use GA_1d_19820201_19820501_grid_W.nc
+  yes? shade/x=100/y=150  log(TKE25H)
 
 
 ----
