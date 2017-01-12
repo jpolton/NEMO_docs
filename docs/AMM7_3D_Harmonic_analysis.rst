@@ -42,7 +42,12 @@ Manually fix the restart files to appear. **(Perhaps this should not be done in 
   for i in {10..99};   do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_00'$i.nc  'restart_00'$i.nc; done
   for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_0'$i.nc   'restart_0'$i.nc; done
 
+Try restart from end July 2003::
 
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_0'$i.nc   'restart_0'$i.nc; done
 
 
 Submit restart from Jan 1998 - for 3 months::
@@ -53,19 +58,133 @@ Submit restart from Jan 1998 - for 3 months::
   qsub -v m=1,y=1998,nit0=1,ndate=19980101 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1998-01 -N GA199801 subm
   4185406.sdb
 
-**PENDING (11 Jan 17)**
 
 Note that the output here is for three months but the start date is manually set in the namelist file: `output_199801/namelist_cfg2`
 
 Check output. Mount archer over sshfs. Use ferret for quick and easy look at data::
 
   #cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
-  livmaf$ cd /Volumes/archer/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
-  ls -lrt GA_1d_19980201*nc
+  livmaf$ cd /Volumes/archer/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  ls -lrt GA_1d_1982*nc
   ferret
   yes? use GA_1d_19820201_19820501_grid_W.nc
   yes? shade/x=100/y=150  log(TKE25H)
 
+Maria's integrations work and do not show evidence of decaying with time.
+
+With restart from restart_CAA199712 the 25h output decays very fast
+
+*12 Jan 17*
+
+*Find restarts for 1982 simulation that Maria used.
+
+*Copied in restarts from end July 2003
+
+*Switched to different (harm3d) execuatable - this is probably more important than the restart file change:
+
+#  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+#  ln -s opa_harm3d opa
+*Removed this because EXEC=opa_harm3d is set in `subm`
+Restored `ln -s /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/BLD/bin/nemo.exe /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/opa`
+
+Submit::
+
+  ./rsub subm 2003 8 1
+  qsub -v m=8,y=2003,nit0=1,ndate=20030801 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--2003-08 -N GA200308 subm
+  4186749.sdb
+
+Something happened and it crashed pretty quick::
+
+  less GA200308.e4186749
+  /var/spool/PBS/mom_priv/jobs/4186749.sdb.SC: line 226: [: -lt: unary operator expected
+
+
+Submit again with non-unit nit0, so that calendar parameters are read from restart::
+
+  ./rsub subm 2003 8 2
+  qsub -v m=8,y=2003,nit0=2,ndate=20030801 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--2003-08 -N GA200308 subm
+  4187198.sdb
+
+Same error. Switch back to other (Dec 97) restarts::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_0'$i.nc   'restart_0'$i.nc; done
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  ./rsub subm 1998 1 1
+  qsub -v m=1,y=1998,nit0=1,ndate=19980101 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1998-01 -N GA199801 subm
+  4187211.sdb
+
+Note that  ``restart_CAA199712`` has 100 files and ``restart_CAA200307`` has 192 files. There should be 192. Some of the 1997 files are missing. Synchronise again::
+
+  rsync -uartv /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_CAA199712/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_CAA199712
+---
+
+Resubmit 2003 run::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_0'$i.nc   'restart_0'$i.nc; done
+
+  ./rsub subm 2003 8 1
+
+
+Problem with `difvho`. Netcdf output fails to write properly. (No time dimension, L=0 in ferret)::
+
+  less GA199801.e4187211
+  > Error [CNc4DataOutput::writeFieldData_ (CField*  field)] : In file '/home/n01/n01/slwa/work/NEMO/src/NEMO_V3.6_STABLE/NEMO/xios-1.0/src/output/nc4_data_output.cpp', line 1236 -> On writing field data: difvho
+  ...
+
+Comment out this variable from output::
+
+  vi iodef.xml
+  <file id="file25" name_suffix="_grid_W" description="ocean W grid variables" >
+    <field field_ref="e3w"  />
+    <field field_ref="gdepw"  />
+    <field field_ref="woce"         name="wo"      long_name="ocean vertical velocity" />
+    <!--
+    <field field_ref="avt"          name="difvho"  long_name="ocean_vertical_heat_diffusivity" />
+    -->
+  </file>
+
+Resubmit (``chmod a+rx restart_????.nc``)::
+
+    ./rsub subm 2003 8 1
+    qsub -v m=8,y=2003,nit0=1,ndate=20030801 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--2003-08 -N GA200308 subm
+    4188183.sdb
+
+
+Still not working. Same error as before::
+
+  less GA200308.e4188179
+  /var/spool/PBS/mom_priv/jobs/4188179.sdb.SC: line 226: [: -lt: unary operator expected
+
+
+Switch comment on month looper::
+
+  #while [ $mm -le 1 ]; do
+  while [ $mm -le $im2 ]; do
+
+Resubmit::
+
+  ./rsub subm 2003 8 1
+  qsub -v m=8,y=2003,nit0=1,ndate=20030801 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--2003-08 -N GA200308 subm
+  4188202.sdb
+  
+---
+
+
+
+Try a different submission method? e.g.::
+
+  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+
+No these look to be Sarah's code without the modifications for closure scheme or 3d harmonics
 
 ----
 
