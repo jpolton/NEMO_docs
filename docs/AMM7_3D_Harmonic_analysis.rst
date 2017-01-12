@@ -175,7 +175,100 @@ Resubmit::
   ./rsub subm 2003 8 1
   qsub -v m=8,y=2003,nit0=1,ndate=20030801 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--2003-08 -N GA200308 subm
   4188202.sdb
-  
+
+Wall time exceeded.
+Plots look OK-ish. E.g. shade /l=1 /k=40 TKE25H. But the TKE and EPS decays following initial conditions the first entry.
+
+
+Check Maria's output. What can I learn about the settings. Did it work as expected?::
+
+  livljobs ~ $ sshfs jelt@login.archer.ac.uk:/work/n01/n01 /work/jelt/mount_points/archer -o default_permissions,uid=18476,gid=18020,umask=022
+
+  livljobs ~ $ cd /login/jelt/work/mount_points/archer/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+
+  livljobs EXP00 $ ls -lrt GA*nc
+  -rwxr-xr-x 1 jelt pol  8260603382 Dec 21 10:52 GA_1d_19820201_19820501_grid_T.nc
+  -rwxr-xr-x 1 jelt pol  8260603382 Dec 21 10:53 GA_1d_19820201_19820501_grid_U.nc
+  -rwxr-xr-x 1 jelt pol  8260603382 Dec 21 10:53 GA_1d_19820201_19820501_grid_V.nc
+  -rwxr-xr-x 1 jelt pol 14314965659 Dec 21 10:54 GA_1d_19820201_19820501_grid_W.nc
+  -rwxr-xr-x 1 jelt pol  6179036889 Dec 21 10:54 GA_1d_19820201_19820501_Tides.nc
+  -rwxr-xr-x 1 jelt pol   209468708 Dec 21 10:55 GA_1m_19820201_19820501_grid_T.nc
+  -rwxr-xr-x 1 jelt pol   141294638 Dec 21 10:56 GA_1m_19820201_19820501_grid_U.nc
+  -rwxr-xr-x 1 jelt pol   141294638 Dec 21 10:57 GA_1m_19820201_19820501_grid_V.nc
+  -rwxr-xr-x 1 jelt pol   273603514 Dec 21 10:57 GA_1m_19820201_19820501_grid_W.nc
+
+  livljobs EXP00 $ ferret
+             *** NOTE: Unable to create journal file ferret.jnl
+   	NOAA/PMEL TMAP
+   	FERRET v6.95
+   	Linux 2.6.32-573.7.1.el6.x86_64 64-bit - 10/27/15
+   	12-Jan-17 20:47
+
+  yes? use GA_1d_19820201_19820501_grid_U.nc
+  yes? sh da
+       currently SET data sets:
+      1> ./GA_1d_19820201_19820501_grid_U.nc  (default)
+   name     title                             I         J         K         L         M         N
+   NAV_LAT  Latitude                         1:297     1:375     ...       ...       ...       ...
+   NAV_LON  Longitude                        1:297     1:375     ...       ...       ...       ...
+   E3U      U-cell thickness                 1:297     1:375     1:51      1:90      ...       ...
+   TIME_CENTERED
+            Time axis                        ...       ...       ...       1:90      ...       ...
+   TIME_CENTERED_BOUNDS
+                                             1:2       ...       ...       1:90      ...       ...
+   GDEPU    U-cell depth                     1:297     1:375     1:51      1:90      ...       ...
+   UOS      sea_surface_x_velocity           1:297     1:375     ...       1:90      ...       ...
+   UO       sea_water_x_velocity             1:297     1:375     1:51      1:90      ...       ...
+   UO25H    sea_water_x_velocity             1:297     1:375     1:51      1:90      ...       ...
+   UBAR     barotropic_x_velocity            1:297     1:375     ...       1:90      ...       ...
+
+  yes? shade /x=100/y=150 UO
+
+Velocities (daily) appear tp exibit a spring neap cycle. At the very least they are not decaying away from the restart.
+
+Looking in from_mane1 directory, only maria's output has time dimension stored properly
+
+Plan
+====
+
+Use Sarah's restarts. Run for 1 month with 3d harmonics. Then pick it up and output 3d harmonics for 3 months.
+Copy restarts from
+files_restart_198112 -> /work/n01/n01/slwa/NEMO/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP06/files_restart_198112::
+
+  cp files_restart_198112/* .
+
+Submit::
+
+  ./rsub subm 1982 1 1
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1982-01 -N GA198201 subm
+  4188366.sdb
+
+**PENDING. Did the one month run work and produce sensible output for regular fields?** 
+
+Then increase time to 3 months::
+
+  vi subm
+  nit=25920 # 90 days
+
+And resubmit::
+
+  ./rsub subm 1982 2 1
+
+
+To-do
+======
+
+* Change to one month simulation so it completes::
+
+  vi subm
+  nit = ...
+
+* Make sure the restarts are consistent with the tke scheme used (there are restarts linked to Sarah's space)
+* Check velocity variables. Do they go wierd/quiet too? Is the forcing there? They are OK in Maria's output. They are not OK in my simulations.
+
+* cold restart?
+
+
 ---
 
 
