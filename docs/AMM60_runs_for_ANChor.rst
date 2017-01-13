@@ -280,7 +280,13 @@ Exceeded walltime at end of Nov 2013. Resubmit::
   ./run_nemo
   4184892.sdb
 
-**PENDNG 11 Jan 2017. How is output? Check:**
-**``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**
+Hit walltime. Increase walltime to 30mins from 25mins::
 
-----
+  vi submit_nemo.pbs
+  #PBS -l walltime=00:30:00
+
+  ./run_nemo
+  4189019.sdb
+
+**PENDNG 13 Jan 2017. How is output? Check:**
+**``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**

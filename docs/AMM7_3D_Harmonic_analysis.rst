@@ -237,49 +237,266 @@ files_restart_198112 -> /work/n01/n01/slwa/NEMO/src/NEMO_V3.6_STABLE_r6232/NEMOG
 
   cp files_restart_198112/* .
 
+Ensure turn off the harmonic analysis in namelist.
+Use climatology EXCEPT for ``if [ $yy -ge 1990 -a $yy -le 2009 ]; then``::
+
+  vi namelist_cfg.template_skag_climate
+  nitend_han = 8640 ! 25920 ! 105120 ! 210528  ! Last time step used for harmonic analysis
+
+Some how the RUNDIR filepath for thet output files, form rsub, was changed back to Maria's, which is why the qsub logs didn't work
 Submit::
 
   ./rsub subm 1982 1 1
-  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1982-01 -N GA198201 subm
-  4188366.sdb
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1982-01 -N GA198201 subm
+  4188705.sdb
 
-**PENDING. Did the one month run work and produce sensible output for regular fields?** 
-
-Then increase time to 3 months::
+Velocity blow up very fast. Try a cold start::
 
   vi subm
-  nit=25920 # 90 days
-
-And resubmit::
-
-  ./rsub subm 1982 2 1
+  ...
+  rstart=.false.
+  #   rstart=.true.
 
 
-To-do
-======
+  ./rsub subm 1982 1 1
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1982-01 -N GA198201 subm
+  4188716.sdb
 
-* Change to one month simulation so it completes::
+This hit the wall time but worked (Mangaged 19 days). Decrease runtime to complete on short queue (Cut down iodef.xml output so 1 month should now work)::
 
   vi subm
-  nit = ...
+  nit=576  # 2 days
 
-* Make sure the restarts are consistent with the tke scheme used (there are restarts linked to Sarah's space)
-* Check velocity variables. Do they go wierd/quiet too? Is the forcing there? They are OK in Maria's output. They are not OK in my simulations.
+Make sure harmonic analysis will complete::
 
-* cold restart?
+  vi namelist_cfg.template_skag_climate
+  nitend_han = 576
 
+  ./rsub subm 1982 1 1
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-01 -N GA198201 subm
+  4188775.sdb
 
----
+Pick up restart. Problem with renaming restarts so fix subm and do it manually here::
 
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do mv 'GA_00000576_restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};     do mv 'GA_00000576_restart_00'$i.nc 'restart_00'$i.nc; done
+  for i in {100..191};     do mv 'GA_00000576_restart_0'$i.nc 'restart_0'$i.nc; done
 
+Warm start::
 
-Try a different submission method? e.g.::
+  vi subm
+  ...
+  #rstart=.false.
+  rstart=.true.
 
-  ./run_nemo.sh annualrun.pbs 12 16 192 1981 1 1
+Run time 15 days (Cut down iodef.xml output so 1 month should now work)::
 
-No these look to be Sarah's code without the modifications for closure scheme or 3d harmonics
+  vi subm
+  nit=4320 # 15 days
+
+Harmonic analysis duration 15 days (Cut down iodef.xml output so 1 month should now work)::
+
+  vi namelist_cfg.template_skag_climate
+  nitend_han = 4320
+
+Submit::
+
+  ./rsub subm 1982 1 1
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-01 -N GA198201 subm
+  4188818.sdb
+
+Run completed fine but the data is no good. **UBAR, TKE25H, EPS25H, M2X_SSH are empty-ish**
 
 ----
 
-2. Compile and run using Maria's methods
-========================================
+The machinery for running seems OK but perhaps the executable is not good.
+
+Compile new executable
+======================
+
+Copy code from Maria::
+
+  cd /work/n01/n01/mane1/V3.6_ST/NEMOGCM
+  rsync -uart ARCH/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/ARCH
+  rsync -uart EXTERNAL/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/EXTERNAL
+  rsync -uart fcm-make/ /work/n01/n01/jelt/from_mane1/V3.6_S/fcm-make
+  rsync -uart NEMO/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/NEMO
+  rsync -uart SETTE/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/SETTE
+  rsync -uart TOOLS/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/TOOLS
+  cp License_CeCILL.txt /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/.
+  cp CONFIG/XIOS_AMM7_nemo/cpp_XIOS_AMM7_nemo.fcm /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/.
+
+Add compiler key::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM
+  vi CONFIG/XIOS_AMM7_nemo/cpp_XIOS_AMM7_nemo.fcm
+  ...
+  key_diaharm
+
+
+XIOS executables differ between that which I and Maria had previously used. Either using James' or Andrew build::
+
+ cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/ARCH
+ diff  arch-XC_ARCHER_INTEL.fcm /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/ARCH/arch-XC_ARCHER_INTEL.fcm
+ 35c35
+ < %XIOS_HOME           /work/n01/n01/acc/XIOS_r484
+ ---
+ > %XIOS_HOME           /work/n01/n01/jdha/ST/xios-1.0
+
+James' is newer. Use his::
+
+ cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/ARCH/arch-XC_ARCHER_INTEL.fcm /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/ARCH/.
+
+Compile::
+
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG
+
+  ./makenemo -n XIOS_AMM7_nemo -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM7_nemo -m XC_ARCHER_INTEL -j 10
+
+Copy executable to new EXPeriment directory::
+
+  cp XIOS_AMM7_nemo/BLD/bin/nemo.exe XIOS_AMM7_nemo/EXP01/opa_harm3d
+
+Also copy into old run directory to try it out::
+
+  cp XIOS_AMM7_nemo/BLD/bin/nemo.exe XIOS_AMM7_nemo/EXP01/opa_harm3d_jp
+
+Edit subm to use new executable::
+
+  vi subm
+  ...
+  export EXEC=opa_harm3d_jp
+
+Submit as a restart to see what happens::
+
+  ./rsub subm 1982 2 1
+
+Output files are not readable with ferret. ALl but the edges are emtpy
+
+Recompile without key_diaharm
+Resubmit as a restart. Note that this may be problematic since the restart data is not great::
+
+  ./rsub subm 1982 2 1
+  qsub -v m=2,y=1982,nit0=1,ndate=19820201 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-02 -N GA198202 subm
+  4189208.sdb
+
+Data didn't work. Try again with a cold start::
+
+  vi subm
+  ...
+  rstart=.false.
+  #   rstart=.true.
+
+  ./rsub subm 1982 2 1
+  qsub -v m=2,y=1982,nit0=1,ndate=19820201 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-02 -N GA198202 subm
+  4189465.sdb
+
+
+Empty files. Perhaps there is nothing to initialise the domain with (not this it seems to produce an error). TRy again with restarts::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_0'$i.nc   'restart_0'$i.nc; done
+
+Try again with a warm start::
+
+    vi subm
+    ...
+    #rstart=.false.
+       rstart=.true.
+
+    ./rsub subm 1982 2 1
+    qsub -v m=2,y=1982,nit0=1,ndate=19820201 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-02 -N GA198202 subm
+    4189527.sdb
+
+Crashed quicky because of excessive currents. *Post script: The warm start shohld have been done with ``/rsub subm 1982 1 1`` not Feb*
+Try ramping up tides. Hmm can not see how to change the timestep (formally rn_rdt, which exists in ``output.namelist.dyn``)
+
+Recompile with key_diaharm and resubmit::
+
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG
+  ./makenemo -n XIOS_AMM7_nemo -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM7_nemo -m XC_ARCHER_INTEL -j 10
+  cp XIOS_AMM7_nemo/BLD/bin/nemo.exe /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/opa_harm3d_jp
+
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA199712/restart_0'$i.nc   'restart_0'$i.nc; done
+
+
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  ./rsub subm 1982 1 1
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-01 -N GA198201 subm
+  4189784.sdb
+
+Again, crashed quicky because of excessive currents.
+
+Try with different restart files (restart)::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+  for i in {0..9};     do cp 'files_restart_198112/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp 'files_restart_198112/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp 'files_restart_198112/restart_0'$i.nc   'restart_0'$i.nc; done
+
+  ./rsub subm 1982 1 1
+  qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-01 -N GA198201 subm
+  4189941.sdb
+
+Again, crashed quicky because of excessive currents.
+
+
+Try a cold start::
+
+  vi subm
+  ...
+  rstart=.false.
+  #rstart=.true.
+
+  ./rsub subm 1982 1 1
+
+Ran but no valid data. Perhaps no initial condition.
+
+
+Idea copy restarts from Maria, after successful simulation and integrate ONWARDS::
+
+  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+
+  for i in {0..9};     do cp '/work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_000'$i.nc 'restart_000'$i.nc; done
+  for i in {10..99};   do cp '/work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_00'$i.nc  'restart_00'$i.nc; done
+  for i in {100..191}; do cp '/work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_0'$i.nc   'restart_0'$i.nc; done
+
+Warm restart (check)::
+
+  vi subm
+  ...
+  #rstart=.false.
+  rstart=.true.
+
+Use Maria's executable::
+
+  vi subm
+  ...
+  export EXEC=opa_harm3d
+
+Submit a follow on run for GA_1d_19820201_19820501_Tides.nc::
+
+  ./rsub subm 1982 5 1
+  qsub -v m=5,y=1982,nit0=1,ndate=19820501 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-1982-05 -N GA198205 subm
+  4190062.sdb
+
+Again, crashed quicky because of excessive currents.
+
+Hmm...
