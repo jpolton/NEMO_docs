@@ -122,7 +122,7 @@ Resubmit::
 Note that  ``restart_CAA199712`` has 100 files and ``restart_CAA200307`` has 192 files. There should be 192. Some of the 1997 files are missing. Synchronise again::
 
   rsync -uartv /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_CAA199712/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/restart_CAA199712
----
+
 
 Resubmit 2003 run::
 
@@ -132,7 +132,6 @@ Resubmit 2003 run::
   for i in {100..191}; do cp '/work/n01/n01/mane1/AMM7_w/restart_CAA200307/restart_0'$i.nc   'restart_0'$i.nc; done
 
   ./rsub subm 2003 8 1
-
 
 Problem with `difvho`. Netcdf output fails to write properly. (No time dimension, L=0 in ferret)::
 
@@ -500,3 +499,5 @@ Submit a follow on run for GA_1d_19820201_19820501_Tides.nc::
 Again, crashed quicky because of excessive currents.
 
 Hmm...
+
+Ask Maria...
