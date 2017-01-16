@@ -67,7 +67,7 @@ With the following error report::
 Looks like bad PYTHONPATH. Need to install following the `installation guide <http://pynemo.readthedocs.io/en/latest/intro.html>`_.
 
 
-ACTIONS (16 Jan 17):
+**ACTIONS (16 Jan 17):**
 
 * Do a local install to get the documents.
 * Try editing the docs' source with ``svn commit``
