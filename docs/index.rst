@@ -117,7 +117,8 @@ cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/C
 
 ACTIONS: (16 Jan 2016)
 * Tidy up and close this work Object.
-* Are there still non compressed netcdf output files?
+* Are there still non compressed netcdf output files? No
+* Does gzipping improve disk storage for already compressed netcdf files?
 
 
 ISSUES:
@@ -207,7 +208,6 @@ ACTIONS:
 
 PLANS:
 
-* Delete /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea_old when ready
 * Gzip compression of output in the finish script
 
 
