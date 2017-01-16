@@ -68,14 +68,8 @@ PROGRESS:
 
 CURRENT:
 
-* Try `Recompile and resubmit clean 3D Harmonic analysis  <clean_3D_Harmonic_analysis.index>`_ again. Make sure permissions on MY_SRC files are all same. Resubmit **PENDING 27 Oct 2016**
-* Noted that there are differences between AMM60 and Maria's AMM7 keys: https://www.evernote.com/shard/s523/nl/2147483647/9efc56c7-6965-4baf-b8be-b05f4e2b8d4c/
+* Try `mapping AMM60 to v3.6_STABLE from AMM7 <AMM7_3D_Harmonic_analysis.index>`_ .  **PENDING 16 Jan 2017**
 
-**ACTIONS (21 Oct 2016):**
-
-* Submit a one (or two month simulation) June / July 2012
-* Develop diagnostics
-* Copy ``field_def.xml`` edits to other directories, that don't need them.
 
 PLANS:
 
@@ -114,21 +108,16 @@ PROGRESS:
 #. 3 moorings in 2 files works in AMM7.
 #. Switching to outputting 3d array for moorings output usugn a 2d mask array for moorings locations
 #. Shelf break mooring subdomain. Output 3D arrays with a mooring mask applied.
-
+#. June 2012 simulation finished
+#. off-line compression on netcdf output
 
 CURRENT:
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
-* Submitted June 2012 simulation
-**PENDING (2 Nov 2016)**
-* Will need to do off-line compression on output
 
-
-
-ACTIONS: (2 Nov 2016)
-* Will need to do off-line compression on output
+ACTIONS: (16 Jan 2016)
 * Tidy up and close this work Object.
-
+* Are there still non compressed netcdf output files?
 
 
 ISSUES:
@@ -138,9 +127,8 @@ ISSUES:
 
 PLANS:
 
-* Run June 2012 with full list of moorings
 * Migrate tech notes to NEMO skills
-* Compress output in the finish script?
+* Gzip output in the finish script?
 * Other output:
   * Slowly varying stratification
   * Baines forcing
@@ -206,6 +194,7 @@ PROGRESS:
 * Running with hourly velocity output with vertical viscosity AVM
 * mesh files generated with `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_
 * Have output through to the end of Aug 2012 (27th)
+* Generated hourly output for North Sea: Jan 2010 - Nov 2013
 
 CURRENT:
 
@@ -214,12 +203,12 @@ CURRENT:
 
 ACTIONS:
 
-* Notify GaBy of output **Submitted (22 Oct 2016)**
+* gzipping 2012 and 2013 **Submitted (16 Jan 2017)**
 
 PLANS:
 
 * Delete /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea_old when ready
-* Compress output in the finish script?
+* Gzip compression of output in the finish script
 
 
 

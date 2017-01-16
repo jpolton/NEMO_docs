@@ -290,3 +290,15 @@ Hit walltime. Increase walltime to 30mins from 25mins::
 
 **PENDNG 13 Jan 2017. How is output? Check:**
 **``cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT``**
+
+
+---
+
+Compression of output
+=====================
+
+Compress output data using the serial queue. Instead of trying to use netcdf compression, use gzip::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/
+  qsub -q serial AMM60gzip12
+  qsub -q serial AMM60gzip13
