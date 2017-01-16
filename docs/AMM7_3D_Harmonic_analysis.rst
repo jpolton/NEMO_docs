@@ -2,8 +2,8 @@
 AMM7  3D Harmonic build and submission
 ======================================
 
-Plan
-====
+0. Plan
+=======
 
 * Copy from Maria
 * Compile and run using her methods
@@ -74,18 +74,20 @@ Maria's integrations work and do not show evidence of decaying with time.
 
 With restart from restart_CAA199712 the 25h output decays very fast
 
+----
+
 *12 Jan 17*
 
-*Find restarts for 1982 simulation that Maria used.
+* Find restarts for 1982 simulation that Maria used.
 
-*Copied in restarts from end July 2003
+* Copied in restarts from end July 2003
 
-*Switched to different (harm3d) execuatable - this is probably more important than the restart file change:
+* Switched to different (harm3d) execuatable - this is probably more important than the restart file change::
 
-#  cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
-#  ln -s opa_harm3d opa
-*Removed this because EXEC=opa_harm3d is set in `subm`
-Restored `ln -s /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/BLD/bin/nemo.exe /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/opa`
+  ``cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00``
+  ``ln -s opa_harm3d opa``
+
+* Reversed this because EXEC=opa_harm3d is set in `subm`. Restored ``ln -s /work/n01/n01/mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/BLD/bin/nemo.exe /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/opa``
 
 Submit::
 
@@ -227,23 +229,25 @@ Velocities (daily) appear tp exibit a spring neap cycle. At the very least they 
 
 Looking in from_mane1 directory, only maria's output has time dimension stored properly
 
-Plan
-====
+----
 
-Use Sarah's restarts. Run for 1 month with 3d harmonics. Then pick it up and output 3d harmonics for 3 months.
+*13 Jan*
+
+
+Plan: Use Sarah's restarts. Run for 1 month with 3d harmonics. Then pick it up and output 3d harmonics for 3 months.
 Copy restarts from
 files_restart_198112 -> /work/n01/n01/slwa/NEMO/src/NEMO_V3.6_STABLE_r6232/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP06/files_restart_198112::
 
   cp files_restart_198112/* .
 
-Ensure turn off the harmonic analysis in namelist.
+*Edit (16Jan) not sure why I wrote this*: Ensure turn off the harmonic analysis in namelist. *I don't see any action following this statement*
 Use climatology EXCEPT for ``if [ $yy -ge 1990 -a $yy -le 2009 ]; then``::
 
   vi namelist_cfg.template_skag_climate
   nitend_han = 8640 ! 25920 ! 105120 ! 210528  ! Last time step used for harmonic analysis
 
-Some how the RUNDIR filepath for thet output files, form rsub, was changed back to Maria's, which is why the qsub logs didn't work
-Submit::
+Note the RUNDIR filepath for the output log files is set in rsub. Somehow this was changed back to Maria's path, which is why the qsub logs didn't work
+Fix and submit::
 
   ./rsub subm 1982 1 1
   qsub -v m=1,y=1982,nit0=1,ndate=19820101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7--1982-01 -N GA198201 subm
@@ -307,12 +311,12 @@ Submit::
 
 Run completed fine but the data is no good. **UBAR, TKE25H, EPS25H, M2X_SSH are empty-ish**
 
-----
+**Can not successfully rerun Maria's executable to produce same 3D tide output.**
 
 The machinery for running seems OK but perhaps the executable is not good.
 
-Compile new executable
-======================
+2. Compile new executable
+=========================
 
 Copy code from Maria::
 
@@ -376,7 +380,7 @@ Submit as a restart to see what happens::
 
   ./rsub subm 1982 2 1
 
-Output files are not readable with ferret. ALl but the edges are emtpy
+Output files are not readable with ferret. All but the edges are emtpy
 
 Recompile without key_diaharm
 Resubmit as a restart. Note that this may be problematic since the restart data is not great::
@@ -499,5 +503,15 @@ Submit a follow on run for GA_1d_19820201_19820501_Tides.nc::
 Again, crashed quicky because of excessive currents.
 
 Hmm...
+
+Restarts crash because of excessive currents. This could perhaps be a wrong variable being read in as a velocity (if NEMO will allow this).
+Can not do cold starts because I don't have the infracstructure to run from an initial condition.
+
+Likely causes of the difficulties::
+
+  1) wrong implementation of submission script
+  2) wrong restart files
+  3) wrong compiler keys
+  4) Other user-error
 
 Ask Maria...
