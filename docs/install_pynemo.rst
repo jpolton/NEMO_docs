@@ -63,3 +63,12 @@ With the following error report::
 
 
   Please make the appropriate changes for your system and try again.
+
+Looks like bad PYTHONPATH. Need to install following the `installation guide <http://pynemo.readthedocs.io/en/latest/intro.html>`_.
+
+
+ACTIONS (16 Jan 17):
+
+* Do a local install to get the documents.
+* Try editing the docs' source with ``svn commit``
+* Do a proper install of pyNEMO
