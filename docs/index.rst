@@ -109,22 +109,21 @@ PROGRESS:
 #. Switching to outputting 3d array for moorings output usugn a 2d mask array for moorings locations
 #. Shelf break mooring subdomain. Output 3D arrays with a mooring mask applied.
 #. June 2012 simulation finished
-#. off-line compression on netcdf output
+#. off-line compression on netcdf output. Gzipping saves approximately a factor of 2 space.
 
 CURRENT:
 cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo/EXP_SBmoorings
 
 
 ACTIONS: (16 Jan 2016)
+
 * Tidy up and close this work Object.
-* Are there still non compressed netcdf output files? No
-* Does gzipping improve disk storage for already compressed netcdf files?
 
 
 ISSUES:
 
-* Not succeeded in output 3305 moorings. An I/O problem?
-* Too slow using id moorings, aggregated into files.
+* Not succeeded in outputting 3305 1d moorings. An I/O problem?
+* Outputted using masked 3D spatial arrays.
 
 PLANS:
 

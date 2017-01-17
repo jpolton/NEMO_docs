@@ -515,3 +515,11 @@ Likely causes of the difficulties::
   4) Other user-error
 
 Ask Maria...
+
+---
+
+*(16 Jan 17)* Maria said::
+
+  #. I had wrong bathymetry file. Now it should work.
+  #. try to use opa_harm3d as executable. I am afraid that last version has key that you don't need to use: key_gen_IC
+  Delete it and recompile

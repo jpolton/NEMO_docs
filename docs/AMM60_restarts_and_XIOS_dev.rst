@@ -8,6 +8,13 @@ Copy the restart file from Karens run. Perhaps  ``/work/n01/n01/kariho40/NEMO/NE
 
 In particular I want to rerun the June 2012 period (when there was a cruise) and output lots of virtual moorings for Jo Hopkins’ student (David) to analyse the shelf break processes.
 
+NOTE:
+
+Outputting 3305 moorings using XIOS 1d techniques failed. Tried distributing moorings across different numbers of files.
+Tried varying the processor allocation to XIOS.
+There were either walltime issues or memory problems. This might be fixed in xios-2...
+In the end outputted the data as a masked 3D spatial array, though not a elegant it was fast and worked!
+
 
 PLAN:
 
@@ -269,7 +276,6 @@ Resubmit::
 | Create a separate lookup for lat and lon.
 | Save new file as ``iodef_1file.xml``
 
-Create new GitHub repo: https://github.com/jpolton/EXP_SBmoorings
 
 | Trim ``run_counter.txt``
 | ``cp iodef_1file.xml iodef.xml``
@@ -1447,3 +1453,6 @@ Here is the completed ``run_counter.txt`` file with 1 day increments.
 * Submit lots of nc_compress jobs with revised wall time estimates. **DONE**
 * Submit last nc_compress1_9_10.pbs when only 3 files left in OUTPUT. **DONE**
 * LATER: scp cmp\*nc files to SAN. **DONE**
+* gzip OUTPUT/cmp\*nc files **DONE**
+* delete EXP_SBmoorings2 EXP_SBmoorings3
+* move EXP_SBmoorings to /nerc
