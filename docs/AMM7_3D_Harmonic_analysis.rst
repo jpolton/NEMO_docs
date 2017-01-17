@@ -5,9 +5,9 @@ AMM7  3D Harmonic build and submission
 0. Plan
 =======
 
-* Copy from Maria
-* Compile and run using her methods
-* Update code base with latest v3.6_STABLE
+* Copy directory from Maria. Run
+* Compile and run using Maria's methods
+* Reference Maria's codebase to a fixed revision of v3.6_STABLE
 * Compile and run
 * Remove initial straight copied version
 * Update to AMM60 configuration.
@@ -87,7 +87,7 @@ This runs. AND the output looks sensible for TKE25H, EPS25H and M2X_SSH.
 2. Compile new executable
 =========================
 
-Copy code from Maria::
+Copy source code from Maria::
 
   cd /work/n01/n01/mane1/V3.6_ST/NEMOGCM
   rsync -uart ARCH/ /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/ARCH
@@ -160,6 +160,49 @@ Submit::
 
 This WORKS!!  AND the output looks sensible for TKE25H, EPS25H and M2X_SSH.
 
+----
+
+**PLAN**
+
+Now to replicate Maria's code need to create a restart in the summer. Say end of May. Then do a 3 month tidal analysis, for June, July, Aug.
+So need a 5 month simulation. Launch 5 successive restarts from Jan 2012. Save the last restart set.
+
+Copy fresh restart files from Dec 2011::
+
+    cd /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00
+    for i in {0..9};     do cp 'files_restart_201112/restart_000'$i.nc 'restart_000'$i.nc; done
+    for i in {10..99};   do cp 'files_restart_201112/restart_00'$i.nc  'restart_00'$i.nc; done
+    for i in {100..191}; do cp 'files_restart_201112/restart_0'$i.nc   'restart_0'$i.nc; done
+
+Edit the number of timestep in the simulation to do one month. Comment out the test cases::
+
+  vi subm
+  ...
+  #nit=576  # 2 days
+  #nit=4320  # 15 days
+  #nit=25920 # 90 days
+
+For 2012 the namelist comes from ``namelist_cfg.template_skag_climate``. The harmonic analysis is kept at 15 days because we don't care during spin up to June. **THIS WILL NEED TO BE CHANGED**::
+
+  vi namelist_cfg.template_skag_climate
+  ...
+  nitend_han = 4320
+
+Edit the ``iodef.xml``. Comment out the daily U,V,T,W,tides files. Otherwise a month will not complete on the short queue (Just M2 ran for 30days in 20mins). Lots of consituents commented out. Again this will need to be changed for the production run.
+
+Submit run::
+
+  ./rsub subm 2012 1 1
+  qsub -v m=1,y=2012,nit0=1,ndate=20120101 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-01 -N GA201201 subm
+  4197124.sdb
+
+Jan completed. Restart for Feb (on standard queue after 8pm)::
+
+  ./rsub subm 2012 2 1
+  qsub -v m=2,y=2012,nit0=1,ndate=20120201 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-02 -N GA201202 subm
+  4197610.sdb
+
+Manually resubmit to avoid the chance of breaking something
 
 
 3. Other things learnt while debugging
@@ -182,3 +225,216 @@ Harmonic analysis duration 15 days (Cut down iodef.xml output so 1 month should 
 
       vi namelist_cfg.template_skag_climate
       nitend_han = 4320
+
+
+
+4. Identify code changes in Maria's source
+==========================================
+
+Create a patch file for changes in the OPA_SRC directory. In the following there are duplicated lines for two different revisions.
+I wasn't sure if a later revision would be preferable as it might have fewer changes. I think it just has different changes...
+In implementing the following either follow r6204 OR r7564, not both.
+
+Setup some directory aliases::
+
+  export TDIR=/work/n01/n01/jelt/TRY
+  export SDIR=/work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC
+  export WDIR=/work/n01/n01/jelt
+
+Clean out the TRY directory::
+
+  cd $TDIR
+  rm -rf *
+
+Checkout a v3.6_STABLE at revision 6204/7564. (This corresponded to the highest version number in Maria's code)::
+
+  svn co http://forge.ipsl.jussieu.fr/nemo/svn/branches/2015/nemo_v3_6_STABLE@6204
+  svn co http://forge.ipsl.jussieu.fr/nemo/svn/branches/2015/nemo_v3_6_STABLE@7564
+
+Create a link to the clean files in modified source::
+
+  ln -s $TDIR/nemo_v3_6_STABLE/NEMOGCM/NEMO/OPA_SRC/ $SDIR/../OPA_SRC_r6204
+  ln -s $TDIR/nemo_v3_6_STABLE/NEMOGCM/NEMO/OPA_SRC/ $SDIR/../OPA_SRC_r7564
+
+For some reason OPA_SRC is recursively defined inside the target dir (for r6204)::
+
+  rm $SDIR/../OPA_SRC_r6204/OPA_SRC
+
+Using the syntax: ``diff -crB OrigSrc ModSrc > ModSrc.patch`` create a patch file,
+where -c context, -r recursive (multiple levels dir), -B is to ignore Blank Lines, -N new files.
+(Following http://linux.byexamples.com/archives/163/how-to-create-patch-file-using-patch-and-diff/)
+
+Create a patch only for \*90 files. This is neatly done by creating a list of files that are not \*90 files and excluding them from the diff (diff has no include option)
+I didn't do this for the r6204 patch::
+
+  cd $SDIR/..
+  find  OPA_SRC -type f | grep --text -vP "90$" | sed 's/.*\///' | sort -u > file1
+  find  OPA_SRC_r7564/ -type f | grep --text -vP "90$" | sed 's/.*\///' | sort -u >> file1
+  sort -u file1 > excludelist
+  rm file[12]
+
+  diff -crBN OPA_SRC_r6204 OPA_SRC  > OPA_SRC_r6204_harm3d.patch
+  diff -crBN OPA_SRC_r7564 OPA_SRC -X excludelist > OPA_SRC_r7564_harm3d.patch
+
+Make a new 'test' directory to patch::
+
+  rsync -ravt  /work/n01/n01/jelt/TRY/nemo_v3_6_STABLE/NEMOGCM/NEMO/OPA_SRC/ OPA_SRC_harm3d
+  cd OPA_SRC_harm3d/
+
+Do a dry run first::
+
+  patch --dry-run -p1 -i ../OPA_SRC_r6204_harm3d.patch
+  patch --dry-run -p1 -i ../OPA_SRC_r7564_harm3d.patch
+
+This is a bit heavy handed and patches all the files, including svn logs and things that do not need patching.
+However a ``diff -r OPA_SRC_harm3d/ $SDIR`` returns a set of empty lines.
+
+
+
+5. Check for differences between AMM7 and AMM60
+===============================================
+
+
+6. Build harmonic code from clean checkout
+==========================================
+
+Load modules::
+
+  module swap PrgEnv-cray PrgEnv-intel
+  module load cray-netcdf-hdf5parallel
+  module load cray-hdf5-parallel
+
+Setup some directory aliases::
+
+  export WDIR=/work/n01/n01/jelt
+
+Clean out the TRY directory::
+
+  cd $WDIR
+
+Checkout a v3.6_STABLE at revision 7564. (This is currently the latest v3.6_STABLE
+revision available)::
+
+  svn co http://forge.ipsl.jussieu.fr/nemo/svn/branches/2015/nemo_v3_6_STABLE@7564
+
+Change checked out repo directory name.
+Have to use suffix harm3d since the source code in ``OPA_SRC`` will be modified
+from checked out version::
+
+  mv nemo_v3_6_STABLE/ NEMO/nemo_v3_6_STABLE_r7564_harm3d
+
+Copy ARCH file::
+
+  export CDIR=$WDIR/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG
+
+  cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/ARCH/arch-XC_ARCHER_INTEL.fcm $CDIR/../ARCH/.
+
+Compile only with OPA_SRC::
+
+  cd $CDIR
+  ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10
+
+Fails. Remove spurious key_lim2, replace with the following (for AMM7)::
+
+  vi XIOS_AMM60_nemo/cpp_XIOS_AMM60_nemo.fcm
+  bld::tool::fppkeys key_dynspg_ts key_ldfslp key_zdfgls key_mpp_mpi \
+                   key_netcdf4 \
+                   key_nosignedzero key_traldf_c2d \
+                   key_dynldf_c2d key_bdy key_tide key_vvl key_iomput \
+                   key_diaharm
+
+----
+
+*Does not work*
+
+Now have a MY_SRC directory. Copy original source code and apply patch there (exclude /.svn folders)::
+
+  rsync -arvt --exclude=".*" $WDIR/NEMO/nemo_v3_6_STABLE_r6204/NEMOGCM/NEMO/OPA_SRC/* XIOS_AMM60_nemo/MY_SRC/.
+
+Obtain and apply patch::
+
+  cd $CDIR/XIOS_AMM60_nemo
+  cp /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC_r7564_harm3d.patch .
+
+  cd MY_SRC
+  patch --dry-run -p1 -i ../OPA_SRC_r7564_harm3d.patch
+
+*END: DOES NOT WORK*. The BDY patches seemed OK but all the others had issues. Could apply patch directly at OPA_SRC directory.
+
+----
+
+Apply patch directly at OPA_SRC::
+
+  cp /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC_r7564_harm3d.patch $CDIR/../NEMO/.
+  cd $CDIR/../NEMO/OPA_SRC
+  patch --dry-run -p1 -i ../OPA_SRC_r7564_harm3d.patch
+
+If it doesn't return errors::
+
+  patch -p1 -i ../OPA_SRC_r7564_harm3d.patch
+
+This works. But does not preserve the source code.
+
+Build again::
+
+  cd $CDIR
+  ./makenemo clean
+  ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10
+
+This produces a new executables, which differs from the one generated in Maria's
+code base. Comparing the FORTRAN shows the difference is due to the nemogcm.F90 file::
+
+  diff XIOS_AMM60_nemo/WORK /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK
+
+  diff XIOS_AMM60_nemo/WORK/bdydyn3d.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdydyn3d.F90
+  486d485
+  <
+  490d488
+  <
+  diff XIOS_AMM60_nemo/WORK/bdydyn.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdydyn.F90
+  142a143,145
+  >
+  >
+  >
+  diff XIOS_AMM60_nemo/WORK/bdyini.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdyini.F90
+  116d115
+  <
+  diff XIOS_AMM60_nemo/WORK/bdytra.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdytra.F90
+  332a333
+  >
+  384d384
+  <
+  diff XIOS_AMM60_nemo/WORK/diaptr.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/diaptr.F90
+  436d435
+  <
+  diff XIOS_AMM60_nemo/WORK/lbclnk.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/lbclnk.F90
+  443d442
+  <
+  diff XIOS_AMM60_nemo/WORK/mppini_2.h90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/mppini_2.h90
+  326d325
+  <
+  335a335
+  >
+  diff XIOS_AMM60_nemo/WORK/nemogcm.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/nemogcm.F90
+  86a87,88
+  >    USE diatmb          ! Top,middle,bottom output
+  >    USE dia25h          ! 25h mean output
+  476a479,480
+  >                             CALL dia_tmb_init  ! TMB outputs
+  >                             CALL dia_25h_init  ! 25h mean  outputs
+  631a636
+  >       USE diainsitutem, ONLY: insitu_tem_alloc
+  647a653
+  >       ierr = ierr + insitu_tem_alloc()
+  diff XIOS_AMM60_nemo/WORK/sbccpl.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/sbccpl.F90
+  1578a1579
+  >
+  diff XIOS_AMM60_nemo/WORK/traadv_tvd.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/traadv_tvd.F90
+  578d577
+  <
+
+This may or may not be a problem for simulation execution...
+
+PLAN:
+
+* Copy new executable into ``/work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/`` and try it out (ideally once the summer restarts are generated)  
