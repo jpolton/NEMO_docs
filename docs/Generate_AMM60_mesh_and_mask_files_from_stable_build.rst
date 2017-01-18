@@ -145,7 +145,7 @@ Submit run::
   3953845.sdb     jelt     standard AMM60meshg    --   92 220    --  00:05 Q   — nn_msh =1. HOW ARE THE MESH FILES?
 
 
-**Job crashed. However ``mesh_mask*.nc`` files contain grid information and is OK**::
+**Job crashed. However ``mesh_mask\*.nc`` files contain grid information and is OK**::
 
   module load cray-netcdf
   ncdump -h mesh_mask_0208.nc

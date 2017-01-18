@@ -1,6 +1,6 @@
-======================================
-AMM7  3D Harmonic build and submission
-======================================
+=====================================
+AMM7 3D Harmonic build and submission
+=====================================
 
 0. Plan
 =======
@@ -206,8 +206,42 @@ Feb completed in 15mins on standard queue. Switch back to 20 mins on short queue
 
   ./rsub subm 2012 3 1
   qsub -v m=3,y=2012,nit0=1,ndate=20120301 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-03 -N GA201203 subm
-  4198207.sdb
+  4198601.sdb
 
+  ./rsub subm 2012 4 1
+  qsub -v m=4,y=2012,nit0=1,ndate=20120401 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-04 -N GA201204 subm
+  4198656.sdb
+
+  ./rsub subm 2012 5 1
+  qsub -v m=5,y=2012,nit0=1,ndate=20120501 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-05 -N GA201205 subm
+  4198704.sdb
+
+Backup the restarts from end of May 2012::
+
+  mkdir files_restart_201205
+  cp restart_????.nc files_restart_201205/.
+
+Configure simulation to run for 3 months with all the XIOS output::
+
+  vi iodef.xml
+  *restore outputs*
+
+  vi namelist_cfg.template_skag_climate
+  nitend_han = 25920 ! 105120 ! 210528  ! Last time step used for harmonic analysis
+
+  vi subm
+  #PBS -l walltime=03:00:00
+  ##PBS -q short
+  ...
+  nit=25920 # 90 days
+
+Submit 3 month run::
+
+  ./rsub subm 2012 6 1
+  qsub -v m=6,y=2012,nit0=1,ndate=20120601 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-06 -N GA201206 subm
+  4198851.sdb
+
+**PENDING 18 Jan 17.**
 Manually resubmit to avoid the chance of breaking something
 
 
@@ -439,7 +473,7 @@ code base. Comparing the FORTRAN shows the difference is due to the nemogcm.F90 
   578d577
   <
 
-This may or may not be a problem for simulation execution...
+This is probably because Maria recompiled the code for other purposes before I copied it. This is not a problem.
 
 PLAN:
 
