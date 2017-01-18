@@ -13,7 +13,7 @@ Pages made:
 .. toctree::
    :maxdepth: 2
 
-   Generate_mesh_and_mask_files_from_stable_build
+   Generate_AMM60_mesh_and_mask_files_from_stable_build
 
    Testing_a_new_compilation_with_NSea_experiment
 
@@ -145,7 +145,7 @@ NEMO skills
   * `Generate mesh and mask files on short queue <https://www.evernote.com/shard/s523/nl/2147483647/f0149755-b99c-4f5c-a488-bd2940e16d20/>`_ (originally for AMM60 ANChor output). ``EXP_NSea_mesh``. **Doesn’t actually work**. Tried reducing tilmestep to 6s. No good. (22 Sept 16)
   * `Configure AMM60 on the short queue <https://www.evernote.com/shard/s523/nl/2147483647/e0445ece-518f-4a5f-aff5-6ff5df8a491e/>`_ - though this **doesn’t actually work…**
   * `Generate mesh and mask files on long queue <https://www.evernote.com/shard/s523/nl/2147483647/300e814a-5c06-4677-9c2e-d76e02133a11/>`_ (Karen’s codebase. Restart. Fresh compile. nn_msh=[1,3]). **Doesn’t work**
-  * `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_ ``(EXP_meshgen) qsub nc_mesh_build.pbs —> mesh_mask.nc``. **WORKS!**
+  * `Generate AMM60 mesh and mask files from stable build <Generate_AMM60_mesh_and_mask_files_from_stable_build.html>`_ ``(EXP_meshgen) qsub nc_mesh_build.pbs —> mesh_mask.nc``. **WORKS!**
   * Compile ``-g -traceback`` debug version - there are some notes somewhere, though there is not much to say.
   * `Debugging XML sensitivities in the short queue with AMM7 <Debugging_XIOS_in_AMM7.html>`_
 
@@ -192,7 +192,7 @@ PATH:
 PROGRESS:
 
 * Running with hourly velocity output with vertical viscosity AVM
-* mesh files generated with `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_
+* mesh files generated with `Generate AMM60 mesh and mask files from stable build <Generate_AMM60_mesh_and_mask_files_from_stable_build.html>`_
 * Have output through to the end of Aug 2012 (27th)
 * Generated hourly output for North Sea: Jan 2010 - Nov 2013
 
@@ -211,39 +211,6 @@ PLANS:
 
 
 
-AMM60 validation work
-=====================
-meeting notes `AMM60 manuscript <https://www.evernote.com/shard/s538/nl/2147483647/e4d4f9ba-0221-41aa-8458-35e35522327b/>`_
-
-PROGRESS:
-
-* June 2012, D376, recalculated
-
-CURRENT:
-
-* iPython notebook:  ``~/python/ipynb/jcomp_tools_dev/internaltidemap_AMM60_paper.ipynb``
-* analysis of June 2012
-
-
-ACTIONS (20 Oct 2016):
-
-* Do spring neap plots for June 2012
-* Do one winter plot
-
-
-PLANS:
-
-*  Look at spring and neap diagnostics from 2012
-*  Verify winter diagnostic.
-*  Paper structure:
-
-     Would this work well with AMM7 and NNA?
-     Where can the mooring data fit into this?
-
-* Shift diagnostics to JASMIN?
-
-
-
 AMM60 in v3.6_STABLE
 ====================
 Updating Karen’s code base
@@ -251,7 +218,7 @@ Updating Karen’s code base
 PROGRESS:
 
 * downloaded and compiled v3.6_STABLE. `Fresh build with v3.6_STABLE <https://www.evernote.com/shard/s523/nl/2147483647/408b131e-fddf-4fee-94ec-d4f0671f0e21/>`_
-* generated AMM60 mesh files. `Generate mesh and mask files from stable build <Generate_mesh_and_mask_files_from_stable_build.html>`_
+* generated AMM60 mesh files. `Generate AMM60 mesh and mask files from stable build <Generate_AMM60_mesh_and_mask_files_from_stable_build.html>`_
 
 CURRENT:
 
