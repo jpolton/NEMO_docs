@@ -202,6 +202,12 @@ Jan completed. Restart for Feb (on standard queue after 8pm)::
   qsub -v m=2,y=2012,nit0=1,ndate=20120201 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-02 -N GA201202 subm
   4197610.sdb
 
+Feb completed in 15mins on standard queue. Switch back to 20 mins on short queue::
+
+  ./rsub subm 2012 3 1
+  qsub -v m=3,y=2012,nit0=1,ndate=20120301 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-03 -N GA201203 subm
+  4198207.sdb
+
 Manually resubmit to avoid the chance of breaking something
 
 
@@ -437,4 +443,4 @@ This may or may not be a problem for simulation execution...
 
 PLAN:
 
-* Copy new executable into ``/work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/`` and try it out (ideally once the summer restarts are generated)  
+* Copy new executable into ``/work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/`` and try it out (ideally once the summer restarts are generated)
