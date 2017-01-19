@@ -300,5 +300,25 @@ Compression of output
 Compress output data using the serial queue. Instead of trying to use netcdf compression, use gzip::
 
   cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/
-  qsub -q serial AMM60gzip12
-  qsub -q serial AMM60gzip13
+
+  less gzip2012
+  #!/bin/bash
+  #PBS -N AMM60gz12
+  #PBS -l select=serial=true:ncpus=1
+  #PBS -l walltime=24:00:00
+  #PBS -o AMM60gz12.log
+  #PBS -e AMM60gz12.err
+  #PBS -A n01-NOCL
+  ###################################################
+  #set up paths
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT
+  gzip AMM60_1?_2012*nc
+
+  # qsub -q serial <filename>
+  ############################
+
+Then submit the jobs::
+
+  qsub -q serial gzip2012
+  qsub -q serial gzip2013
