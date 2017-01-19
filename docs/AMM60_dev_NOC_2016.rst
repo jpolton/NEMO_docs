@@ -20,7 +20,7 @@ PATH::
 Setup some directory aliases::
 
   export TDIR=/work/n01/n01/jelt/TRY
-  export CDIR=$TDIR/dev_NOC/2016/NEMOGCM/CONFIG
+  export CDIR=$TDIR/dev_NOC_2016_r7342/NEMOGCM/CONFIG
 
 
 load modules::
@@ -100,7 +100,9 @@ Trim ``run_counter.txt::
 Submit job::
 
   ./run_nemo
-  4200546.sdb
+  4202081.sdb
+
+**PENDING**  
 
 | **Does GRID it WORK? (19 Jan 2017)**
 | **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various 25h files.**
