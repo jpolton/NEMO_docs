@@ -241,8 +241,10 @@ Submit 3 month run::
   qsub -v m=6,y=2012,nit0=1,ndate=20120601 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-06 -N GA201206 subm
   4198851.sdb
 
-**PENDING 18 Jan 17.**
-Manually resubmit to avoid the chance of breaking something
+The 3 month run took walltime-01:22:51.
+A quick look with Ferret. Tides appear OK.
+
+**ACTION: check grid_W.nc output**
 
 
 3. Other things learnt while debugging
