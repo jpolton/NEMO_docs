@@ -41,7 +41,7 @@ Add MY_SRC code from Maria::
 Maria suggested I need the following but it breaks the compilation so for now comment it out.
 ``#cp /work/n01/n01/mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/dia25h.F90 .``
 
-Create a new ``diagram.F90`` that merges Karen and Maria’s. Start with Maria’s::
+Create a new ``diaharm.F90`` that merges Karen and Maria’s. Start with Maria’s::
 
   cp diaharm.F90_mane1 diaharm.F90
   sdiff diaharm.F90_mane1 diaharm2.F90_kariho40
@@ -420,10 +420,6 @@ Trim run_counter.txt and resubmit::
   3982223.sdb     jelt     standard AMM60_harm    --   92 220    --  00:05 Q   --<— DOES THIS WORK.
   PREVIOUSLY ALWAYS GOT CORE DUMPS.
   OUTPUT SHOULD BE 3D harmonics, outputted hourly over 2 days (10 Oct 2016)
-
-Try and document work flow on github::
-
-  https://github.com/jpolton/EXP_harmIT.git
 
 This WORKED. Resubmit full 3D harmonics list in ``iodef.xml`` on a 20minute job.
 

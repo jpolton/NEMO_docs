@@ -237,6 +237,8 @@ Edit the link to the executable in the script ``run_nemo`` to point to the execu
 Actually the executable from Maria's source is also called ``nemo.exe``, residues in the build location
 and is symbolically linked to the run directory. So here take the link to the build directory::
 
+  cd  /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/
+
   vi run_nemo
   ...
   rm  $JOBDIR/$EXEC
