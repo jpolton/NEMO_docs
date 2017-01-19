@@ -75,6 +75,40 @@ Copy executable::
 
   ln -s  $NDIR/../BLD/bin/nemo.exe $NDIR/opa_harm3d
 
+Copy in coordinates file::
+
+  cp $KDIR/WDIR/coordinates.bdy.nc $NDIR/.
+
+
+  export GRIDDIR=/work/n01/n01/kariho40/NEMO/GRID         # Where to get forcings
+  export RUNNAME=EXP_NSea
+  export HOMEDIR=/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo              # Home Directory
+  export JOBDIR=$HOMEDIR/$RUNNAME                 # Config directory
+
+
+
+
+  #===============================================================
+  # INPUT FILES
+  #===============================================================
+  #---------------------------------------------------------------
+  # Coordinates
+  #---------------------------------------------------------------
+  echo `date`: Link coordinates
+  ln -s $GRIDDIR/coordinates_AMM60.nc        $WDIR/coordinates.nc
+
+  #---------------------------------------------------------------
+  # Bathymetry
+  #---------------------------------------------------------------
+  echo `date`: Link Bathymetry
+  ln -s $GRIDDIR/bathyfile_AMM60_nosmooth.nc $WDIR/bathy_meter.nc
+
+  #---------------------------------------------------------------
+  # XML files
+  #---------------------------------------------------------------
+
+
+
 
 Harmonising Namelists
 =====================
@@ -119,14 +153,23 @@ Just submit it and see what happens. (iodef.xml is default). There are no restar
 
 Error::
 
-  less stdouter
-  apsched: claim exceeds reservation's node-count
+  less output_201001/ocean.output
+  ...
+  File coordinates.nc* not found
+
+  grep coordinates $NDIR/namelist_cfg
+   cn_coords_file = 'coordinates.bdy.nc'
+
+  cp $KDIR/WDIR/coordinates.bdy.nc $NDIR/.
 
 
 
-ACTION: Fix PBS settings (editted notes above). Resubmit.
+
+ACTION: Fix and implement the above. Resubmit.
 
 **Pending**
+
+Took a detour. Does the old AMM60 harmonic attempts work with Maria's executable?
 
 
 
@@ -137,3 +180,4 @@ ACTION: Fix PBS settings (editted notes above). Resubmit.
 **TO DO**
 
 * Sort IJ in subm
+* Copy XML from maria

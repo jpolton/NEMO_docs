@@ -349,6 +349,7 @@ Load modules::
 Setup some directory aliases::
 
   export WDIR=/work/n01/n01/jelt
+  export CDIR=$WDIR/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG
 
 Clean out the TRY directory::
 
@@ -366,8 +367,6 @@ from checked out version::
   mv nemo_v3_6_STABLE/ NEMO/nemo_v3_6_STABLE_r7564_harm3d
 
 Copy ARCH file::
-
-  export CDIR=$WDIR/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG
 
   cp /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/ARCH/arch-XC_ARCHER_INTEL.fcm $CDIR/../ARCH/.
 
@@ -401,7 +400,9 @@ Obtain and apply patch::
   cd MY_SRC
   patch --dry-run -p1 -i ../OPA_SRC_r7564_harm3d.patch
 
-*END: DOES NOT WORK*. The BDY patches seemed OK but all the others had issues. Could apply patch directly at OPA_SRC directory.
+The BDY patches seemed OK but all the others had issues. Could apply patch directly at OPA_SRC directory.
+
+*END: DOES NOT WORK*.
 
 ----
 
@@ -417,65 +418,24 @@ If it doesn't return errors::
 
 This works. But does not preserve the source code.
 
+
+Copy in Fred's bdy code into MY_SRC. (Came in an email from Maria). Files to be found at::
+
+  /work/n01/n01/jelt/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG/XIOS_AMM60_nemo/MY_SRC/bdydyn3d.F90
+  /work/n01/n01/jelt/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG/XIOS_AMM60_nemo/MY_SRC/bdyini.F90
+
 Build again::
 
   cd $CDIR
   ./makenemo clean
   ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10
 
-This produces a new executables, which differs from the one generated in Maria's
-code base. Comparing the FORTRAN shows the difference is due to the nemogcm.F90 file::
+This produces a new executables, which was the same as the one generated from Maria's codebase
+Except for changes with bdydyn3d.F90 and bdyini.F90 and modifications she made to nemogcm.F90 before I copied it.
 
-  diff XIOS_AMM60_nemo/WORK /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK
+Attempting to compile throws up an error associated with the ``sponge_factor`` array. Fixing it would mean fiddling with some more bdy files. If I don't need the sponge then I can just comment out this line.
+To get the code to build I commented out the line starting ``sponge_factor``. This is OK-ish if the ln_sponge is not true, which it was not in Maria's run. (But was in Karen's)..
 
-  diff XIOS_AMM60_nemo/WORK/bdydyn3d.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdydyn3d.F90
-  486d485
-  <
-  490d488
-  <
-  diff XIOS_AMM60_nemo/WORK/bdydyn.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdydyn.F90
-  142a143,145
-  >
-  >
-  >
-  diff XIOS_AMM60_nemo/WORK/bdyini.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdyini.F90
-  116d115
-  <
-  diff XIOS_AMM60_nemo/WORK/bdytra.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/bdytra.F90
-  332a333
-  >
-  384d384
-  <
-  diff XIOS_AMM60_nemo/WORK/diaptr.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/diaptr.F90
-  436d435
-  <
-  diff XIOS_AMM60_nemo/WORK/lbclnk.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/lbclnk.F90
-  443d442
-  <
-  diff XIOS_AMM60_nemo/WORK/mppini_2.h90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/mppini_2.h90
-  326d325
-  <
-  335a335
-  >
-  diff XIOS_AMM60_nemo/WORK/nemogcm.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/nemogcm.F90
-  86a87,88
-  >    USE diatmb          ! Top,middle,bottom output
-  >    USE dia25h          ! 25h mean output
-  476a479,480
-  >                             CALL dia_tmb_init  ! TMB outputs
-  >                             CALL dia_25h_init  ! 25h mean  outputs
-  631a636
-  >       USE diainsitutem, ONLY: insitu_tem_alloc
-  647a653
-  >       ierr = ierr + insitu_tem_alloc()
-  diff XIOS_AMM60_nemo/WORK/sbccpl.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/sbccpl.F90
-  1578a1579
-  >
-  diff XIOS_AMM60_nemo/WORK/traadv_tvd.F90 /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/WORK/traadv_tvd.F90
-  578d577
-  <
-
-This is probably because Maria recompiled the code for other purposes before I copied it. This is not a problem.
 
 PLAN:
 

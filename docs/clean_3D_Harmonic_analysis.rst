@@ -230,3 +230,50 @@ The GDEPW and EPS25H fields are gridded onto a subdomain. E3W is OK. Perhaps the
 Try copying Maria's AMM7 code with 3D harmonics and changing it to AMM60...
 
 Logs at `AMM7 3D Harmonic analysis <AMM7_3D_Harmonic_analysis.html>`_
+
+*(19 Jan 17)*
+Copy in Maria's executable
+Edit the link to the executable in the script ``run_nemo`` to point to the executable from Maria's code.
+Actually the executable from Maria's source is also called ``nemo.exe``, residues in the build location
+and is symbolically linked to the run directory. So here take the link to the build directory::
+
+  vi run_nemo
+  ...
+  rm  $JOBDIR/$EXEC
+  #ln -s $CODEDIR/bin/$EXEC $JOBDIR/$EXEC
+  ln -s /work/n01/n01/jelt/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG/XIOS_AMM60_nemo/BLD/bin/nemo.exe $JOBDIR/$EXEC
+
+Trim ``run_counter.txt::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+
+Submit job::
+
+    ./run_nemo
+    4200546.sdb
+
+| **Does GRID it WORK? (19 Jan 2017)**
+| **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various 25h files.**
+
+
+Simulation crashes instantly because ``nb_jpk_bdy`` is not defined in the FORTRAN.
+This variable declares the number of vertical levels in the boundary forcing data, if different from the config domain.
+Maria's code, and recent checkouts (r7564), does not have the option to vertically interpolate bdy grid and so does not have this variable.
+
+However Fred's code does have this (as did Karen's). I will recompile Maria's code with Fred's bdyini.F90. He also shared a bdydyn3d.F90 which I may as well also use.
+Notes on recompiling source code are at `AMM7 3D Harmonic analysis<AMM7_3D_Harmonic_analysis.html>`_
+
+However another variable ``sponge_factor`` is also affected by code updates. Karen used the sponge but Maria didn't.
+If I comment out the line regarding the ``sponge_factor`` then the model compiles. Fixing ``sponge_factor`` will require modifications to other source files.
+Ensure that the sponge is not evoke in the namelist::
+
+  vi namelist_cfg
+  ln_sponge = .false.
+
+Resubmit::
+
+  ./run_nemo
+  4200654.sdb
