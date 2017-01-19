@@ -75,6 +75,8 @@ Copy executable::
 
   ln -s  $NDIR/../BLD/bin/nemo.exe $NDIR/opa_harm3d
 
+*(19 Jan 17)*
+
 Copy in coordinates file::
 
   cp $KDIR/WDIR/coordinates.bdy.nc $NDIR/.
