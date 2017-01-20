@@ -94,6 +94,12 @@ Edit the link to the executable in the script ``run_nemo`` to point to this new 
   #ln -s $CODEDIR/bin/$EXEC $JOBDIR/$EXEC
   ln -s **REPLACE_WITH_$CDIR_PATH**/XIOS_AMM60_nemo/BLD/bin/nemo.exe $JOBDIR/$EXEC
 
+Edit namelist_ref. Remove parameters that break the simulation::
+
+  vi namelist_ref
+  ...
+  !ln_useCT    = .true.  ! use of Conservative Temp. ==> surface CT converted in Pot. Temp. in sbcssm
+
 Trim ``run_counter.txt::
 
   vi run_counter.txt
@@ -104,7 +110,7 @@ Trim ``run_counter.txt::
 Submit job::
 
   ./run_nemo
-  4203356.sdb
+  4204509.sdb
 
 **PENDING (20 Jan 2017)**
 
