@@ -106,6 +106,7 @@ Submit job::
   ./run_nemo
   4203356.sdb
 
+**PENDING (20 Jan 2017)**
 
 ----
 
