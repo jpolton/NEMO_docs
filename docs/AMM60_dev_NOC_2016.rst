@@ -102,7 +102,75 @@ Submit job::
   ./run_nemo
   4202081.sdb
 
-**PENDING**  
+Error::
+
+  less ocean.output
+
+  ...
+  Stefan-Boltzmann constant                 =   5.670000000000000E-008
+  J/s/m^2/K^4
+
+  conversion: degre ==> radian          rad =   1.745329251994330E-002
+
+  smallest real computer value       rsmall =   1.110223024625157E-016
+
+  ===>>> : E R R O R
+  ===========
+
+  misspelled variable in namelist nameos in reference namelist iostat =   19
+
+  eos_init : equation of state
+  ~~~~~~~~
+  Namelist nameos : Chosen the Equation Of Seawater (EOS)
+  TEOS-10 : rho=F(Conservative Temperature, Absolute  Salinity, depth)   ln
+  _TEOS10 =  F
+  EOS-80  : rho=F(Potential    Temperature, Practical Salinity, depth)   ln
+  _EOS80  =  F
+  S-EOS   : rho=F(Conservative Temperature, Absolute  Salinity, depth)   ln
+  _SEOS   =  F
+
+  ===>>> : E R R O R
+  ===========
+
+  Exactly one equation of state option must be selected
+
+Try and edit the reference namelist to accomodate the change in EOS::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi namelist_ref
+
+  !-----------------------------------------------------------------------
+  &nameos        !   ocean physical parameters
+  !-----------------------------------------------------------------------
+     nn_eos      =  -1     !  type of equation of state and Brunt-Vaisala frequency
+                                   !  =-1, TEOS-10
+                                   !  = 0, EOS-80
+                                   !  = 1, S-EOS   (simplified eos)
+     ln_useCT    = .true.  ! use of Conservative Temp. ==> surface CT converted in Pot. Temp. in sbcssm
+
+Switch for
+
+::
+
+  !-----------------------------------------------------------------------
+  &nameos        !   ocean physical parameters
+  !-----------------------------------------------------------------------
+     ln_teos10   = .false.         !  = Use TEOS-10 equation of state
+     ln_eos80    = .false.         !  = Use EOS80 equation of state
+     ln_seos     = .false.         !  = Use simplified equation of state (S-EOS)
+                                   !
+
+Also edit namelist_cfg to switch to ln_teos10 = .true.::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi namelist_cfg
+  ...
+  !-----------------------------------------------------------------------
+  &nameos        !   ocean physical parameters
+  !-----------------------------------------------------------------------
+     ln_teos10 = .true.    !  = Use TEOS-10 equation of state
+
+**PENDING**
 
 | **Does GRID it WORK? (19 Jan 2017)**
 | **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various 25h files.**
