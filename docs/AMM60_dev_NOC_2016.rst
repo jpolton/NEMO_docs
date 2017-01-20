@@ -20,7 +20,8 @@ PATH::
 Setup some directory aliases::
 
   export TDIR=/work/n01/n01/jelt/TRY
-  export CDIR=$TDIR/dev_NOC_2016_r7342/NEMOGCM/CONFIG
+  #  export CDIR=$TDIR/dev_NOC_2016_r7342/NEMOGCM/CONFIG
+  export CDIR=$TDIR/dev_r6998_ORCHESTRA_r7581/NEMOGCM/CONFIG
 
 
 load modules::
@@ -37,8 +38,11 @@ Clean out the TRY directory::
 
 Check out code and rename::
 
-  svn co http://forge.ipsl.jussieu.fr/nemo/svn/branches/2016/dev_NOC_2016@7342
-  mv dev_NOC_2016 dev_NOC_2016_r7342
+  #svn co http://forge.ipsl.jussieu.fr/nemo/svn/branches/2016/dev_NOC_2016@7342
+  #mv dev_NOC_2016 dev_NOC_2016_r7342
+
+  svn co https://forge.ipsl.jussieu.fr/nemo/svn/branches/NERC/dev_r6998_ORCHESTRA
+  mv dev_r6998_ORCHESTRA dev_r6998_ORCHESTRA_r7581
 
 Copy ARCH file::
 
@@ -100,7 +104,30 @@ Trim ``run_counter.txt::
 Submit job::
 
   ./run_nemo
-  4202081.sdb
+  4203356.sdb
+
+
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Errors when trying dev_NOC_2016_r7342
++++++++++++++++++++++++++++++++++++++
+
 
 Error::
 
@@ -169,6 +196,32 @@ Also edit namelist_cfg to switch to ln_teos10 = .true.::
   &nameos        !   ocean physical parameters
   !-----------------------------------------------------------------------
      ln_teos10 = .true.    !  = Use TEOS-10 equation of state
+
+
+Submit job::
+
+   ./run_nemo
+   4202926.sdb
+
+
+Error::
+
+ less ocean.output
+ ...
+
+  conversion: degre ==> radian          rad =   1.745329251994330E-002
+
+  smallest real computer value       rsmall =   1.110223024625157E-016
+
+  ===>>> : E R R O R
+  ===========
+
+  misspelled variable in namelist nameos in reference namelist iostat =   19
+
+  eos_init : equation of state
+
+
+Can't figure this one out. I can not find trace of ``rsmall`` in either old or new namelists
 
 **PENDING**
 
