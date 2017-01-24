@@ -220,12 +220,15 @@ PROGRESS:
 
 * downloaded and compiled v3.6_STABLE. `Fresh build with v3.6_STABLE <https://www.evernote.com/shard/s523/nl/2147483647/408b131e-fddf-4fee-94ec-d4f0671f0e21/>`_
 * generated AMM60 mesh files. `Generate AMM60 mesh and mask files from stable build <Generate_AMM60_mesh_and_mask_files_from_stable_build.html>`_
+* Tried building AMM60 in AMM7 environment: `AMM60 from AMM7v3.6_STABLE environment <AMM60_from_AMM7v3_6_STABLE.html>`_ *(18 Jan 17). Not succesful*
+* Tried building AMM60 `with new source code <AMM60_v3_6_update.html>`_ *(19-24 Jan 17). Not successful*
 
 CURRENT:
 
 * Have not updated AMM60 to v3.6_STABLE. `Compiling AMM60 from v3.6_STABLE <https://www.evernote.com/shard/s523/nl/2147483647/cc65c445-f129-4db7-9310-b976c49645b0/>`_.  **In progress**
 * Copied Maria's 3D harmonics version of AMM7 running on v3.6_STABLE: `AMM7 3D Harmonic analysis <AMM7_3D_Harmonic_analysis.html>`_  **IN PROGRESS (11 Jan 17)**
-* Try building AMM60 in AMM7 environment: `AMM60 from AMM7v3.6_STABLE environment <AMM60_from_AMM7v3_6_STABLE.html>`_ **IN PROGRESS (18 Jan 17)**
+
+
 
 Indices and tables
 ==================
