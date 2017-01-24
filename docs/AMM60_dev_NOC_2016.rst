@@ -15,7 +15,21 @@ PATH::
 
   /work/n01/n01/jelt/NEMO/xx/NEMOGCM/
 
+
+Recompiled code from two different code bases. Tried running AMM60 switching in
+these new executables.
+
+Workflow::
+
+Submit / wait / fix namelist change / submit / wait ...
+
+In the end I decided to revert back to the old code base for now since the new
+codebase is too untested and there may be easier ways to get timeaveraged maps
+of dissipation.
+
 ----
+
+The following recipe includes the two source codes tried. One is commented out.
 
 Setup some directory aliases::
 
@@ -112,28 +126,29 @@ Submit job::
   ./run_nemo
   4204509.sdb
 
-**PENDING (20 Jan 2017)**
+**CRASHED (21 Jan 2017)**
 
-----
+dom_init : domain initialization
+ ~~~~~~~~
+
+ ===>>> : E R R O R
+         ===========
+
+ misspelled variable in namelist namrun in reference namelist iostat =   19
+
+ ===>>> : E R R O R
+         ===========
+
+ misspelled variable in namelist namrun in configuration namelist iostat =   19
+
+**STOP**
+*(24 Jan 2017)*
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Errors when trying dev_NOC_2016_r7342
-+++++++++++++++++++++++++++++++++++++
+Further Errors when specifically trying dev_NOC_2016_r7342
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 Error::
@@ -230,7 +245,20 @@ Error::
 
 Can't figure this one out. I can not find trace of ``rsmall`` in either old or new namelists
 
-**PENDING**
 
-| **Does GRID it WORK? (19 Jan 2017)**
-| **OUTPUT SHOULD BE 3D harmonics, for 5 days. Also various 25h files.**
+**STOP**
+
+
+New Plan
+++++++++
+
+*(24 Jan 2017)*
+
+Though it is desirable to get AMM60 up and running on a contemporary code base
+perhaps the difficulties with the old case can be circumnavigated.
+
+Maria pointed out that it is not really necessary to use the 25h averaging diagnostics
+to make reasonable maps of dissipation. I could use the regular XIOS tools to output
+multiples of 1 day for tke and dissipation.
+
+----
