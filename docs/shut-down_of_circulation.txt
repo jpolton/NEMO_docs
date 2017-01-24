@@ -1,2 +1,21 @@
 First Paragraph: 200 words
-Coastal and shelf seas around the world are of substantial importance through the resources and services they provide, such as fisheries ($bn example) and carbon sequestration (PgC example), and through their relation to the high populations often found in adjoining countries (M people). They are highly constrained by external forcing, mediated by their circulation which determines their material properties. Here we present an example of a radical change in a shelf sea circulation under two future climate forcing scenarios. This identifies a new vulnerability of the shelf sea environment to climate change, namely greater isolation from the wider ocean system. In this example, the North Sea inflow reduces from ~0.8Sv (=106 m3s-1) to 0.4Sv, with the Atlantic water largely bi-passing the North Sea. These changes are caused by wider scale changes in the circulation and density field of the sub-polar gyre and Nordic Seas, and linked here to the shelf-sea circulation through simple geostrophic dynamics. If these changes were to be realised there would be far reaching implications, making the sea more riverine and susceptible to anthropogenic influence, but less vulnerable to climate change effects in the open ocean.
+
+Coastal and shelf seas around the world are of substantial importance through
+ the resources and services they provide. NEW SENTENCE such as fisheries ($bn example) and
+ carbon sequestration (PgC example), and through their relation to the high
+ populations often found in adjoining countries (M people). They are highly
+ constrained by external forcing, mediated by their circulation which determines
+ their material properties. Here we present an example of a radical change in a
+ shelf sea circulation under two future climate forcing scenarios. We find a new
+vulnerability of the shelf sea environment to climate change:
+
+Future changes in open ocean density and circulation patterns enhance the dynamical isolation of (the?) shelf seas.
+
+In this example, the
+ North Sea inflow reduces from ~0.8Sv (=106 m3s-1) to 0.4Sv, with the Atlantic
+ water largely bi-passing the North Sea.
+
+ These changes are linked to the open ocean circulation through simple geostrophic
+ dynamics. If these changes were to be realised there would be far reaching
+ implications, making the sea more riverine and susceptible to anthropogenic
+ influence, but less vulnerable to climate change effects in the open ocean.
