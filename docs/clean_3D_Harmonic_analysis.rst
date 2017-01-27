@@ -279,3 +279,40 @@ Resubmit::
 
   ./run_nemo
   4200654.sdb
+
+----
+
+*(27 Jan 2017)*
+Decided to revert back to old executable, which basically worked. And find an
+alternative way to output dissipation. Here the working 3D harmonics are restored.
+Next steps to output dissipation and any additional necessary grid information.
+
+Recompile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+Ensure the executable is correct::
+
+    vi run_nemo
+    ...
+    ln -s $CODEDIR/bin/$EXEC $JOBDIR/$EXEC
+
+Copy namelists back in::
+
+  cp ../XIOS_AMM60_nemo_harmIT/EXP_harmIT/namelist* ../XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/.
+
+Comment out 25h output in iodef.xml::
+
+  vi iodef.xml
+  /25h
+
+Resubmit::
+
+  ./run_nemo
+  4215689.sdb
