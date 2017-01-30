@@ -316,3 +316,31 @@ Resubmit::
 
   ./run_nemo
   4215689.sdb
+
+
+----
+
+*(30 Jan 2017)*
+
+Got output. Check it in Ferret::
+
+  cd /Volumes/archer/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+
+Load in Tides looks ok.
+
+Load T-grid output:
+* E3T **OK**
+* E1T and E2T **BAD** grid messed up.
+
+Load in velocity output (u-vel):
+* E3U, UO, UBAR, UOS **OK**
+* E1U, E2U, GDEPU **BAD** grid messed up.
+
+Talking to Maria, she pointed out that e[12][uvt] are not needed in the ``iodef.xml``
+file since they don't change. Instead get them from ``coordinates.nc``.
+
+Noted that the *bad* horizontal grid files are 2d but were written as if they
+were 3d. This could have been why the gridding was garbled.
+
+The tke25h and eps25h have had grids that are messed up in a similar way. Perhaps
+they were written in a way that creates conflicts with the dimensions.
