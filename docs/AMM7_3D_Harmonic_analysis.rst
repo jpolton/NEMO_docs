@@ -444,7 +444,7 @@ PLAN:
 
 ----
 
-*(30 Jan 2017)*
+*(30 Jan 2017)* THIS WAS LATER ALL DELETED...
 
 Remove Fred's code and build again::
 
