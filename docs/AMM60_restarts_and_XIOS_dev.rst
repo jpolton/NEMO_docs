@@ -1038,9 +1038,11 @@ Resubmit with only 10 output files. Check run_counter.txt::
 
 WALLTIME EXCEEDED
 
-----
 
-PLAN: OUTPUT 3D data with a SBmooring mask. NEED TO EDIT AND RECOMPILE THE CODE.
+PLAN: OUTPUT 3D data with a SBmooring mask.
++++++++++++++++++++++++++++++++++++++++++++
+
+NEED TO EDIT AND RECOMPILE THE CODE
 
 Copy the modifications to the executable::
 
@@ -1456,3 +1458,9 @@ Here is the completed ``run_counter.txt`` file with 1 day increments.
 * gzip OUTPUT/cmp\*nc files **DONE**
 * delete EXP_SBmoorings2 EXP_SBmoorings3
 * move EXP_SBmoorings to /nerc
+
+*(31 Jan 2016)*
+Over wrote run_nemo and submit_nemo.pbs by mistake. Replaced them with old
+copies. I think that they are OK but haven't tested.
+Noted that extra processes are used for the XIOS steps (XIOSproc=60 instead of 40 running on 92 nodes). These are probably not
+needed with the 3D masked array output method.
