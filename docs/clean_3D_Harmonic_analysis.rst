@@ -534,7 +534,61 @@ Resubmit::
   --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
   4246394.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
 
+
+FAIL. The entire contents of AMM60_1d_20120601_20120605_grid_W.nc have the same gridding problem. Perhaps the issues is in the XML grid definitions
+
+
+Different grid are witten with the XIOS calls.
+It appears that I am missing some important lines in diawri.F90. However Karen
+made some edits there for pycnocline diagnostic, which need to be merged too.
+For now, park Karen's version, copy in Maria's recompile and resubmit.
+Replace diawri.F90 code::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/MY_SRC
+  mv diawri.F90 diawri.F90_kariho40
+  cp /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/NEMO/OPA_SRC/DIA/diawri.F90 diawri.F90_mane1
+  ln -s diawri.F90_mane1 diawri.F90
+
+Comment out diagnostic for top, middle, bottom thingy::
+
+  vi diawri.F90
+  ...
+  !   USE diatmb          ! Top,middle,bottom output
+  ...
+  !      IF (ln_diatmb) THEN
+  !         CALL dia_tmb
+  !      ENDIF
+
+Recompile etc ::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi run_counter.txt
+    1 1 7200 20100105
+    2 1264321 1271520
+
+Resubmit::
+
+  ./run_nemo
+  4246757.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4246757.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
 **Actions:**
+* This might be a poor implementation of a good idea.
 * Check the eps25h and tke25h output.
 * Check S2_25h output which stores tmask. Is it the size I expect with sensible content?
-* Output velocit with 25h averaging. This has a different grid.
+* Output velocity with 25h averaging. This has a different grid.
+
+cd /Volumes/archer/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
