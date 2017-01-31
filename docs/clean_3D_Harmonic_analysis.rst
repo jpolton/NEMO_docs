@@ -344,3 +344,197 @@ were 3d. This could have been why the gridding was garbled.
 
 The tke25h and eps25h have had grids that are messed up in a similar way. Perhaps
 they were written in a way that creates conflicts with the dimensions.
+
+----
+
+*(31 Jan 17)*
+
+Repeat the above process. Recompile code::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2
+
+Trim run_counter.txt to two lines::
+
+  vi EXP_harmIT2/run_counter.txt
+
+
+Check namelists. Should be OK. (These are read and editted from the JOBDIR)
+
+Edit the iodef.xml file. Output 1h SSH. Only M2x_SSH, M2x_rho, tke_25h, eps_25h.
+Remove all the horiztonal grid spacings as these can come from coordinates.nc
+
+Diff the iodef.xml with AMM7 version (that works)::
+
+  diff iodef.xml /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/iodef.xml
+
+Looks ok on quick inspection.
+Submit::
+
+    ./run_nemo
+    4245219.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4245219.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
+
+* If there are problems, perhaps also diff the other XML files. Check the namelist differences.
+
+Run Completed.
+
+cd /Volumes/archer/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+
+All variables in AMM60_1d_20120601_20120605_Tides.nc OK
+currently SET data sets:
+1> ./AMM60_1d_20120601_20120605_Tides.nc  (default)
+name     title                             I         J         K         L         M         N
+NAV_LAT  Latitude                         1:1120    1:1440    ...       ...       ...       ...
+NAV_LON  Longitude                        1:1120    1:1440    ...       ...       ...       ...
+E3T      T-cell thickness                 1:1120    1:1440    1:51      1:5       ...       ...
+TIME_CENTERED
+     Time axis                        ...       ...       ...       1:5       ...       ...
+TIME_CENTERED_BOUNDS
+                                      1:2       ...       ...       1:5       ...       ...
+GDEPT    depth                            1:1120    1:1440    1:51      1:5       ...       ...
+M2X_RO   M2 ro   real part                1:1120    1:1440    1:51      ...       ...       ...
+M2X_SSH  M2 ro   real part                1:1120    1:1440    ...       ...       ...       ...
+
+All OK.
+
+AMM60_1h_20120601_20120605_SSH.nc is OK
+
+MM60_1d_20120601_20120605_grid_T.nc
+ name     title                             I         J         K         L         M         N
+ E3T      T-cell thickness                 1:1120    1:1440    1:51      1:5       ...       ...
+ ...
+ GDEPT    depth                            1:1120    1:1440    1:51      1:5       ...       ...
+
+E3T OK
+GDEPT NOT OK. Gridding is wrong (as before)
+
+AMM60_1d_20120601_20120605_grid_W.nc
+name     title                             I         J         K         L         M         N
+E3W      W-cell thickness                 1:1120    1:1440    1:51      1:5       ...       ...
+...
+GDEPW    W-cell depth                     1:1120    1:1440    1:51      1:5       ...       ...
+TKE25H   25h vertical kinetic energy      1:1120    1:1440    1:51      1:5       ...       ...
+
+E3W OK
+GDEPW, TKE25H NOT OK. Gridding is wrong (as before)
+
+Looking through the MY_SRC files perhaps the GDEP? variables are not actually defined properly and so should not be used.
+
+Add (:,:,:) to zw3d in writing statement (diaharm.F90 has these)
+cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/MY_SRC
+ vi dia25h.F90
+           CALL iom_put("tke25h", zw3d(:,:,:))   ! tke
+
+
+Recompile add tke25h and eps25h to iodef.xml to see if there is a difference.
+Trim run_counter.txt
+Edit iodef.xml (as suggested). Add tke25g and eps25h, remove gdep*
+Resubmit::
+
+  ./run_nemo
+  4245537.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4245537.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
+
+
+* try and output tmask to XIOS control
+* comment out masks in 25h outputs
+* output all 25h outputs.
+* Do I need zdftke.F90. There are differences in the definition of ``en``. Maria say's no, I don't use or need key_zdftke
+
+RUN COMPETED SAME PROBLEM WITH BOTH eps25h and tke25h. Therefore it was insufficient to edit the Fortran::
+
+  vi dia25h.F90
+  ...
+            CALL iom_put("tke25h", zw3d(:,:,:))   ! tke
+From::
+
+            CALL iom_put("tke25h", zw3d)   ! tke
+
+Proceeding,
+Comment out the masks in the definitions of tke25h etc::
+
+  vi dia25h.F90
+  ...
+
+  #if defined key_zdftke || defined key_zdfgls
+             zw3d(:,:,:) = en_25h(:,:,:)*tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put("tke25h", zw3d(:,:,:))   ! tke
+  #endif
+  #if defined key_zdfgls
+             zw3d(:,:,:) = rmxln_25h(:,:,:)*tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "mxln25h",zw3d)
+             zw3d(:,:,:) = eps_25h(:,:,:)*tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "eps25h",zw3d)
+             zw3d(:,:,:) = N2_25h(:,:,:)*tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "N2_25h",zw3d)
+             zw3d(:,:,:) = S2_25h(:,:,:)*tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "S2_25h",zw3d)
+
+  #endif
+
+
+Becomes::
+
+  vi dia25h.F90
+  ...
+
+  #if defined key_zdftke || defined key_zdfgls
+             zw3d(:,:,:) = en_25h(:,:,:) ! *tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put("tke25h", zw3d(:,:,:))   ! tke
+  #endif
+  #if defined key_zdfgls
+             zw3d(:,:,:) = rmxln_25h(:,:,:) ! *tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "mxln25h",zw3d)
+             zw3d(:,:,:) = eps_25h(:,:,:) ! *tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "eps25h",zw3d)
+             zw3d(:,:,:) = N2_25h(:,:,:) ! *tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             CALL iom_put( "N2_25h",zw3d)
+             zw3d(:,:,:) = S2_25h(:,:,:) ! *tmask(:,:,:) + zmdi*(1.0-tmask(:,:,:))
+             !jelt !CALL iom_put( "S2_25h",zw3d)
+             CALL iom_put( "S2_25h",tmask)
+
+  #endif
+
+Add in N2 and S2 25h fields to iodef.xml file since they have different masks,
+well actually N2, S2 have the same mask as the tke and eps fields.
+However I have overwritten the S2_25h field with tmask variable.
+
+Trim ``run_counter.txt`` to two lines.
+
+Recompile as above.
+
+Resubmit::
+
+  ./run_nemo
+  4246394.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4246394.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
+**Actions:**
+* Check the eps25h and tke25h output.
+* Check S2_25h output which stores tmask. Is it the size I expect with sensible content?
+* Output velocit with 25h averaging. This has a different grid.
