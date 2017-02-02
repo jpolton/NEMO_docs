@@ -939,3 +939,61 @@ Resubmit::
   Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
   --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
   4255270.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
+Ran for 5:01
+less time.step:   1265759
+
+less stdouterr
+> Error [CObjectFactory::GetObject(const StdString & id)] : In file '/work/n01/n01/jdha/ST/xios-1.0/src/object_factory_impl.hpp', line 79 -> [ id = avt25h, U = field ]  object is not referenced !
+
+tail ocean.output_EXP_harmIT2
+...
+Horizontal mixing in s-coordinate: slope = slope of s-surfaces
+Horizontal mixing in s-coordinate: slope = slope of s-surfaces
+dia_wri_tide : Summing instantaneous hourly diagnostics at timestep
+1265760
+~~~~~~~~~~~~
+dia_tide : Summed the following number of hourly values so far          25
+dia_wri_tide : Writing 25 hour mean tide diagnostics at timestep     1265760
+~~~~~~~~~~~~
+dia_wri_tide : Mean calculated by dividing 25 hour sums and writing output
+
+
+Comment out all the ``avt`` and ``avm`` terms in ``dia25h.F90``. Perhaps AVT
+doesn't work because I dropping insitu teemperature??? Seems unlikely.
+Anyway we don't need either of AVT or AVM as 25h diagnostics.
+
+Recompile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi run_counter.txt
+    1 1 7200 20100105
+    2 1264321 1271520
+
+Resubmit::
+
+  ./run_nemo
+  4255436.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4255436.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
+**Actions:**
+* Check the eps25h and tke25h output. (python)
+* Check S2_25h output which stores tmask. Is it the size I expect with sensible content?
+* Output velocity with 25h averaging. This has a different grid.
+* When it works: replace Karen's diagIT in diawri.F90; restore output in dia25h.F90; fix other code bases; clean notes
+
+cd /Volumes/archer/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+
+----
+
+*(3 Feb 2017)*
