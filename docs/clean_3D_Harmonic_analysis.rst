@@ -793,3 +793,149 @@ Resubmit::
   Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
   --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
   4254220.sdb     jelt     standard AMM60_har2    --   92 220    --  00:05 Q   --
+
+
+**It broke in CALL theta2t**
+
+Add some Write statements into diainsitutem.F90, theta2t. Keep the queue short at 5mins.
+e.g.::
+
+  vi diainsitutem.F90
+  ...
+  IF(1) WRITE(6,*) 'jelt:theta2t: post lbc_lnk'
+
+
+Recompile etc::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi run_counter.txt
+    1 1 7200 20100105
+    2 1264321 1271520
+
+Resubmit::
+
+  ./run_nemo
+  4254832.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4254832.sdb     jelt     standard AMM60_har2    --   92 220    --  00:05 Q   --
+
+Problem happens in SUBROUTINE theta2t in CALL lbc_lnk( rinsitu_t,  'T', 1.0)
+This is in lbclnk.F90, which is the same file in AMM60 and AMM7 code base.
+
+The problem is in calculating boundary conditons on ``rinsitu_t``. I don't care about this
+so comment it out::
+
+  vi diainsitutem.F90
+  ...
+  SUBROUTINE theta2t
+  ...
+  ! jelt: 2 Feb 2017. comment CALL lbc_lnk out because the boundary code does not work with my code base.
+  ! CALL lbc_lnk( rinsitu_t,  'T', 1.0)
+
+
+Recompile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi run_counter.txt
+    1 1 7200 20100105
+    2 1264321 1271520
+
+Resubmit::
+
+  ./run_nemo
+  4255022.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4255022.sdb     jelt     standard AMM60_har2    --   92 220    --  00:05 Q   --
+
+
+
+less ocean.output_EXP_harmIT2
+
+  dia_25h_init : Output 25 hour mean diagnostics
+~~~~~~~~~~~~
+Namelist nam_dia25h : set 25h outputs
+Switch for 25h diagnostics (T) or not (F)  ln_dia25h  =  T
+jelt:dia_25h_init: allocated arrays
+jelt:dia_25h_init: assignied initial values, 1
+jelt:dia_25h_init: assignied initial values, 2
+
+
+less stdouterr
+
+...
+jelt:theta2t: pre lbc_lnk
+jelt:theta2t: post lbc_lnk
+forrtl: severe (174): SIGSEGV, segmentation fault occurred
+Image              PC                Routine            Line        Source
+...
+
+The problem seems to be with the ``rinsitu_t`` variable. Comment out all ``rinsitu_t(:,:,:)`` and ``CALL theta2t`` in
+``dia25h.F90``
+e.g.::
+
+  vi dia25h.F90
+  ...
+  !CALL theta2t
+  !rinsitu_t_25h(:,:,:) = rinsitu_t(:,:,:)
+
+
+
+Recompile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi run_counter.txt
+    1 1 7200 20100105
+    2 1264321 1271520
+
+Resubmit::
+
+  ./run_nemo
+  4255212.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4255212.sdb     jelt     standard AMM60_har2    --   92 220    --  00:05 Q   --
+
+
+**THIS WORKS!**
+
+* Fix the walltime (25mins) in submit_nemo.pbs
+* Remove all the jelt comments
+* check run_counter.txt
+
+Resubmit::
+
+  ./run_nemo
+  4255270.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4255270.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
