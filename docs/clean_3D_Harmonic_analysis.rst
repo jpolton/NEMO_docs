@@ -610,6 +610,7 @@ grepping subroutine dia_25h_init is not called.
 It *SHOULD* be called in nemogcm.F90
 
 >    USE dia25h          ! 25h mean output
+...
 >    CALL dia_25h_init  ! 25h mean  outputs
 
 Copy nemogcm.F90 into MY_SRC::
@@ -645,4 +646,150 @@ Recompile etc ::
 Resubmit::
 
   ./run_nemo
-  4246757.sdb
+  4252750.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4252750.sdb     jelt     standard AMM60_har2    --   92 220    --  00:25 Q   --
+
+**Actions:**
+* Check the eps25h and tke25h output.
+* Check S2_25h output which stores tmask. Is it the size I expect with sensible content?
+* Output velocity with 25h averaging. This has a different grid.
+* When it works: replace Karen's diagIT in diawri.F90; restore output in dia25h.F90; fix other code bases; clean notes
+
+cd /Volumes/archer/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+
+*(2 Feb 2017)*
+
+Reads in to namelist dia25 and then crashes
+
+outputnamelist::
+
+  &NAMTRD
+LN_DYN_TRD      = F,
+LN_KE_TRD       = F,
+LN_VOR_TRD      = F,
+LN_DYN_MXL      = F,
+LN_TRA_TRD      = F,
+LN_PE_TRD       = F,
+LN_GLO_TRD      = F,
+LN_TRA_MXL      = F,
+NN_TRD  =         365
+/
+&NAM_DIA25H
+LN_DIA25H       = T
+/
+*END OF FILE*
+
+In the initialising phase of dia25
+less ocean.output
+
+dia_25h_init : Output 25 hour mean diagnostics
+~~~~~~~~~~~~
+Namelist nam_dia25h : set 25h outputs
+Switch for 25h diagnostics (T) or not (F)  ln_dia25h  =  T
+*END OF FILE*
+
+
+Looking at an ocean.output file from an AMM7 run::
+
+  less /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/output_201202/ocean.output
+  ..
+  Euler time step switch is            1
+
+   dia_tmb_init : Output Top, Middle, Bottom Diagnostics
+   ~~~~~~~~~~~~
+   Namelist nam_diatmb : set tmb outputs
+   Switch for TMB diagnostics (T) or not (F)  ln_diatmb  =  F
+
+   dia_25h_init : Output 25 hour mean diagnostics
+   ~~~~~~~~~~~~
+   Namelist nam_dia25h : set 25h outputs
+   Switch for 25h diagnostics (T) or not (F)  ln_dia25h  =  T
+
+  AAAAAAAA
+
+
+   sbc_tide : Update of the components and (re)Init. the potential at kt=
+             1
+   ~~~~~~~~
+   Q1   -0.190437839525882       0.961724601942270        11.1552706366618
+    6.495854101908828E-005
+   O1   -0.190437839525882       0.961724601942270        8.31628077515238
+    6.759774402887834E-005
+   P1    0.000000000000000E+000   1.00000000000000      -0.698071644152197
+    7.252294578606445E-005
+   S1    0.000000000000000E+000   1.00000000000000        3.15250096141476
+    7.272205216643040E-005
+   K1    0.152999615230591       0.976665375188633        7.00307356698171
+    7.292115854679635E-005
+   2N2   3.523888426978372E-002   1.01215178979009        20.9973340651529
+    1.352404965560946E-004
+   MU2   3.523888426978372E-002   1.01215178979009        24.3337067614387
+    1.355937008184885E-004
+   N2    3.523888426978372E-002   1.01215178979009        18.1583442036435
+    1.378796995658846E-004
+   NU2   3.523888426978372E-002   1.01215178979009        21.4947168999292
+    1.382329038282786E-004
+   M2    3.523888426978372E-002   1.01215178979009        15.3193543421341
+    1.405189025756747E-004
+   L2    3.523888426978372E-002   1.05497486424526        15.6219571342145
+    1.431581055854647E-004
+   T2    0.000000000000000E+000   1.00000000000000        5.82549023405499
+    1.452450074605893E-004
+   S2    0.000000000000000E+000   1.00000000000000        6.30500192282952
+    1.454441043328608E-004
+   K2    0.301179257684973       0.923664480285121        17.1477397875532
+    1.458423170935927E-004
+   M4    7.047776853956744E-002   1.02445124557527        30.6387086842682
+    2.810378051513493E-004
+
+   sbc_apr : Atmospheric pressure
+
+
+The AMM60 is getting stuck before outputing::
+
+    AAAAAAAA
+
+
+     sbc_tide : Update of the components and (re)Init. the potential at kt=
+               1
+
+Add lots of comments to see where the break happens in dia25h.F90 and nemogcm.F90
+
+
+Recompile etc ::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+  module add cray-hdf5-parallel
+  module load  cray-netcdf-hdf5parallel
+  module swap PrgEnv-cray PrgEnv-intel
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10 clean
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+  vi run_counter.txt
+    1 1 7200 20100105
+    2 1264321 1271520
+
+Shorten the run time from 25min::
+
+  vi submit_nemo.pbs
+  ...
+  #PBS -l walltime=00:05:00
+
+Resubmit::
+
+  ./run_nemo
+  4254220.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4254220.sdb     jelt     standard AMM60_har2    --   92 220    --  00:05 Q   --
