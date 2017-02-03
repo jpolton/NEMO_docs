@@ -978,11 +978,20 @@ Recompile::
 
   cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
 
-5 days takes 25mins. 31 days estimate takes 155 = 2h 35min. Try 3hours (instead of 25mins)::
+5 days takes 25mins. 31 days estimate takes 155 = 2h 35min. Try 3hours
+(instead of 25mins). I editted iodef.xml and namelist_cfg after submission.
+Not ideal::
 
   vi submit_nemo.pbs
   ...
   #PBS -l walltime=03:00:00
+
+  vi namelist_cfg
+  nit000_han = 1264321 ! 31 May 2012
+  nitend_han = 1307520 ! 30 June 2012
+
+  vi iodef.xml
+  #Put all the M2 diagnostics in
 
   vi run_counter.txt
   1 1 7200 20100105
