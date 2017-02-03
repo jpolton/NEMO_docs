@@ -997,3 +997,59 @@ cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/
 ----
 
 *(3 Feb 2017)*
+Run completed in 23mins.
+
+**The 25h diagnostics all work**
+
+* sshfs connection to archer
+* livmaf: cd python/ipynb/jcomp_tools_dev/; jupyter notebook
+* copy working grid_W.nc data to /scratch/jelt/tmp
+* copied all the key output files to /scratch/jelt/tmp::
+
+  cd /scratch/jelt/tmp
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc .
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/WDIR/coordinates.nc .
+
+Clean ``nemogcm.F90`` of jelt write comments.
+Tidy comments in ``dia25h.F90`` that avoid ``CALL theta2t`` and ``avm`` and
+``avt`` 25h diagnostics. Avoid ``theta2t`` because it in turn has an MPI call
+for boundaries ``CALL lbc_lnk`` that does not work with this (Karen's) code base.
+
+Restore 25h diagnostics calculations to include the tmask (``dia25h.F90``).
+
+Recompile::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG
+
+  ./makenemo -n XIOS_AMM60_nemo_harmIT2 -m XC_ARCHER_INTEL -j 10
+
+  cd XIOS_AMM60_nemo_harmIT2/EXP_harmIT2
+
+5 days takes 25mins. 31 days estimate takes 155 = 2h 35min. Try 3hours (instead of 25mins)::
+
+  vi submit_nemo.pbs
+  ...
+  #PBS -l walltime=03:00:00
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1271520
+
+  ./run_nemo
+  4256984.sdb
+
+  sdb:
+                                                              Req'd  Req'd   Elap
+  Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+  --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+  4256984.sdb     jelt     standard AMM60_har2    --   92 220    --  03:00 Q   --
+
+
+**Actions: PENDING 3Feb17**
+* Check the eps25h, tke25h, S2_25h N2_25h output. (FERRET faster, or python: AMM60_read_plot.ipynb)
+* When it works: restore Karen's diagIT in diawri.F90; clean notes
+* Move data to SAN: ``rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc /scratch/jelt/tmp/.``
+* Proceed with diagnostic analysis: `diagnostics_3D_harmonics<diagnostics_3D_harmonics.html>`_.
+
+cd /Volumes/archer/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
