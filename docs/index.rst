@@ -29,6 +29,8 @@ Pages made:
 
    AMM7_3D_Harmonic_analysis
 
+   diagnostics_3D_harmonics
+
 Introduction
 ============
 This file is the launch page for different work flows.
@@ -69,7 +71,7 @@ PROGRESS:
 CURRENT:
 
 * Try `mapping AMM60 to v3.6_STABLE from AMM7 <AMM7_3D_Harmonic_analysis.index>`_ .  **PENDING 16 Jan 2017**
-
+* Start analysising output with `diagnostics_3D_harmonics<diagnostics_3D_harmonics.html>`_. **PENDING 3 Feb 2017**
 
 PLANS:
 
