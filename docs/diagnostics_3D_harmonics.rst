@@ -8,6 +8,7 @@ Diagnostics of 3D Harmonics
 * move good data from */scratch/tmp* to */projectsa*
 * figure out what supporting grid data is also needed.
 * AMM60 3 month run?
+* How many tidal harmonics do I need to use (NB I don't need to output them all)
 
 **Latex notes:** ~/Documents/my/IT_AMM60_16/IT_AMM60.pdf
 
