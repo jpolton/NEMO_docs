@@ -982,3 +982,5 @@ Edit run_counter,  to run for two months (June and July 2012 = 87,840 mins, 61 d
   2 1264321 1352160
 
 `Thread with a second simulation that was severed when I found this trunk simulation had problems <spare_3D_Harmoninc_analyis.html>`_
+
+3D harmonics in AMM60 is `solved (I think...) in clean_3D_Harmonic_analysis<clean_3D_Harmonic_analysis.html>`_.
