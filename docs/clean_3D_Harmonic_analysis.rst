@@ -960,8 +960,8 @@ Run completed in 23mins.
 * copied all the key output files to /scratch/jelt/tmp::
 
   cd /scratch/jelt/tmp
-  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc .
-  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/WDIR/coordinates.nc .
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc /scratch/jelt/tmp/.
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/WDIR/coordinates.nc /scratch/jelt/tmp/coordinates_AMM60.nc
 
 Clean ``nemogcm.F90`` of jelt write comments.
 Tidy comments in ``dia25h.F90`` that avoid ``CALL theta2t`` and ``avm`` and
