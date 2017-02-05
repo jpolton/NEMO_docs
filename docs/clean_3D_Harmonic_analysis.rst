@@ -990,24 +990,26 @@ Not ideal::
   nit000_han = 1264321 ! 31 May 2012
   nitend_han = 1307520 ! 30 June 2012
 
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1307520
+
   vi iodef.xml
   #Put all the M2 diagnostics in
 
-  vi run_counter.txt
-  1 1 7200 20100105
-  2 1264321 1271520
+*(5 Feb 2017)*::
 
   ./run_nemo
-  4256984.sdb
+  4281422.sdb
 
   sdb:
                                                               Req'd  Req'd   Elap
   Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
   --------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
-  4256984.sdb     jelt     standard AMM60_har2    --   92 220    --  03:00 Q   --
+  4281422.sdb     jelt     standard AMM60_har2    --   92 220    --  03:00 Q   --
 
 
-**Actions: PENDING 3Feb17**
+**Actions: PENDING 5 Feb 17**
 * Check the eps25h, tke25h, S2_25h N2_25h output. (FERRET faster, or python: AMM60_read_plot.ipynb)
 * When it works: restore Karen's diagIT in diawri.F90; clean notes
 * Move data to SAN: ``rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc /scratch/jelt/tmp/.``
@@ -1015,3 +1017,7 @@ Not ideal::
 
 cd /Volumes/archer/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
 cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+
+----
+
+*(6 Feb 17)*
