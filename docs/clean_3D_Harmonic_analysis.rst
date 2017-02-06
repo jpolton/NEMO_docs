@@ -1021,3 +1021,9 @@ cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/
 ----
 
 *(6 Feb 17)*
+
+Run completed in 2hrs 21
+Using Nx noMachine pulled (x10)::
+
+  cd /scratch/jelt/tmp
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc /scratch/jelt/tmp/.
