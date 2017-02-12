@@ -246,6 +246,9 @@ A quick look with Ferret. Tides appear OK.
 
 **ACTION: check grid_W.nc output**
 
+**THIS IS THE ACTUAL END OF WHERE I HAD A THREE MONTH 3D TIDAL RUN WITH AMM7**
+
+----
 
 3. Other things learnt while debugging
 ======================================
@@ -443,15 +446,3 @@ PLAN:
 * Copy new executable into ``/work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/`` and try it out (ideally once the summer restarts are generated)
 
 ----
-
-*(30 Jan 2017)* THIS WAS LATER ALL DELETED...
-
-Remove Fred's code and build again::
-
-  rm /work/n01/n01/jelt/NEMO/nemo_v3_6_STABLE_r7564_harm3d/NEMOGCM/CONFIG/XIOS_AMM60_nemo/MY_SRC/*
-
-  cd $CDIR
-  ./makenemo clean
-  ./makenemo -n XIOS_AMM60_nemo -m XC_ARCHER_INTEL -j 10
-
-This recreates Maria's executable.
