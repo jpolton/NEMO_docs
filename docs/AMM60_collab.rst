@@ -9,7 +9,8 @@ Summary
 2. PAP site 3D output for PV analysis - Xiaolong.Yu
 3. Glider simulations - Anastasiia.Domina
 4. Baines Forcing - Matthew.Toberman
-
+5. Tracer exchange - Chris.Wilson
+6. FASTNEt cross shelf variances - Jason.Holt
 
 ----
 
@@ -33,7 +34,7 @@ NEMO_latlon_to_indices.ipynb
 3. Glider simulations - Anastasiia.Domina
 =========================================
 
-NEMO_latlon_to_indices.ipynb
+code:: NEMO_latlon_to_indices.ipynb
 
 lat: ['48.307', '48.307', '48.997', '48.997']
 lon: ['-9.903', '-9.003', '-9.903', '-9.003']
@@ -49,9 +50,17 @@ Note that this is a subset of:
 
 4. Baines Forcing - Matthew.Toberman
 ====================================
+Wants 3D z-coords for AMM60.
 
-Wants 3D z-coords for AMM60
+code:: NEMO_write_e3t_netcdf.ipynb
+
+data:: /projectsa/pycnmix/jelt/AMM60/AMM60_e3t_mean.nc.gz
+
 
 5. Tracer exchange - Chris.Wilson
 =================================
 hourly surface velocity
+
+6. FASTNEt cross shelf variances
+================================
+Output 25h surface velocities to investigate particle spreading rates
