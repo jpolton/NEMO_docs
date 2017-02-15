@@ -294,6 +294,37 @@ Hit walltime. Increase walltime to 30mins from 25mins::
 
 ---
 
+*(15 Feb 2017)*
+Output file was lost or corrupted::
+
+  ncdump -h /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT/AMM60_1h_20100204_20100208_NorthSea.nc
+  ncdump: /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT/AMM60_1h_20100204_20100208_NorthSea.nc: NetCDF: Unknown file format
+
+Recreate it. Edit run_counter.txt, run_nemo and check submit_nemo.pbs::
+
+  cp run_counter.txt run_counter.txt_finished
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 7201 14400 7200=20100109
+  3 14401 21600 14400=20100114
+  4 21601 28800
+  5 28801 36000 28800=20100124
+  6 36001 43200 36000=20100129
+  7 43201 50400 43200=20100203
+
+  vi run_nemo
+  export nrestart_max=300
+  —>
+  export nrestart_max=7
+
+Submit::
+
+  ./run_nemo
+  4321044.sdb
+
+**PENDING 15 Feb 2017**  
+
 Compression of output
 =====================
 
