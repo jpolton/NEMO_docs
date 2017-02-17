@@ -87,7 +87,7 @@ Create a clean experiment from Karen’s code base with AVM in the XML output. (
    <file id="file3" name_suffix="_PAP3D_grid_U" description="ocean U grid variables" >
     <field_group id="PAP3D_U" domain_ref="PAP3D">
       <field field_ref="e3u"  />
-      <field field_ref="uoce"         name="uo"      long_name="sea_water_x_velocity" operation="instant" freq_op="5d" > @uoce_e3u / @e3u </field>
+      <field field_ref="uoce"         name="uo"      long_name="sea_water_x_velocity"  />
       <field field_ref="utau"         name="tauuo"   long_name="surface_downward_x_stress" />
     </field_group>
    </file>
@@ -121,7 +121,24 @@ Submit::
   ./run_nemo
   4326612.sdb
 
-**(PENDING 16 Feb 2017)** Are there files of output for the PAP site.
+
+
+
+Ran to completion but there was no output.
+Copied the iodef.xml file from EXP_NSea
+Trimmed off the run_counter.txt to 3 lines::
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 7201 14400 7200=20100109
+  3 1396801 1404000 1396800=20120831
+
+
+Resubmit::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_PAP
+  ./run_nemo
+
 **ACTION**: Share with Xiaolong. Q: Are the fluxes OK? Is the data OK?
 
 ----
