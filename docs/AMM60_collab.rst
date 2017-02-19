@@ -64,6 +64,15 @@ data:: /projectsa/pycnmix/jelt/AMM60/AMM60_e3t_mean.nc.gz
 =================================
 hourly surface velocity
 
+
 6. FASTNEt cross shelf variances
 ================================
-Output 25h surface velocities to investigate particle spreading rates
+
+Date:: 17 Feb 2017
+
+Output 25h surface velocities to investigate particle spreading rates. Drogued at 50m.
+Run for two months. Output data with the 3D harmonic.
+Run for two months and also output 25hr velocities for dispersal analysis.
+Try 6hour queue (expect 5:30hrs). 31 May 2012 (1264321) -- 27 July 2012 (1346400)
+
+data:: cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT

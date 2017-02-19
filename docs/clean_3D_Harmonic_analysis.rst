@@ -1027,3 +1027,37 @@ Using Nx noMachine pulled (x10)::
 
   cd /scratch/jelt/tmp
   rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60*nc /scratch/jelt/tmp/.
+
+
+----
+
+*(17 Feb 2017)*
+Run for two months and also output 25hr velocities for dispersal analysis.
+Try 6hour queue (expect 5:30hrs). 31 May 2012 (1264321) -- 27 July 2012 (1346400)
+::
+
+  vi submit_nemo.pbs
+  ...
+  #PBS -l walltime=06:00:00
+
+  vi namelist_cfg
+  nit000_han = 1264321 ! 31 May 2012
+  nitend_han = 1346400 ! 27 July 2012
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1346400
+
+  vi iodef.xml
+  #Put all the M2 + S2 diagnostics in
+
+Submit::
+
+  ./run_nemo
+  4329244.sdb
+
+**ACTIONS: PENDING**
+*  cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+* Check the 2 month harmonics against 1 month.
+* How to M2 and S2 differ?
+* Are the 25hr velocities OK for John's FASTNEt dispersal calculation?
