@@ -76,3 +76,6 @@ Run for two months and also output 25hr velocities for dispersal analysis.
 Try 6hour queue (expect 5:30hrs). 31 May 2012 (1264321) -- 27 July 2012 (1346400)
 
 data:: cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+
+Chat with JohnH *(20 Feb 16* Monthly transport maps would be good. Drifter positions every 24 hours, from 25hr averaged velocities, with water depth would be good.
+(Dates to be determined)
