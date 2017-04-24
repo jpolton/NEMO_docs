@@ -323,7 +323,7 @@ Submit::
   ./run_nemo
   4321044.sdb
 
-**PENDING 15 Feb 2017**  
+**PENDING 15 Feb 2017**
 
 Compression of output
 =====================

@@ -1034,6 +1034,8 @@ Using Nx noMachine pulled (x10)::
 *(17 Feb 2017)*
 Run for two months and also output 25hr velocities for dispersal analysis.
 Try 6hour queue (expect 5:30hrs). 31 May 2012 (1264321) -- 27 July 2012 (1346400)
+Used walltime=05:47:06, though it took another 28 mins before all the output file
+were written.
 ::
 
   vi submit_nemo.pbs
@@ -1061,3 +1063,96 @@ Submit::
 * Check the 2 month harmonics against 1 month.
 * How to M2 and S2 differ?
 * Are the 25hr velocities OK for John's FASTNEt dispersal calculation?
+
+*(21 Apr 17)*
+Copy M2, S2 anaylsis to projectsa
+::
+
+  rsync -uartv jelt@login.archer.ac.uk:/work/n01/n01/jelt/NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT/AMM60_1d_20120601_20120727*nc /projectsa/pycnmix/jelt/AMM60/.
+
+Diagnose with internaltideharmonics.ipynb
+
+*(24 Apr 17)*
+Output all the 9 harmonics available. Don't output the 25h averaged as these will
+not be different.
+::
+
+  vi iodef.xml
+  #Put 9 harmonics consitutents in. grep x_SSH iodef.xml
+  <field field_ref="M2x_SSH"      name="M2x_SSH"  long_name="M2 ro   real part"                       />
+  <field field_ref="S2x_SSH"      name="S2x_SSH"  long_name="S2 ro   real part"                       />
+  <field field_ref="N2x_SSH"      name="N2x_SSH"  long_name="N2 ro   real part"                       />
+  <field field_ref="K2x_SSH"      name="K2x_SSH"  long_name="K2 ro   real part"                       />
+  <field field_ref="K1x_SSH"      name="K1x_SSH"  long_name="K1 ro   real part"                       />
+  <field field_ref="O1x_SSH"      name="O1x_SSH"  long_name="O1 ro   real part"                       />
+  <field field_ref="Q1x_SSH"      name="Q1x_SSH"  long_name="Q1 ro   real part"                       />
+  <field field_ref="M4x_SSH"      name="M4x_SSH"  long_name="M4 ro   real part"                       />
+  <field field_ref="P1x_SSH"      name="P1x_SSH"  long_name="P1 ro   real part"                       />
+
+Split the species into frequency groups. semi_diurnal, diurnal, quart-diurnal.
+Because otherwise the files will prob be too big. (42Gb for M2+S2+e3t only)
+::
+  <file id="file8" name_suffix="_D2_Tides" description="semi diurnal tidal harmonics" >
+  <file id="file9" name_suffix="_D1_Tides" description="diurnal tidal harmonics" >
+  <file id="file10" name_suffix="_D4_Tides" description="quarter diurnal tidal harmonics" >
+
+
+Comment out all the non-tide output (as this won't be different to that which we already have)
+::
+  vi iodef.xml
+  ...
+  <!--
+  <file id="file51" name_suffix="_grid_T" description="ocean T grid variables" >
+        <field field_ref="e3t"  />
+  </file>
+
+  <file id="file53" name_suffix="_grid_U" description="ocean U grid variables" >
+          <field field_ref="e3u"  />
+          <field field_ref="ssu"          name="uos"     long_name="sea_surface_x_velocity"    />
+          <field field_ref="uoce"         name="uo"      long_name="sea_water_x_velocity" />
+          <field field_ref="vozocrtx25h"  name="uo25h"   long_name="sea_water_x_velocity" />
+          <field field_ref="ubar"         name="ubar"    long_name="barotropic_x_velocity" />
+  </file>
+
+  <file id="file54" name_suffix="_grid_V" description="ocean V grid variables" >
+          <field field_ref="e3v"  />
+          <field field_ref="ssv"          name="vos"     long_name="sea_surface_y_velocity"    />
+          <field field_ref="voce"         name="vo"      long_name="sea_water_y_velocity" />
+          <field field_ref="vomecrty25h"  name="vo25h"   long_name="sea_water_y_velocity" />
+          <field field_ref="vbar"         name="vbar"    long_name="barotropic_y_velocity" />
+  </file>
+
+  <file id="file55" name_suffix="_grid_W" description="ocean W grid variables" >
+          <field field_ref="e3w"  />
+          <field field_ref="N2_25h"       name="N2_25h"  long_name="25h mean Brent-Viasala " />
+          <field field_ref="S2_25h"       name="S2_25h"  long_name="25h squared shear" />
+          <field field_ref="eps25h"       name="eps25h"  long_name="TKE dissipation rate 25h " />
+          <field field_ref="tke25h"       name="TKE25h"  long_name="25h vertical kinetic energy" />
+  </file>
+  -->
+
+Change the wall time to 11:30 hours (I've no idea).
+Check the run_counter.txt file
+::
+
+  vi submit_nemo.pbs
+  ...
+  #PBS -l walltime=11:30:00
+
+  vi namelist_cfg
+  nit000_han = 1264321 ! 31 May 2012
+  nitend_han = 1346400 ! 27 July 2012
+
+  vi run_counter.txt
+  1 1 7200 20100105
+  2 1264321 1346400
+
+Submit::
+
+  ./run_nemo
+  4466105.sdb
+
+**ACTIONS: PENDING**
+*  cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
+* Check wall time. What should I do next time?
+* Investigate other consituents?
