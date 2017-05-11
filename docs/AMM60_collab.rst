@@ -59,6 +59,19 @@ code:: NEMO_write_e3t_netcdf.ipynb
 
 data:: /projectsa/pycnmix/jelt/AMM60/AMM60_e3t_mean.nc.gz
 
+sftp AMM60 data from archer to ftp site::
+
+  ssharcher
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT
+  sftp jeltpub@livftp01.nerc-liv.ac.uk
+  sftp> cd data
+  sftp> mput AMM60_1d*gz
+
+  qsub -q serial gzip2010
+  qsub -q serial gzip2013
+  qsub -q serial gzip2011_06_12
+  qsub -q serial gzip2012_06_12
+
 
 5. Tracer exchange - Chris.Wilson
 =================================
