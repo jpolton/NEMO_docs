@@ -353,3 +353,53 @@ Then submit the jobs::
 
   qsub -q serial gzip2012
   qsub -q serial gzip2013
+
+
+  ----
+
+*(22 May 2017)*
+
+Unzip jun-aug for 2010-2013 for Locate project
+==============================================
+::
+
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT
+
+  qsub -q serial gunzip2010_may_aug
+  4527147.sdb
+  jelt@eslogin004:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gunzip2011_may_aug
+  4527148.sdb
+  jelt@eslogin004:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gunzip2012_may_aug
+  4527149.sdb
+  jelt@eslogin004:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gunzip2013_may_aug
+  4527150.sdb
+
+---
+
+Sharing with Matthew Toberman
+=============================
+
+Prepare files for JASMIN.
+Hourly U,V files
+Daily T,S files for the North Sea.
+
+Zip any unzipped files::
+
+  jelt@eslogin006:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gzip2010
+  4796211.sdb
+  jelt@eslogin006:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gzip2011
+  4796212.sdb
+  jelt@eslogin006:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gzip2012
+  4796214.sdb
+  jelt@eslogin006:/work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea> qsub -q serial gzip2013
+
+Copy files to JAMIN nemo workspace::
+
+  ssharcher
+  exec ssh-agent $SHELL
+  (this produces an error but it works)
+  ssh-add ~/.ssh/id_rsa_jasmin
+  cd /work/n01/n01/jelt/NEMO/NEMOGCM/CONFIG/AMM60smago/EXP_NSea/OUTPUT
+  rsync AMM60_2013_grid_T.tar jelt@jasmin-xfer1.ceda.ac.uk:/group_workspaces/jasmin2/nemo/vol5/public/AMM60/pycnmix/.
+
+Notes on Evernote. Need to copy here when ready.

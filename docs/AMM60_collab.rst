@@ -10,7 +10,7 @@ Summary
 3. Glider simulations - Anastasiia.Domina
 4. Baines Forcing - Matthew.Toberman
 5. Tracer exchange - Chris.Wilson
-6. FASTNEt cross shelf variances - Jason.Holt
+6. FASTNEt cross shelf variances - John.H
 
 ----
 
@@ -73,9 +73,32 @@ sftp AMM60 data from archer to ftp site::
   qsub -q serial gzip2012_06_12
 
 
+  tar -cvf AMM60_2011b_grid_T.tar AMM60_??_2011*_grid_T.nc.gz
+  tar -cvf AMM60_2011a_grid_T.tar AMM60_??_2011*_grid_T.nc
+  tar -cvf AMM60_2012b_grid_T.tar AMM60_??_2012*_grid_T.nc.gz
+  tar -cvf AMM60_2012a_grid_T.tar AMM60_??_2012*_grid_T.nc
+  tar -cvf AMM60_2010_grid_T.tar AMM60_??_2010*_grid_T.nc.gz
+  tar -cvf AMM60_2013_grid_T.tar AMM60_??_2013*_grid_T.nc.gz
+
+  sftp jeltpub@livftp01.nerc-liv.ac.uk
+  sftp> cd data
+  sftp> mput AMM60_2011*_grid_T.tar
+  sftp> mput AMM60_2012*_grid_T.tar
+  sftp> mput AMM60_2010_grid_T.tar
+  sftp> mput AMM60_2013_grid_T.tar
+
+
+
+Share at ftp://livftp01.nerc-liv.ac.uk/noc/jeltpub/data/
+
+---
+
+3D hourly T,S,U,V
+
+
 5. Tracer exchange - Chris.Wilson
 =================================
-hourly surface velocity
+hourly surface fields: SSH, u, v, SST, SSS
 
 
 6. FASTNEt cross shelf variances

@@ -248,6 +248,22 @@ A quick look with Ferret. Tides appear OK.
 
 **THIS IS THE ACTUAL END OF WHERE I HAD A THREE MONTH 3D TIDAL RUN WITH AMM7**
 
+*(17 May 2017)* Submit a 2 month run for comparison with AMM60::
+
+ vi subm
+ nit=17568 # 61 days
+
+ vi namelist_cfg.template_skag_climate
+ nn_msh = 0
+ ...
+ nitend_han = 17568 ! 25920 ! 105120 ! 210528  ! Last time step used for harmonic analysis
+
+ ./rsub subm 2012 6 1
+ qsub -v m=6,y=2012,nit0=1,ndate=20120601 -o /work/n01/n01/jelt/from_mane1/V3.6_ST/NEMOGCM/CONFIG/XIOS_AMM7_nemo/EXP00/GA-AMM7-2012-06 -N GA201206 subm
+ 4516717.sdb
+
+This breaks because the boundary forcing data has moved
+
 ----
 
 3. Other things learnt while debugging
