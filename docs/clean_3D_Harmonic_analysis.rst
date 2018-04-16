@@ -1152,6 +1152,8 @@ Submit::
   ./run_nemo
   4466105.sdb
 
+It took 05:14:50
+
 **ACTIONS: PENDING**
 *  cd /work/n01/n01/jelt//NEMO/NEMOGCM_jdha/dev_r4621_NOC4_BDY_VERT_INTERP/NEMOGCM/CONFIG/XIOS_AMM60_nemo_harmIT2/EXP_harmIT2/OUTPUT
 * Check wall time. What should I do next time?
